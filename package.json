@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "preview": "nuxt preview"
+    "type-check": "nuxi typecheck"
   },
   "dependencies": {
     "@nuxt/eslint": "0.7.4",
