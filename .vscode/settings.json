@@ -103,6 +103,7 @@
     "leave-from-class",
     "leave-to-class"
   ],
+  "tailwindCSS.experimental.classRegex": ["tw`(.*?)`", "tw\\('(.*?)'\\)", "tw\\(\\s*('(.*?)'|\"(.*?)\")\\s*\\)"],
   "tailwindCSS.rootFontSize": 16,
   "typescript.tsdk": "node_modules/typescript/lib",
   "vue.complete.casing.props": "kebab",
