@@ -44,7 +44,17 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@primevue/nuxt-module',
     '@nuxt/fonts',
+    '@nuxt/icon',
   ],
+  imports: {
+    dirs: ['~/stores'],
+    presets: [
+      {
+        from: 'tailwind-merge',
+        imports: ['twJoin', 'twMerge'],
+      },
+    ],
+  },
   devtools: { enabled: true },
   compatibilityDate: '2025-01-08',
   eslint: {

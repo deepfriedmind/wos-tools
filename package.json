@@ -15,16 +15,19 @@
   "dependencies": {
     "@nuxt/eslint": "0.7.4",
     "@nuxt/fonts": "0.10.3",
+    "@nuxt/icon": "1.10.3",
     "@nuxtjs/tailwindcss": "npm:@nuxtjs/tailwindcss@nightly",
     "@primevue/themes": "^4.2.5",
     "nuxt": "^3.15.1",
     "primevue": "^4.2.5",
+    "tailwind-merge": "^2.6.0",
     "tailwindcss-primeui": "^0.3.4",
     "vue": "latest",
     "vue-router": "latest"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^3.12.2",
+    "@iconify-json/fluent-emoji": "^1.2.2",
     "@primevue/nuxt-module": "4.2.5",
     "eslint": "^9.17.0",
     "eslint-plugin-format": "^1.0.1",
