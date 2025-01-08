@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@nuxt/eslint": "0.7.4",
+    "@nuxt/fonts": "0.10.3",
     "@nuxtjs/tailwindcss": "npm:@nuxtjs/tailwindcss@nightly",
     "@primevue/themes": "^4.2.5",
     "nuxt": "^3.15.1",

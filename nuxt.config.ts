@@ -43,6 +43,7 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxtjs/tailwindcss',
     '@primevue/nuxt-module',
+    '@nuxt/fonts',
   ],
   devtools: { enabled: true },
   compatibilityDate: '2025-01-08',
