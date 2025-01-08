@@ -1,0 +1,119 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "never",
+    "source.sortImports": "never"
+  },
+  "editor.formatOnPaste": false,
+  "editor.formatOnSave": false,
+  "editor.formatOnType": false,
+  "eslint.rules.customizations": [
+    {
+      "fixable": true,
+      "rule": "*",
+      "severity": "off"
+    }
+  ],
+  "eslint.runtime": "node",
+  "eslint.validate": [
+    "astro",
+    "css",
+    "gql",
+    "graphql",
+    "html",
+    "javascript",
+    "javascriptreact",
+    "json",
+    "json5",
+    "jsonc",
+    "less",
+    "markdown",
+    "pcss",
+    "postcss",
+    "scss",
+    "toml",
+    "typescript",
+    "typescriptreact",
+    "vue",
+    "xml",
+    "yaml"
+  ],
+  "explorerExclude.backup": {},
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "files.exclude": {
+    "**/.DS_Store": true,
+    "**/.git": true,
+    "**/.hg": true,
+    "**/.stylelintcache": true,
+    "**/.svn": true,
+    "**/CVS": true,
+    "**/Thumbs.db": true,
+    ".eslintcache": true,
+    ".nuxt": true,
+    ".output": true,
+    "node_modules": true,
+    "pnpm-lock.yaml": true
+  },
+  "files.readonlyInclude": {
+    "**/.stylelintcache": true,
+    "**/auto-imports.d.ts": true,
+    "**/components.d.ts": true,
+    ".eslintcache": true,
+    ".nuxt": true,
+    ".output": true,
+    "node_modules/**/*": true,
+    "pnpm-lock.yaml": true
+  },
+  "git.inputValidationSubjectLength": 72,
+  "github.copilot.chat.codeGeneration.useInstructionFiles": true,
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "file": ".github/copilot-commit-message-instructions.md"
+    }
+  ],
+  "github.copilot.chat.reviewSelection.instructions": [
+    {
+      "file": ".github/copilot-code-review-instructions.md"
+    }
+  ],
+  "github.copilot.chat.testGeneration.instructions": [
+    {
+      "file": ".github/copilot-test-generation-instructions.md"
+    }
+  ],
+  "nuxtr.defaultPackageManager": "pnpm",
+  "nuxtr.piniaFiles.defaultTemplate": "setup",
+  "nuxtr.vueFiles.firstTag": "script",
+  "nuxtr.vueFiles.script.defaultLanguage": "ts",
+  "nuxtr.vueFiles.script.type": "setup",
+  "nuxtr.vueFiles.style.addStyleTag": false,
+  "peacock.color": "#254166",
+  "prettier.enable": false,
+  "tailwindCSS.classAttributes": [
+    "appear-active-class",
+    "appear-from-class",
+    "appear-to-class",
+    "class",
+    "enter-active-class",
+    "enter-from-class",
+    "enter-to-class",
+    "leave-active-class",
+    "leave-from-class",
+    "leave-to-class"
+  ],
+  "tailwindCSS.rootFontSize": 16,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "vue.complete.casing.props": "kebab",
+  "vue.complete.casing.tags": "pascal",
+  "workbench.colorCustomizations": {
+    "commandCenter.border": "#e7e7e799",
+    "sash.hoverBorder": "#33598b",
+    "tab.activeBorder": "#33598b",
+    "titleBar.activeBackground": "#254166",
+    "titleBar.activeForeground": "#e7e7e7",
+    "titleBar.inactiveBackground": "#25416699",
+    "titleBar.inactiveForeground": "#e7e7e799"
+  }
+}

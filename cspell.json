@@ -1,0 +1,30 @@
+{
+  "dictionaries": [],
+  "dictionaryDefinitions": [],
+  "ignorePaths": [],
+  "ignoreWords": [],
+  "import": [],
+  "language": "en-US,en",
+  "version": "0.2",
+  "words": [
+    "fadeinright",
+    "fontaine",
+    "fxemoji",
+    "gridlines",
+    "iconify",
+    "Ifta",
+    "messageicon",
+    "neue",
+    "Noto",
+    "Nuxt",
+    "nuxtjs",
+    "openmoji",
+    "primeui",
+    "roboto",
+    "segoe",
+    "toastservice",
+    "usetoast",
+    "vueuse",
+    "wght"
+  ]
+}
