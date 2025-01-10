@@ -4,7 +4,7 @@ defineOptions({ inheritAttrs: false })
 const { as = 'h1' } = defineProps<Properties>()
 
 /**
- * Main site logo
+ * Site logo
  */
 interface Properties {
   /**
@@ -15,8 +15,18 @@ interface Properties {
 }
 
 const attributes = useAttrs()
-const baseClasses = 'text-6xl tracking-tighter [text-shadow:0.0333em_0.033em_0_rgb(36_65_102_/_90%)] font-logo font-semibold select-none drop-shadow flex items-center'
-const classes = computed(() => twMerge(baseClasses, attributes.class as string))
+const baseClasses = tw`
+  flex
+  select-none
+  items-center
+  font-logo
+  text-6xl
+  font-semibold
+  tracking-tighter
+  drop-shadow
+  [text-shadow:0.0333em_0.033em_0_rgb(36_65_102_/_90%)]
+`
+const classes = computed(() => twMerge(baseClasses, useAttrs().class as string))
 </script>
 
 <template>
@@ -26,9 +36,10 @@ const classes = computed(() => twMerge(baseClasses, attributes.class as string))
     :class="classes"
   >
     <span>WoS </span><Icon
+      class="-z-10 translate-x-[-0.1em]"
       size="0.7em"
       name="fluent-emoji:snowflake"
     />
-    <span class="[transform:translateX(-10%)]">Tools</span>
+    <span class="translate-x-[-0.3em]">Tools</span>
   </component>
 </template>
