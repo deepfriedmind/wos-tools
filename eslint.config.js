@@ -11,12 +11,39 @@ export default withNuxt(
       html: true,
       markdown: 'prettier',
     },
-    stylistic: false,
+    stylistic: true,
+    typescript: {
+      overrides: {
+        'ts/prefer-destructuring': [
+          'error',
+          {
+            AssignmentExpression: {
+              array: true,
+              object: false,
+            },
+            VariableDeclarator: {
+              array: true,
+              object: true,
+            },
+          },
+          {
+            enforceForRenamedProperties: false,
+          },
+        ],
+      },
+      parserOptions: {
+        projectService: true,
+      },
+      tsconfigPath: 'tsconfig.json',
+    },
     unicorn: {
       allRecommended: true,
     },
     vue: true,
-  }),
+  })
+    .renamePlugins({
+      style: '@stylistic',
+    }),
   {
     name: 'project/global',
     rules: {
@@ -62,20 +89,8 @@ export default withNuxt(
       'no-lonely-if': 'error',
       'no-useless-concat': 'error',
       'perfectionist/sort-imports': 'off',
-      'prefer-destructuring': [
         'error',
         {
-          AssignmentExpression: {
-            array: true,
-            object: false,
-          },
-          VariableDeclarator: {
-            array: false,
-            object: true,
-          },
-        },
-        {
-          enforceForRenamedProperties: false,
         },
       ],
       'unicorn/filename-case': [
