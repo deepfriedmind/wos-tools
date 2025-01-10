@@ -45,6 +45,8 @@ export default defineNuxtConfig({
     '@primevue/nuxt-module',
     '@nuxt/fonts',
     '@nuxt/icon',
+    'dayjs-nuxt',
+    '@vueuse/nuxt',
   ],
   imports: {
     dirs: ['~/stores'],
@@ -57,6 +59,9 @@ export default defineNuxtConfig({
   },
   devtools: { enabled: true },
   compatibilityDate: '2025-01-08',
+  dayjs: {
+    plugins: ['utc', 'duration'],
+  },
   eslint: {
     config: {
       standalone: false,
