@@ -1,6 +1,7 @@
 // @ts-check
 import antfu from '@antfu/eslint-config'
 import perfectionist from 'eslint-plugin-perfectionist'
+import tailwind from 'eslint-plugin-tailwindcss'
 
 import withNuxt from './.nuxt/eslint.config.mjs'
 
@@ -44,6 +45,7 @@ export default withNuxt(
     .renamePlugins({
       style: '@stylistic',
     }),
+  ...tailwind.configs['flat/recommended'],
   {
     name: 'project/global',
     rules: {
@@ -89,8 +91,14 @@ export default withNuxt(
       'no-lonely-if': 'error',
       'no-useless-concat': 'error',
       'perfectionist/sort-imports': 'off',
+      'tailwindcss/classnames-order': ['error', {
+        callees: ['tw', 'twMerge', 'twJoin'],
+        tags: ['tw'],
+      }],
+      'tailwindcss/no-custom-classname': [
         'error',
         {
+          whitelist: ['dark'],
         },
       ],
       'unicorn/filename-case': [

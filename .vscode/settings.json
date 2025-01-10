@@ -7,6 +7,9 @@
   "editor.formatOnPaste": false,
   "editor.formatOnSave": false,
   "editor.formatOnType": false,
+  "editor.quickSuggestions": {
+    "strings": true
+  },
   "eslint.rules.customizations": [
     {
       "fixable": true,
@@ -103,7 +106,19 @@
     "leave-from-class",
     "leave-to-class"
   ],
-  "tailwindCSS.experimental.classRegex": ["tw`(.*?)`", "tw\\('(.*?)'\\)", "tw\\(\\s*('(.*?)'|\"(.*?)\")\\s*\\)"],
+  "tailwindCSS.experimental.classRegex": [
+    "tw\\('(.*?)'\\)",
+    "tw\\(\\s*('(.*?)'|\"(.*?)\")\\s*\\)",
+    "tw`(.*?)`",
+    [
+      "twJoin\\(([^)]*)\\)",
+      "[\"'`]([^\"'`]*)[\"'`]"
+    ],
+    [
+      "(?:twMerge|twJoin)\\(([^;]*)[\\);]",
+      "[`'\"`]([^'\"`;]*)[`'\"`]"
+    ]
+  ],
   "tailwindCSS.rootFontSize": 16,
   "typescript.tsdk": "node_modules/typescript/lib",
   "vue.complete.casing.props": "kebab",
