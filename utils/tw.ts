@@ -31,6 +31,3 @@ export default function tw(strings: TemplateStringsArray): string {
 
   return String.raw(strings).replaceAll(/\s+/g, ' ').trim()
 }
-
-const lol = tw`text-center text-lg font-bold shadow-sm`
-const lol2 = twJoin('text-center text-lg font-bold shadow-sm')
