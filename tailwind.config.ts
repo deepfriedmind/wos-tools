@@ -12,6 +12,7 @@ export default <Partial<Config>>{
   darkMode: 'selector',
   plugins: [
     primeui,
+    // eslint-disable-next-line ts/unbound-method
     plugin(({ addUtilities, addVariant, theme }) => {
       addUtilities({
         '.hitbox-50': {

@@ -35,7 +35,7 @@ const ThemeConfiguration = definePreset(Aura, {
       950: '#202e3f',
     },
   },
-})
+}) as Record<string, unknown>
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
