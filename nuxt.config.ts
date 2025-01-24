@@ -68,6 +68,17 @@ export default defineNuxtConfig({
       stylistic: true,
     },
   },
+  icon: {
+    serverBundle: {
+      externalizeIconsJson: true,
+    },
+    clientBundle: {
+      icons: [
+        'fluent-emoji:snowflake',
+      ],
+      scan: true,
+    },
+  },
   primevue: {
     options: {
       ripple: true,
