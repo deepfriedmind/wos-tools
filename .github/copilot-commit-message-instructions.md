@@ -9,7 +9,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 1. An emoji (Devmoji) representing the type of change MUST immediately follow the colon and space after the type/scope prefix.
 1. A space and a description MUST immediately follow the emoji.
    The description is a short summary of the code changes, e.g., _fix: array parsing issue when multiple spaces were contained in string_.
-1. The whole commit subject MUST NOT exceed 72 characters.
+1. The subject line MUST NOT exceed 72 characters.
 1. A longer commit body MAY be provided after the short description, providing additional contextual information about the code changes. The body MUST begin one blank line after the description.
 1. A commit body is free-form and MAY consist of any number of newline separated paragraphs.
 1. One or more footers MAY be provided one blank line after the body. Each footer MUST consist of
@@ -30,6 +30,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 1. The units of information that make up Conventional Commits MUST NOT be treated as case sensitive by implementors, with the exception of BREAKING CHANGE which MUST be uppercase.
 1. BREAKING-CHANGE MUST be synonymous with BREAKING CHANGE, when used as a token in a footer.
 1. Use backticks for code or file names.
+1. Use these emojis for the different scopes: feat: ✨, fix: 🐛, docs: 📚, style: 🎨, refactor: ♻️, perf: ⚡, test: 🚨, chore: 🔧, chore-release: 🚀, chore-deps: 🔗, build: 📦, ci: 👷, security: 🔒, i18n: 🌐, breaking: 💥, config: ⚙️, add: ➕, remove: ➖.
 
 ### Default Devmoji Reference
 
