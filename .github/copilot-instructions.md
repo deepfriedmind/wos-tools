@@ -4,6 +4,12 @@ Always validate code syntax and nesting before suggesting changes.
 
 Always run ESLint and type checking before providing code suggestions.
 
+Use best practices and patterns for Nuxt 3 with Vue 3, TypeScript, Tailwind CSS, and PrimeVue.
+
+Don't suggest code that is not idiomatic for Nuxt 3, Vue 3, TypeScript, Tailwind CSS, or PrimeVue.
+
+Don't add imports for anything that is auto-imported via Nuxt.
+
 Use `<script setup lang="ts">` with `defineProps` and `defineEmits`.
 
 Use destructuring syntax for props and emits with default values.
@@ -13,6 +19,14 @@ Use interfaces for props and emits with JSDoc comments.
 Use `defineOptions({ inheritAttrs: false })`, `twMerge` and `v-bind="{ ...attributes, class: null }"` for components with default Tailwind classes.
 
 Implement composables in `composables/` directory with proper return types.
+
+Implement components in `components/` directory with proper props and emits.
+
+Implement layouts in `layouts/` directory with proper slots.
+
+Implement pages in `pages/` directory with proper routing.
+
+Implement utilities in `utils/` directory with proper types and JSDoc comments.
 
 Handle async data with `useAsyncData` and error handling.
 
@@ -34,9 +48,9 @@ Manage server state with `useState`.
 
 Create reusable PrimeVue component compositions.
 
-Use VueUse composables for common utilities.
+Use Day.js via the `useDayjs` composable for everything date- and time-related.
 
-Format dates with `dayjs` using typed methods.
+Use VueUse composables for common utilities.
 
 Use `provide`/`inject` for dependency injection.
 
