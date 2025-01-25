@@ -10,24 +10,40 @@
  *  Tailwind CSS IntelliSense for VSCode (configured in `.vscode/settings.json` under `tailwindCSS.experimental.classRegex`).
  *
  * Not to be confused with `twJoin()` and `twMerge()` from the `tailwind-merge` package.
- * @param strings Template literal
+ * @param strings Template literal strings array
+ * @param values Interpolated values
  * @returns String with all extraneous whitespace removed
  * @example
  * ```ts
  * tw`
  *   class1
  *   class2
- *   class3
+ *   ${someVar}
  * `
- * // => 'class1 class2 class3'
+ * // => 'class1 class2 someValue'
  * ```
  */
-export default function tw(strings: TemplateStringsArray): string {
-  if (!Array.isArray(strings) || typeof strings[0] !== 'string') {
+export default function tw(strings: TemplateStringsArray, ...values: unknown[]): string {
+  if (!Array.isArray(strings) || !('raw' in strings)) {
     throw new TypeError(
       `tw.ts: Expected template literal, got ${typeof strings}`,
     )
   }
 
-  return String.raw(strings).replaceAll(/\s+/g, ' ').trim()
+  const parts = Array.from({ length: strings.length * 2 - 1 })
+  let index = 0
+
+  for (const [index_, string] of strings.entries()) {
+    parts[index++] = string
+
+    if (index_ < values.length) {
+      parts[index++] = String(values[index_] ?? '')
+    }
+  }
+
+  const result = parts.join('')
+  if (!result.trim())
+    return ''
+
+  return result.replaceAll(/\s+/g, ' ').trim()
 }

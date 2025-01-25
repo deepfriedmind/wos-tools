@@ -1,3 +1,5 @@
+Place test files in the same directory as the file being tested.
+
 Use Vitest with `@nuxt/test-utils` for testing.
 
 Use `setup()` from `@nuxt/test-utils` in test files.

@@ -40,13 +40,14 @@ const ThemeConfiguration = definePreset(Aura, {
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: [
-    '@nuxt/eslint',
-    '@nuxtjs/tailwindcss',
-    '@primevue/nuxt-module',
-    '@nuxt/fonts',
-    '@nuxt/icon',
     'dayjs-nuxt',
     '@vueuse/nuxt',
+    '@primevue/nuxt-module',
+    '@nuxtjs/tailwindcss',
+    '@nuxt/test-utils/module',
+    '@nuxt/icon',
+    '@nuxt/fonts',
+    '@nuxt/eslint',
   ],
   imports: {
     dirs: ['~/stores'],
