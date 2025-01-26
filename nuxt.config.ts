@@ -60,6 +60,9 @@ export default defineNuxtConfig({
   },
   devtools: { enabled: true },
   compatibilityDate: '2025-01-08',
+  typescript: {
+    typeCheck: true,
+  },
   dayjs: {
     plugins: ['utc', 'duration'],
   },
