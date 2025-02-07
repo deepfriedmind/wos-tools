@@ -115,13 +115,6 @@ export default withNuxt(
     files: ['**/*.vue'],
     name: 'project/vue',
     rules: {
-      'unicorn/filename-case': [
-        'error',
-        {
-          cases: { pascalCase: true },
-          ignore: ['^app\.vue$'],
-        },
-      ],
       'vue/camelcase': 'error',
       'vue/first-attribute-linebreak': [
         'error',
@@ -139,16 +132,16 @@ export default withNuxt(
     },
   },
   {
-    files: ['**/*.md'],
-    name: 'project/markdown',
+    files: ['components/**/*'],
+    name: 'project/components',
     rules: {
-      '@stylistic/no-trailing-spaces': 'off',
+      'unicorn/filename-case': [
+        'error',
+        {
+          case: 'pascalCase',
+        },
+      ],
     },
-  },
-  {
-    files: ['package.json'],
-    name: 'project/packagejson',
-    rules: { 'jsonc/sort-keys': 'off' },
   },
   {
     files: ['utils/**/*', 'composables/**/*'],
@@ -168,5 +161,17 @@ export default withNuxt(
     rules: {
       'perfectionist/sort-objects': 'off',
     },
+  },
+  {
+    files: ['**/*.md'],
+    name: 'project/markdown',
+    rules: {
+      '@stylistic/no-trailing-spaces': 'off',
+    },
+  },
+  {
+    files: ['package.json'],
+    name: 'project/packagejson',
+    rules: { 'jsonc/sort-keys': 'off' },
   },
 )
