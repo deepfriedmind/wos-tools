@@ -15,7 +15,7 @@
     "type-check": "nuxi typecheck"
   },
   "dependencies": {
-    "@nuxt/eslint": "0.7.4",
+    "@nuxt/eslint": "1.0.1",
     "@nuxt/fonts": "0.10.3",
     "@nuxt/icon": "1.10.3",
     "@nuxtjs/tailwindcss": "npm:@nuxtjs/tailwindcss@nightly",
@@ -32,7 +32,7 @@
     "vue-router": "latest"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^3.12.2",
+    "@antfu/eslint-config": "^4.1.1",
     "@iconify-json/fluent-emoji": "^1.2.3",
     "@nuxt/test-utils": "3.15.4",
     "@primevue/nuxt-module": "4.2.5",
