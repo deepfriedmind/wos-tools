@@ -22,7 +22,7 @@ export default function useResetCountdown(): CountdownReturn {
   const dayjs = useDayjs()
   const now = useNow({ interval: 1000 })
   const timeRemaining = ref('00:00:00')
-  const error = ref(false)
+  const hasError = ref(false)
 
   const calculateTimeToMidnight = () => {
     try {
@@ -31,26 +31,26 @@ export default function useResetCountdown(): CountdownReturn {
       const diff = midnight.diff(currentTime)
 
       if (diff < 0) {
-        error.value = true
+        hasError.value = true
 
         return
       }
 
       const duration = dayjs.duration(diff)
       timeRemaining.value = duration.format('HH:mm:ss')
-      error.value = false
+      hasError.value = false
     }
-    catch (error_) {
-      if (error_ instanceof Error)
-        console.error('Error calculating time to midnight:', error_.message)
-      error.value = true
+    catch (error) {
+      if (error instanceof Error)
+        console.error('Error calculating time to midnight:', error.message)
+      hasError.value = true
     }
   }
 
   watch(now, calculateTimeToMidnight, { immediate: true })
 
   return {
-    error: readonly(error),
+    error: readonly(hasError),
     timeRemaining: readonly(timeRemaining),
   }
 }

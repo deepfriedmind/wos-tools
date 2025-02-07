@@ -3,7 +3,7 @@ const { error, timeRemaining } = useResetCountdown()
 </script>
 
 <template>
-  <div class="text-center">
+  <div>
     <span
       class="sr-only"
       role="status"
@@ -12,7 +12,7 @@ const { error, timeRemaining } = useResetCountdown()
       {{ error ? 'Error calculating countdown' : 'Time until midnight UTC' }}
     </span>
     <time
-      class="font-mono text-lg tabular-nums"
+      class="font-mono tabular-nums"
       :class="error ? 'text-red-500 dark:text-red-400' : ''"
       :datetime="timeRemaining"
       :aria-label="error ? 'Error' : 'countdown timer'"
