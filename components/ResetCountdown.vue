@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { error, timeRemaining } = useResetCountdown()
+const { error, timeRemainingUntilReset } = useResetCountdown()
 </script>
 
 <template>
@@ -12,12 +12,12 @@ const { error, timeRemaining } = useResetCountdown()
       {{ error ? 'Error calculating countdown' : 'Time until midnight UTC' }}
     </span>
     <time
-      class="font-mono tabular-nums"
+      class="tabular-nums"
       :class="error ? 'text-red-500 dark:text-red-400' : ''"
-      :datetime="timeRemaining"
+      :datetime="timeRemainingUntilReset"
       :aria-label="error ? 'Error' : 'countdown timer'"
     >
-      {{ error ? 'Error' : timeRemaining }}
+      {{ error ? 'Error' : timeRemainingUntilReset }}
     </time>
   </div>
 </template>

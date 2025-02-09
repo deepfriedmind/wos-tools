@@ -8,3 +8,9 @@
   @tailwind components;
   @tailwind utilities;
 }
+
+@layer base {
+  html {
+    @apply bg-[url('/img/bg.avif'),linear-gradient(to_top,white,#244166)] bg-no-repeat bg-bottom bg-contain min-h-screen;
+  }
+}

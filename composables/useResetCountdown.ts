@@ -1,34 +1,50 @@
 interface CountdownReturn {
   /** Whether there was an error calculating the time */
   error: Readonly<Ref<boolean>>
-  /** Current time remaining in HH:mm:ss format */
-  timeRemaining: Readonly<Ref<string>>
+  /** Number of seconds until daily reset (UTC midnight) */
+  secondsUntilReset: Readonly<Ref<number>>
+  /** Time until daily reset in HH:mm:ss format */
+  timeRemainingUntilReset: Readonly<Ref<string>>
 }
 
 /**
- * Composable that provides a countdown timer to midnight UTC
- * Updates every second and handles edge cases and errors
+ * Composable that provides a countdown timer to daily reset (UTC midnight).
+ * Updates automatically every second and handles edge cases and errors.
+ * Uses Day.js for time calculations and formatting.
  *
  * @example
  * ```ts
- * const { timeRemaining, error } = useCountdown()
+ * const { timeRemainingUntilReset, secondsUntilReset, error } = useResetCountdown()
+ *
+ * // Display formatted time
+ * console.log(timeRemainingUntilReset.value) // "23:45:30"
+ *
+ * // Use raw seconds
+ * console.log(secondsUntilReset.value) // 85530
+ *
+ * // Check for errors
+ * if (error.value) {
+ *   console.error('Failed to calculate countdown')
+ * }
  * ```
  *
- * @returns {CountdownReturn} Object containing the time remaining and error state
- * @property {Readonly<Ref<string>>} timeRemaining - Time remaining until midnight in HH:mm:ss format
+ * @returns {CountdownReturn} Object containing countdown information
  * @property {Readonly<Ref<boolean>>} error - Whether there was an error calculating the time
+ * @property {Readonly<Ref<number>>} secondsUntilReset - Number of seconds remaining until UTC midnight
+ * @property {Readonly<Ref<string>>} timeRemainingUntilReset - Formatted time remaining (HH:mm:ss)
  */
 export default function useResetCountdown(): CountdownReturn {
   const dayjs = useDayjs()
   const now = useNow({ interval: 1000 })
-  const timeRemaining = ref('00:00:00')
+  const timeRemainingUntilReset = ref('00:00:00')
+  const secondsUntilReset = ref(0)
   const hasError = ref(false)
 
-  const calculateTimeToMidnight = () => {
+  const calculateTimeUntilReset = () => {
     try {
       const currentTime = dayjs(now.value).utc()
-      const midnight = currentTime.endOf('day')
-      const diff = midnight.diff(currentTime)
+      const resetTime = currentTime.endOf('day')
+      const diff = resetTime.diff(currentTime)
 
       if (diff < 0) {
         hasError.value = true
@@ -37,20 +53,22 @@ export default function useResetCountdown(): CountdownReturn {
       }
 
       const duration = dayjs.duration(diff)
-      timeRemaining.value = duration.format('HH:mm:ss')
+      timeRemainingUntilReset.value = duration.format('HH:mm:ss')
+      secondsUntilReset.value = Math.floor(duration.asSeconds())
       hasError.value = false
     }
     catch (error) {
       if (error instanceof Error)
-        console.error('Error calculating time to midnight:', error.message)
+        console.error('Error calculating time until reset:', error.message)
       hasError.value = true
     }
   }
 
-  watch(now, calculateTimeToMidnight, { immediate: true })
+  watch(now, calculateTimeUntilReset, { immediate: true })
 
   return {
     error: readonly(hasError),
-    timeRemaining: readonly(timeRemaining),
+    secondsUntilReset: readonly(secondsUntilReset),
+    timeRemainingUntilReset: readonly(timeRemainingUntilReset),
   }
 }
