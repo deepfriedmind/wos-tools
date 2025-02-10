@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { useFocusTrap } from '@vueuse/integrations/useFocusTrap'
 
+import type { BoostTypeValue, ExpeditionSkillOption, ResourceCalculations, ResourceCard, ResourceNode } from '~/types/gathering'
+import { BOOST_TYPES } from '~/types/gathering'
+
 useHead({
   title: 'Gathering Amount Calculator',
 })
@@ -28,21 +31,7 @@ const availableGatheringSeconds = computed(() => {
   return secondsUntilReset.value - travelTimeTotal.value
 })
 
-interface ResourceNode {
-  boostPercent: number
-  expeditionSkillLevel: 1 | 2 | 3 | 4 | 5
-  heroImagePath: string
-  heroName: string
-  maxAmount: number
-  rssImagePath: string
-  rssName: string
-}
-
-interface ResourceNodes {
-  [key: string]: ResourceNode
-}
-
-const DEFAULT_NODES: ResourceNodes = {
+const DEFAULT_NODES: Record<string, ResourceNode> = {
   /* eslint-disable perfectionist/sort-objects */
   MEAT: {
     boostPercent: 225.5,
@@ -83,13 +72,7 @@ const DEFAULT_NODES: ResourceNodes = {
   /* eslint-enable perfectionist/sort-objects */
 }
 
-const resourceNodes = useLocalStorage<ResourceNodes>(`${STORAGE_PREFIX}resource-nodes`, DEFAULT_NODES)
-
-interface ExpeditionSkillOption {
-  label: string
-  level: 1 | 2 | 3 | 4 | 5
-  percentage: number
-}
+const resourceNodes = useLocalStorage<Record<string, ResourceNode>>(`${STORAGE_PREFIX}resource-nodes`, DEFAULT_NODES)
 
 const EXPEDITION_SKILL_OPTIONS: ExpeditionSkillOption[] = [
   { label: 'Lv. 1', level: 1, percentage: 5 },
@@ -98,13 +81,6 @@ const EXPEDITION_SKILL_OPTIONS: ExpeditionSkillOption[] = [
   { label: 'Lv. 4', level: 4, percentage: 20 },
   { label: 'Lv. 5', level: 5, percentage: 25 },
 ]
-
-const BOOST_TYPES = {
-  BOTH: 'Using both',
-  CITY: `Using city boost (+${CITY_BONUS_PERCENT}%)`,
-  EXPEDITION: 'Using hero expedition skill',
-  NONE: 'With no extra boost',
-} as const
 
 function calculateGatherTime(node: ResourceNode, useExpeditionBoost = false, useCityBonus = false) {
   let totalBoostPercent = node.boostPercent
@@ -120,7 +96,7 @@ function calculateGatherTime(node: ResourceNode, useExpeditionBoost = false, use
   return BASE_TIME_SECONDS / (1 + totalBoostPercent / 100)
 }
 
-function calculateMaxResources(node: (typeof resourceNodes.value)[keyof typeof resourceNodes.value], useExpeditionBoost = false, useCityBonus = false) {
+function calculateMaxResources(node: ResourceNode, useExpeditionBoost = false, useCityBonus = false) {
   const gatherTime = calculateGatherTime(node, useExpeditionBoost, useCityBonus)
   if (availableGatheringSeconds.value >= gatherTime)
     return node.maxAmount
@@ -130,50 +106,33 @@ function calculateMaxResources(node: (typeof resourceNodes.value)[keyof typeof r
   return Math.floor(node.maxAmount * timeRatio)
 }
 
-function calculateTotalBoost(node: ResourceNode, useExpeditionBoost = false, useCityBonus = false) {
-  let totalBoostPercent = node.boostPercent
-  if (useExpeditionBoost) {
-    const skillOption = EXPEDITION_SKILL_OPTIONS.find(opt => opt.level === node.expeditionSkillLevel)
-    if (skillOption)
-      totalBoostPercent += skillOption.percentage
-  }
-
-  if (useCityBonus)
-    totalBoostPercent += CITY_BONUS_PERCENT
-
-  return totalBoostPercent
-}
-
-function normalizeNumber(number: number) {
-  return number.toLocaleString()
-}
-
 const fastestGatheredNode = computed(() => {
   const nodes = Object.values(resourceNodes.value)
-  let [fastest] = nodes
-  let fastestTotal = calculateTotalBoost(fastest, true, true)
+  const [initialNode] = nodes
+  let fastest = initialNode
 
   for (const current of nodes) {
-    const currentTotal = calculateTotalBoost(current, true, true)
-    if (currentTotal > fastestTotal) {
+    const currentTotal = calculateGatherTime(current, true, true)
+    const fastestTime = calculateGatherTime(fastest, true, true)
+    if (currentTotal < fastestTime)
       fastest = current
-      fastestTotal = currentTotal
-    }
   }
 
   return fastest
 })
 
-const calculations = computed(() => {
+const calculations = computed<ResourceCalculations>(() => {
   const results = Object.values(resourceNodes.value).map(node => ({
-    [BOOST_TYPES.BOTH]: normalizeNumber(calculateMaxResources(node, true, true)),
-    [BOOST_TYPES.CITY]: normalizeNumber(calculateMaxResources(node, false, true)),
-    [BOOST_TYPES.EXPEDITION]: normalizeNumber(calculateMaxResources(node, true, false)),
-    [BOOST_TYPES.NONE]: normalizeNumber(calculateMaxResources(node)),
+    /* eslint-disable perfectionist/sort-objects */
     Resource: node.rssName,
+    [BOOST_TYPES.NONE]: normalizeNumber(calculateMaxResources(node)),
+    [BOOST_TYPES.EXPEDITION]: normalizeNumber(calculateMaxResources(node, true, false)),
+    [BOOST_TYPES.CITY]: normalizeNumber(calculateMaxResources(node, false, true)),
+    [BOOST_TYPES.BOTH]: normalizeNumber(calculateMaxResources(node, true, true)),
+    /* eslint-enable perfectionist/sort-objects */
   }))
 
-  const gatherTimes = {
+  const gatherTimes: Record<BoostTypeValue, number> = {
     /* eslint-disable perfectionist/sort-objects */
     [BOOST_TYPES.NONE]: calculateGatherTime(fastestGatheredNode.value),
     [BOOST_TYPES.EXPEDITION]: calculateGatherTime(fastestGatheredNode.value, true),
@@ -183,7 +142,6 @@ const calculations = computed(() => {
   }
 
   const startTimes = Object.entries(gatherTimes).map(([label, time]) => {
-    // Calculate start time by getting current date's UTC midnight and subtracting gather time
     const now = new Date()
     const utcMidnight = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1))
     const startTimeUTC = new Date(utcMidnight.getTime() - time * 1000)
@@ -205,13 +163,17 @@ const calculations = computed(() => {
   }
 })
 
-function isMaxAmount(node: (typeof resourceNodes.value)[keyof typeof resourceNodes.value], amount: string) {
+function isMaxAmount(node: ResourceNode, amount: string) {
   const numericAmount = Number.parseInt(amount.replaceAll(/[,._\s]/g, ''))
 
   return numericAmount === node.maxAmount
 }
 
-const resourceCards = computed(() => {
+function normalizeNumber(number: number) {
+  return number.toLocaleString()
+}
+
+const resourceCards = computed<ResourceCard[]>(() => {
   const nodes = Object.values(resourceNodes.value)
 
   return nodes.map(node => ({
@@ -223,7 +185,7 @@ const resourceCards = computed(() => {
       [BOOST_TYPES.CITY]: normalizeNumber(calculateMaxResources(node, false, true)),
       [BOOST_TYPES.BOTH]: normalizeNumber(calculateMaxResources(node, true, true)),
       /* eslint-enable perfectionist/sort-objects */
-    },
+    } as Record<BoostTypeValue, string>,
   }))
 })
 
@@ -243,6 +205,11 @@ function onInputFocus(event: Event) {
   selectOnFocus(event)
   activate()
 }
+
+defineExpose({
+  fastestGatheredNode,
+  resourceCards,
+})
 </script>
 
 <template>
