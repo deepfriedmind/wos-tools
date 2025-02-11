@@ -21,36 +21,47 @@ const progressColor = computed(() => {
 
   return false
 })
+
+const isLoaded = computed(() => !error.value && secondsUntilReset.value > 0)
 </script>
 
 <template>
-  <div>
-    <span
-      class="sr-only"
-      role="status"
-      :aria-live="error ? 'assertive' : 'polite'"
+  <Transition
+    enter-active-class="transition duration-300 ease-out-back delay-500"
+    enter-from-class="scale-90 opacity-0 will-change-transform"
+    leave-active-class="transition ease-in"
+    leave-to-class="scale-90 opacity-0 will-change-transform"
+  >
+    <div
+      v-if="isLoaded"
+      class="flex flex-col items-end"
     >
-      {{ error ? 'Error calculating countdown' : 'Time until midnight UTC' }}
-    </span>
-    <time
-      class="tabular-nums"
-      :class="error ? 'text-red-500 dark:text-red-400' : ''"
-      :datetime="timeRemainingUntilReset"
-      :aria-label="error ? 'Error' : 'countdown timer'"
-    >
-      {{ error ? 'Error' : timeRemainingUntilReset }}
-    </time>
-    <ProgressBar
-      v-if="!error"
-      :value="progress"
-      :show-value="false"
-      class="mt-1 h-1.5"
-      :class="error ? 'opacity-50' : ''"
-      :pt="{
-        value: {
-          style: progressColor ? { backgroundColor: progressColor, transition: 'background-color 1s ease' } : undefined,
-        },
-      }"
-    />
-  </div>
+      <div>
+        <Icon
+          class="inline translate-y-[0.15em]"
+          size="16"
+          name="bxs:hourglass"
+        />Reset in:
+      </div>
+      <div>
+        <time
+          class="text-xl font-semibold tabular-nums"
+          :datetime="timeRemainingUntilReset"
+          aria-label="countdown timer"
+        >
+          {{ timeRemainingUntilReset }}
+        </time>
+        <ProgressBar
+          :value="progress"
+          :show-value="false"
+          class="mt-1 h-1.5"
+          :pt="{
+            value: {
+              style: progressColor ? { backgroundColor: progressColor, transition: 'background-color 1s ease' } : undefined,
+            },
+          }"
+        />
+      </div>
+    </div>
+  </Transition>
 </template>

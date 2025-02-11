@@ -99,6 +99,9 @@ export default <Partial<Config>>{
         mono: ['"Space Mono"', ...defaultTheme.fontFamily.mono],
         sans: ['"Space Grotesk"', ...defaultTheme.fontFamily.sans],
       },
+      transitionTimingFunction: {
+        'out-back': 'cubic-bezier(.34,1.56,.64,1)',
+      },
     },
     fontWeight: {
       /* eslint-disable perfectionist/sort-objects */
