@@ -153,7 +153,7 @@ const calculations = computed<ResourceCalculations>(() => {
   })
 
   return {
-    availableTime: dayjs.duration(availableGatheringSeconds.value * 1000).format('HH:mm:ss'),
+    availableTime: availableGatheringSeconds.value > 0 ? dayjs.duration(availableGatheringSeconds.value * 1000).format('HH:mm:ss') : '00:00:00',
     results,
     startTimes,
     timeUntilMidnight: dayjs.duration((availableGatheringSeconds.value + travelTimeTotal.value) * 1000).format('HH:mm:ss'),
@@ -170,7 +170,7 @@ function isMaxAmount(node: ResourceNode, amount: string) {
 }
 
 function normalizeNumber(number: number) {
-  return number.toLocaleString()
+  return number <= 0 ? '0' : number.toLocaleString()
 }
 
 const resourceCards = computed<ResourceCard[]>(() => {
@@ -368,8 +368,9 @@ defineExpose({
               <span
                 class="font-medium tabular-nums"
                 :class="{
-                  'text-yellow-500': !isMaxAmount(node, amount),
                   'text-green-500': isMaxAmount(node, amount),
+                  'text-yellow-500': amount !== '0' && !isMaxAmount(node, amount),
+                  'text-red-500': amount === '0',
                 }"
               >{{ amount }}</span>
             </li>
