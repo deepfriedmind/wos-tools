@@ -1,6 +1,8 @@
-Place test files in the same directory as the file being tested.
+Place test files in the same directory as the file being tested, except for pages and layouts.
 
 Use Vitest with `@nuxt/test-utils` for testing.
+
+Use `filename.nuxt.test.ts` when a Nuxt runtime environment is needed.
 
 Use `setup()` from `@nuxt/test-utils` in test files.
 
@@ -40,7 +42,7 @@ Test loading state transitions.
 
 Test PrimeVue component events.
 
-Verify state management with `pinia/testing`.
+Verify state management with `@pinia/testing`.
 
 Test component lifecycle hooks.
 
@@ -59,3 +61,5 @@ Mock composables with proper typing.
 Test error message displays.
 
 Verify cleanup on unmount.
+
+Run tests with `pnpm vitest run <filename>`.

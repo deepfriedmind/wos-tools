@@ -34,7 +34,7 @@ Implement API routes with `defineEventHandler` and zod validation.
 
 Type API responses with `ResT` generic in `useFetch`.
 
-Store global state in Pinia using `defineStore` and `storeToRefs`.
+Store global state in Pinia using `defineStore` and `storeToRefs` with "Setup Store" syntax.
 
 Use `computed` for derived state in components and stores.
 
@@ -67,3 +67,5 @@ Use `shallowRef` for large reactive objects.
 Create reusable transition components.
 
 Type component methods with `expose`.
+
+Run tests with `pnpm vitest run <filename>`.

@@ -30,28 +30,27 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 1. The units of information that make up Conventional Commits MUST NOT be treated as case sensitive by implementors, with the exception of BREAKING CHANGE which MUST be uppercase.
 1. BREAKING-CHANGE MUST be synonymous with BREAKING CHANGE, when used as a token in a footer.
 1. Use backticks for code or file names.
-1. Use these emojis for the different scopes: feat: ✨, fix: 🐛, docs: 📚, style: 🎨, refactor: ♻️, perf: ⚡, test: 🚨, chore: 🔧, chore-release: 🚀, chore-deps: 🔗, build: 📦, ci: 👷, security: 🔒, i18n: 🌐, breaking: 💥, config: ⚙️, add: ➕, remove: ➖.
+1. Use these emojis for the different scopes: feat: ✨, fix: 🐛, docs: 📚, refactor: ♻️, perf: ⚡, test: 🚨, chore: 🔧, chore-release: 🚀, chore-deps: 🔗, build: 📦, ci: 👷, security: 🔒, i18n: 🌐, breaking: 💥, config: ⚙️, add: ➕, remove: ➖.
 
 ### Default Devmoji Reference
 
-| Emoji                       | Devmoji Code      | Description                                                                                                       |
-| --------------------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------- |
-| ✨ `:sparkles:`             | `:feat:`          | **feat:** a new feature                                                                                           |
-| 🐛 `:bug:`                  | `:fix:`           | **fix:** a bug fix                                                                                                |
-| 📚 `:books:`                | `:docs:`          | **docs:** documentation only changes                                                                              |
-| 🎨 `:art:`                  | `:style:`         | **style:** changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc) |
-| ♻️ `:recycle:`              | `:refactor:`      | **refactor:** a code change that neither fixes a bug nor adds a feature                                           |
-| ⚡ `:zap:`                  | `:perf:`          | **perf:** a code change that improves performance                                                                 |
-| 🚨 `:rotating_light:`       | `:test:`          | **test:** adding missing or correcting existing tests                                                             |
-| 🔧 `:wrench:`               | `:chore:`         | **chore:** changes to the build process or auxiliary tools and libraries such as documentation generation         |
-| 🚀 `:rocket:`               | `:chore-release:` | **chore(release):** code deployment or publishing to external repositories                                        |
-| 🔗 `:link:`                 | `:chore-deps:`    | **chore(deps):** add or delete dependencies                                                                       |
-| 📦 `:package:`              | `:build:`         | **build:** changes related to build processes                                                                     |
-| 👷 `:construction_worker:`  | `:ci:`            | **ci:** updates to the continuous integration system                                                              |
-| 🚀 `:rocket:`               | `:release:`       | code deployment or publishing to external repositories                                                            |
-| 🔒 `:lock:`                 | `:security:`      | Fixing security issues                                                                                            |
-| 🌐 `:globe_with_meridians:` | `:i18n:`          | Internationalization and localization                                                                             |
-| 💥 `:boom:`                 | `:breaking:`      | Introducing breaking changes                                                                                      |
-| ⚙️ `:gear:`                 | `:config:`        | Changing configuration files                                                                                      |
-| ➕ `:heavy_plus_sign:`      | `:add:`           | add something                                                                                                     |
-| ➖ `:heavy_minus_sign:`     | `:remove:`        | remove something                                                                                                  |
+| Emoji                       | Devmoji Code      | Description                                                                                               |
+| --------------------------- | ----------------- | --------------------------------------------------------------------------------------------------------- |
+| ✨ `:sparkles:`             | `:feat:`          | **feat:** a new feature                                                                                   |
+| 🐛 `:bug:`                  | `:fix:`           | **fix:** a bug fix                                                                                        |
+| 📚 `:books:`                | `:docs:`          | **docs:** documentation only changes                                                                      |
+| ♻️ `:recycle:`              | `:refactor:`      | **refactor:** a code change that neither fixes a bug nor adds a feature                                   |
+| ⚡ `:zap:`                  | `:perf:`          | **perf:** a code change that improves performance                                                         |
+| 🚨 `:rotating_light:`       | `:test:`          | **test:** adding missing or correcting existing tests                                                     |
+| 🔧 `:wrench:`               | `:chore:`         | **chore:** changes to the build process or auxiliary tools and libraries such as documentation generation |
+| 🚀 `:rocket:`               | `:chore-release:` | **chore(release):** code deployment or publishing to external repositories                                |
+| 🔗 `:link:`                 | `:chore-deps:`    | **chore(deps):** add or delete dependencies                                                               |
+| 📦 `:package:`              | `:build:`         | **build:** changes related to build processes                                                             |
+| 👷 `:construction_worker:`  | `:ci:`            | **ci:** updates to the continuous integration system                                                      |
+| 🚀 `:rocket:`               | `:release:`       | code deployment or publishing to external repositories                                                    |
+| 🔒 `:lock:`                 | `:security:`      | Fixing security issues                                                                                    |
+| 🌐 `:globe_with_meridians:` | `:i18n:`          | Internationalization and localization                                                                     |
+| 💥 `:boom:`                 | `:breaking:`      | Introducing breaking changes                                                                              |
+| ⚙️ `:gear:`                 | `:config:`        | Changing configuration files                                                                              |
+| ➕ `:heavy_plus_sign:`      | `:add:`           | add something                                                                                             |
+| ➖ `:heavy_minus_sign:`     | `:remove:`        | remove something                                                                                          |
