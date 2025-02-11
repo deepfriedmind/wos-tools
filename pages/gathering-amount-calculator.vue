@@ -164,9 +164,9 @@ const calculations = computed<ResourceCalculations>(() => {
 })
 
 function isMaxAmount(node: ResourceNode, amount: string) {
-  const numericAmount = Number.parseInt(amount.replaceAll(/[,._\s]/g, ''))
+  const numericAmount = Number.parseInt(amount.replaceAll(/\D/g, ''))
 
-  return numericAmount === node.maxAmount
+  return Number.isNaN(numericAmount) ? true : numericAmount === node.maxAmount
 }
 
 function normalizeNumber(number: number) {
@@ -213,7 +213,7 @@ defineExpose({
 </script>
 
 <template>
-  <div class="animate-fadeinright rounded-3xl bg-surface-950/95 p-8 shadow-2xl shadow-blue-200 backdrop-blur-sm animate-once">
+  <div class="animate-fadeinright rounded-3xl bg-surface-950/95 p-8 shadow-2xl shadow-blue-200 backdrop-blur-md animate-once">
     <h2 class="mb-2 text-2xl font-medium">
       Gathering Amount Calculator
     </h2>
@@ -306,7 +306,7 @@ defineExpose({
           </div>
         </div>
 
-        <div class="flex gap-4">
+        <div class="flex items-center gap-4">
           <InputNumber
             v-model="travelTimeMinutes"
             :max="59"
@@ -329,21 +329,14 @@ defineExpose({
             suffix=" sec"
             @focus="onInputFocus"
           />
+
+          <div class="text-xs">
+            <p>Round trip: <span class="tabular-nums">{{ calculations.travelTimeTotal }}</span></p>
+            <p>Available gathering time: <span class="tabular-nums">{{ calculations.availableTime }}</span></p>
+          </div>
         </div>
       </div>
     </div>
-
-    <Divider type="dotted" />
-
-    <div>
-      <p>Travel time (round trip): <span class="tabular-nums">{{ calculations.travelTimeTotal }}</span></p>
-      <p>Available gathering time: <span class="tabular-nums">{{ calculations.availableTime }}</span></p>
-    </div>
-
-    <Divider
-      type="dotted"
-      class="mb-8"
-    />
 
     <div class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <Card
@@ -413,7 +406,8 @@ defineExpose({
       </ul>
       <template #footer>
         <p class="text-sm italic">
-          Based on the type of node you gather fastest. Times are in your local timezone: {{ calculations.timezone }} <span v-if="calculations.timezoneShort">({{ calculations.timezoneShort }})</span>
+          Based on the type of node you gather fastest.<br>
+          Times are in your local timezone: {{ calculations.timezone }} <span v-if="calculations.timezoneShort">({{ calculations.timezoneShort }})</span>
         </p>
       </template>
     </Panel>
