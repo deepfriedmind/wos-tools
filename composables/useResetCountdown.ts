@@ -4,6 +4,8 @@ interface CountdownReturn {
   timeRemainingUntilReset: Readonly<Ref<string>>
 }
 
+const DEBUG = false
+
 /**
  * Composable that provides a countdown timer to daily reset (UTC midnight).
  * Updates automatically every second and handles edge cases and errors.
@@ -32,36 +34,48 @@ interface CountdownReturn {
  */
 export default function useResetCountdown(): CountdownReturn {
   const dayjs = useDayjs()
-  const now = useNow({ interval: 1000 })
-  const timeRemainingUntilReset = ref('00:00:00')
-  const secondsUntilReset = ref(0)
+  const secondsUntilReset = ref(DEBUG ? 2.001 * 3600 : 0)
   const hasError = ref(false)
+  const timeRemainingUntilReset = computed(() => dayjs.duration(secondsUntilReset.value, 'seconds').format('HH:mm:ss'))
 
-  const calculateTimeUntilReset = () => {
-    try {
-      const currentTime = dayjs(now.value).utc()
-      const resetTime = currentTime.endOf('day')
-      const diff = resetTime.diff(currentTime)
-
-      if (diff < 0) {
-        hasError.value = true
-
-        return
+  if (DEBUG) {
+    // Debug mode - simple countdown from manual seconds
+    const secondsUntilResetOriginal = secondsUntilReset.value
+    useIntervalFn(() => {
+      if (secondsUntilReset.value > 0) {
+        secondsUntilReset.value--
       }
-
-      const duration = dayjs.duration(diff)
-      timeRemainingUntilReset.value = duration.format('HH:mm:ss')
-      secondsUntilReset.value = Math.floor(duration.asSeconds())
-      hasError.value = false
-    }
-    catch (error) {
-      if (error instanceof Error)
-        console.error('Error calculating time until reset:', error.message)
-      hasError.value = true
-    }
+      else {
+        secondsUntilReset.value = secondsUntilResetOriginal
+      }
+    }, 1000, { immediate: true })
   }
+  else {
+    // Normal mode - countdown to UTC midnight
+    const updateTime = () => {
+      try {
+        const currentTime = dayjs().utc()
+        const resetTime = currentTime.endOf('day')
+        const diff = resetTime.diff(currentTime)
 
-  watch(now, calculateTimeUntilReset, { immediate: true })
+        if (diff < 0) {
+          hasError.value = true
+
+          return
+        }
+
+        secondsUntilReset.value = Math.floor(dayjs.duration(diff).asSeconds())
+        hasError.value = false
+      }
+      catch (error) {
+        if (error instanceof Error)
+          console.error('Error calculating time until reset:', error.message)
+        hasError.value = true
+      }
+    }
+
+    useIntervalFn(updateTime, 1000, { immediate: true })
+  }
 
   return {
     error: readonly(hasError),
