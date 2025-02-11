@@ -83,12 +83,14 @@ export default <Partial<Config>>{
     container: {
       center: true,
       padding: {
-        '2xl': '5rem',
+        /* eslint-disable perfectionist/sort-objects */
         DEFAULT: '1rem',
-        lg: '3rem',
-        md: '2.5rem',
         sm: '2rem',
+        md: '2.5rem',
+        lg: '3rem',
         xl: '4rem',
+        '2xl': '5rem',
+        /* eslint-enable perfectionist/sort-objects */
       },
     },
     extend: {

@@ -1,9 +1,6 @@
 interface CountdownReturn {
-  /** Whether there was an error calculating the time */
   error: Readonly<Ref<boolean>>
-  /** Number of seconds until daily reset (UTC midnight) */
   secondsUntilReset: Readonly<Ref<number>>
-  /** Time until daily reset in HH:mm:ss format */
   timeRemainingUntilReset: Readonly<Ref<string>>
 }
 
