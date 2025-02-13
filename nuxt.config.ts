@@ -40,14 +40,16 @@ const ThemeConfiguration = definePreset(Aura, {
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: [
-    'dayjs-nuxt',
-    '@vueuse/nuxt',
-    '@primevue/nuxt-module',
-    '@nuxtjs/tailwindcss',
-    '@nuxt/test-utils/module',
-    '@nuxt/icon',
-    '@nuxt/fonts',
     '@nuxt/eslint',
+    '@nuxt/fonts',
+    '@nuxt/icon',
+    '@nuxt/test-utils/module',
+    '@nuxtjs/tailwindcss',
+    '@pinia/nuxt',
+    '@primevue/nuxt-module',
+    '@vueuse/nuxt',
+    'dayjs-nuxt',
+    'pinia-plugin-persistedstate/nuxt',
   ],
   imports: {
     dirs: ['~/stores'],
@@ -59,6 +61,10 @@ export default defineNuxtConfig({
     ],
   },
   devtools: { enabled: true },
+  css: [
+    'primeicons/primeicons.css',
+  ],
+  runtimeConfig: {
   compatibilityDate: '2025-01-08',
   typescript: {
     typeCheck: true,
@@ -87,6 +93,10 @@ export default defineNuxtConfig({
       ],
       scan: true,
     },
+  },
+  piniaPluginPersistedstate: {
+    key: 'wos-tools_%id',
+    storage: 'localStorage',
   },
   primevue: {
     options: {

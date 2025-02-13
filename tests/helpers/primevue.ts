@@ -1,25 +1,20 @@
+import type { MountingOptions } from '@vue/test-utils'
+import Button from 'primevue/button'
+import PrimeVue from 'primevue/config'
+import Popover from 'primevue/popover'
+import ToggleSwitch from 'primevue/toggleswitch'
 import { vi } from 'vitest'
-import { h } from 'vue'
+import type { VNode } from 'vue'
 
-type InputNumberInstance = InputNumberMethods & InputNumberProperties
-
-interface InputNumberMethods {
+interface InputNumberInstance {
   $emit: (event: string, ...arguments_: any[]) => void
-}
-
-interface InputNumberProperties {
   inputClass?: string
-  inputMode?: string
   max?: number
   maxFractionDigits?: number
   min?: number
-  minFractionDigits?: number
   modelValue?: number
   name?: string
-  showButtons?: boolean
-  size?: string
   step?: number
-  suffix?: string
 }
 
 export function mockPrimeVueComponents() {
@@ -40,7 +35,7 @@ export function mockPrimeVueComponents() {
         step: Number,
         suffix: String,
       },
-      render(this: InputNumberInstance): ReturnType<typeof h> {
+      render(this: InputNumberInstance): VNode {
         const displayValue = typeof this.modelValue === 'number' ?
             this.modelValue.toFixed(
               this.maxFractionDigits ?? (Number.isInteger(this.modelValue) ? 0 : 1),
@@ -53,7 +48,7 @@ export function mockPrimeVueComponents() {
           min: this.min,
           name: this.name,
           onFocus: (event: FocusEvent) => {
-            ;(event.target as HTMLInputElement).select?.()
+            (event.target as HTMLInputElement).select?.()
           },
           onInput: (event: Event) => {
             this.$emit('update:modelValue', Number((event.target as HTMLInputElement).value))
@@ -80,4 +75,18 @@ export function mockPrimeVueComponents() {
       template: '<div><slot name="header"></slot><slot name="title"></slot><slot name="content"></slot></div>',
     },
   }))
+}
+
+export function setupPrimeVue(config: Partial<MountingOptions<any>> = {}): Partial<MountingOptions<any>> {
+  return {
+    global: {
+      components: {
+        Button,
+        Popover,
+        ToggleSwitch,
+      },
+      plugins: [PrimeVue],
+      ...config.global,
+    },
+  }
 }
