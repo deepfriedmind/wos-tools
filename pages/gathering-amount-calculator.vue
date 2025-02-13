@@ -74,6 +74,48 @@ const DEFAULT_NODES: Record<string, ResourceNode> = {
 
 const resourceNodes = useLocalStorage<Record<string, ResourceNode>>(`${STORAGE_PREFIX}resource-nodes`, DEFAULT_NODES)
 
+const route = useRoute()
+const router = useRouter()
+
+const queryParameters = computed(() => {
+  const parameters: Record<string, string> = {}
+
+  for (const [key, node] of Object.entries(resourceNodes.value)) {
+    parameters[`${key.toLowerCase()}_boost`] = node.boostPercent.toString()
+    parameters[`${key.toLowerCase()}_skill`] = node.expeditionSkillLevel.toString()
+  }
+
+  return parameters
+})
+
+for (const [key, node] of Object.entries(resourceNodes.value)) {
+  const boostKey = `${key.toLowerCase()}_boost`
+  const skillLevelKey = `${key.toLowerCase()}_skill`
+
+  if (route.query[boostKey]) {
+    const boost = Number(route.query[boostKey])
+    if (!Number.isNaN(boost)) {
+      node.boostPercent = boost
+    }
+  }
+
+  if (route.query[skillLevelKey]) {
+    const level = Number(route.query[skillLevelKey])
+    if (level >= 1 && level <= 5) {
+      node.expeditionSkillLevel = level as 1 | 2 | 3 | 4 | 5
+    }
+  }
+}
+
+watch(resourceNodes, () => {
+  router.replace({
+    query: {
+      ...route.query,
+      ...queryParameters.value,
+    },
+  })
+}, { deep: true })
+
 const EXPEDITION_SKILL_OPTIONS: ExpeditionSkillOption[] = [
   { label: 'Lv. 1', level: 1, percentage: 5 },
   { label: 'Lv. 2', level: 2, percentage: 10 },
