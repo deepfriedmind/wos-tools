@@ -3,7 +3,7 @@ import { mount } from '@vue/test-utils'
 import PrimeVue from 'primevue/config'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import GatheringAmountCalc from '~/pages/gathering-amount-calculator.vue'
+import GatheringAmountCalculator from '~/pages/gathering-amount-calculator.vue'
 import { mockDayjs, mockFocusTrap, mockLocalStorage, mockResetCountdown } from '~/tests/helpers/mocks'
 import { mockPrimeVueComponents } from '~/tests/helpers/primevue'
 import type { ExposedProperties } from '~/types/gathering'
@@ -20,7 +20,7 @@ describe('gatheringAmountCalculator', () => {
     mockResetCountdown()
     mockLocalStorage()
 
-    wrapper = mount(GatheringAmountCalc, {
+    wrapper = mount(GatheringAmountCalculator, {
       global: {
         plugins: [PrimeVue],
         stubs: {

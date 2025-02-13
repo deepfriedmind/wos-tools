@@ -8,7 +8,7 @@ useHead({
   title: 'Gathering Amount Calculator',
 })
 
-const STORAGE_PREFIX = 'wos-gather-'
+const STORAGE_PREFIX = useRuntimeConfig().public.storagePrefix
 const BASE_TIME_SECONDS = 117_847 // 32:44:7.275
 const CITY_BONUS_PERCENT = 100
 const travelTimeMinutes = ref(1)
@@ -121,6 +121,8 @@ const fastestGatheredNode = computed(() => {
   return fastest
 })
 
+const { localSettings } = useLocalSettings()
+
 const calculations = computed<ResourceCalculations>(() => {
   const results = Object.values(resourceNodes.value).map(node => ({
     /* eslint-disable perfectionist/sort-objects */
@@ -142,13 +144,15 @@ const calculations = computed<ResourceCalculations>(() => {
   }
 
   const startTimes = Object.entries(gatherTimes).map(([label, time]) => {
-    const now = new Date()
-    const utcMidnight = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1))
-    const startTimeUTC = new Date(utcMidnight.getTime() - time * 1000)
+    const now = dayjs()
+    const utcMidnight = now.utc().add(1, 'day').startOf('day')
+    const startTimeUTC = utcMidnight.subtract(time, 'seconds').toDate()
 
     return {
       label,
-      time: startTimeUTC.toLocaleTimeString(undefined, { hour: 'numeric', minute: 'numeric' }),
+      time: localSettings.useUtcTime ?
+          dayjs(startTimeUTC).utc().format('HH:mm')
+        : startTimeUTC.toLocaleTimeString(undefined, { hour: 'numeric', minute: 'numeric' }),
     }
   })
 
@@ -157,8 +161,8 @@ const calculations = computed<ResourceCalculations>(() => {
     results,
     startTimes,
     timeUntilMidnight: dayjs.duration((availableGatheringSeconds.value + travelTimeTotal.value) * 1000).format('HH:mm:ss'),
-    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    timezoneShort: Intl.DateTimeFormat(undefined, { timeZoneName: 'short' }).formatToParts(new Date()).find(part => part.type === 'timeZoneName')?.value,
+    timezone: localSettings.useUtcTime ? 'UTC' : localSettings.timezone,
+    timezoneShort: localSettings.useUtcTime ? 'UTC' : localSettings.timezoneShort,
     travelTimeTotal: totalTravelTimeDuration.value.format('HH:mm:ss'),
   }
 })
@@ -406,10 +410,16 @@ defineExpose({
         </li>
       </ul>
       <template #footer>
-        <p class="text-sm italic">
-          Based on the type of node you gather fastest.<br>
-          Times are in your local timezone: {{ calculations.timezone }} <span v-if="calculations.timezoneShort">({{ calculations.timezoneShort }})</span>
-        </p>
+        <div>
+          <p class="mb-2 text-sm italic">
+            Based on the type of node you gather fastest.<br>
+            <ToggleSwitch
+              v-model="localSettings.useUtcTime"
+              class="-mr-1 origin-left translate-y-1.5 scale-75"
+              aria-label="Toggle between UTC and local time display"
+            />Times are in {{ calculations.timezoneShort }} <span v-if="!localSettings.useUtcTime">({{ calculations.timezone }})</span>
+          </p>
+        </div>
       </template>
     </Panel>
   </div>

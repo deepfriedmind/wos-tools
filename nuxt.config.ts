@@ -65,6 +65,10 @@ export default defineNuxtConfig({
     'primeicons/primeicons.css',
   ],
   runtimeConfig: {
+    public: {
+      storagePrefix: 'wos-tools_',
+    },
+  },
   compatibilityDate: '2025-01-08',
   typescript: {
     typeCheck: true,
