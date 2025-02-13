@@ -29,19 +29,48 @@ function toggle(event: MouseEvent) {
       ref="popover"
       class="mt-1 p-3"
     >
-      <div class="mb-2">
-        Show times in:
-      </div>
-      <div
-        data-test="settings-item"
-        class="flex gap-2"
-      >
-        <span>{{ localSettings.timezoneShort }}</span>
-        <ToggleSwitch
-          v-model="localSettings.useUtcTime"
-          aria-label="Toggle UTC time display"
+      <div class="space-y-4">
+        <div class="space-y-2">
+          <div>
+            Show times in:
+          </div>
+          <div
+            data-test="timezone-toggle"
+            class="flex gap-2"
+          >
+            <span>{{ localSettings.timezoneShort }}</span>
+            <ToggleSwitch
+              v-model="localSettings.useUtcTime"
+              aria-label="Toggle UTC time display"
+            />
+            <span>UTC</span>
+          </div>
+        </div>
+
+        <Divider
+          v-if="!localSettings.useUtcTime"
+          type="dotted"
         />
-        <span>UTC</span>
+
+        <div
+          v-if="!localSettings.useUtcTime"
+          class="space-y-2"
+        >
+          <div>
+            Time format:
+          </div>
+          <div
+            data-test="time-format-toggle"
+            class="flex gap-2"
+          >
+            <span>12h</span>
+            <ToggleSwitch
+              v-model="localSettings.use24HourFormat"
+              aria-label="Toggle 24-hour time format"
+            />
+            <span>24h</span>
+          </div>
+        </div>
       </div>
     </Popover>
   </div>

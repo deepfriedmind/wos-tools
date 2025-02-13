@@ -193,19 +193,21 @@ const calculations = computed<ResourceCalculations>(() => {
     return {
       label,
       time: localSettings.useUtcTime ?
-          dayjs(startTimeUTC).utc().format('HH:mm')
-        : startTimeUTC.toLocaleTimeString(undefined, { hour: 'numeric', minute: 'numeric' }),
+          dayjs(startTimeUTC).utc().format(TIME_FORMATS.SHORT_TIME)
+        : startTimeUTC.toLocaleTimeString(undefined, localSettings.use24HourFormat ?
+            TIME_DISPLAY_OPTIONS.HOUR_24
+            : TIME_DISPLAY_OPTIONS.HOUR_12),
     }
   })
 
   return {
-    availableTime: availableGatheringSeconds.value > 0 ? dayjs.duration(availableGatheringSeconds.value * 1000).format('HH:mm:ss') : '00:00:00',
+    availableTime: availableGatheringSeconds.value > 0 ? dayjs.duration(availableGatheringSeconds.value * 1000).format(TIME_FORMATS.LONG_TIME) : '00:00:00',
     results,
     startTimes,
-    timeUntilMidnight: dayjs.duration((availableGatheringSeconds.value + travelTimeTotal.value) * 1000).format('HH:mm:ss'),
+    timeUntilMidnight: dayjs.duration((availableGatheringSeconds.value + travelTimeTotal.value) * 1000).format(TIME_FORMATS.LONG_TIME),
     timezone: localSettings.useUtcTime ? 'UTC' : localSettings.timezone,
     timezoneShort: localSettings.useUtcTime ? 'UTC' : localSettings.timezoneShort,
-    travelTimeTotal: totalTravelTimeDuration.value.format('HH:mm:ss'),
+    travelTimeTotal: totalTravelTimeDuration.value.format(TIME_FORMATS.LONG_TIME),
   }
 })
 
@@ -396,7 +398,7 @@ defineExpose({
               :alt="node.rssName"
               width="52"
               height="52"
-              class="mx-auto"
+              class="mx-auto drop-shadow-lg"
             >
           </div>
         </template>

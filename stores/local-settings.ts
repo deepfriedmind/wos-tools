@@ -1,6 +1,7 @@
 interface LocalSettings {
   timezone: string
   timezoneShort: string
+  use24HourFormat: boolean
   useUtcTime: boolean
 }
 
@@ -11,6 +12,7 @@ export const useLocalSettings = defineStore('local-settings', () => {
       .formatToParts(new Date())
       .find(part => part.type === 'timeZoneName')
       ?.value ?? '',
+    use24HourFormat: true,
     useUtcTime: false,
   })
 

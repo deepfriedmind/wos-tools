@@ -36,7 +36,7 @@ export default function useResetCountdown(): CountdownReturn {
   const dayjs = useDayjs()
   const secondsUntilReset = ref(DEBUG ? 2.001 * 3600 : 0)
   const hasError = ref(false)
-  const timeRemainingUntilReset = computed(() => dayjs.duration(secondsUntilReset.value, 'seconds').format('HH:mm:ss'))
+  const timeRemainingUntilReset = computed(() => dayjs.duration(secondsUntilReset.value, 'seconds').format(TIME_FORMATS.LONG_TIME))
 
   if (DEBUG) {
     // Debug mode - simple countdown from manual seconds

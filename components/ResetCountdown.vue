@@ -34,7 +34,7 @@ const isLoaded = computed(() => !error.value && secondsUntilReset.value > 0)
   >
     <div
       v-if="isLoaded"
-      class="flex flex-col items-end"
+      class="flex flex-col items-end gap-0.5"
     >
       <div>
         <Icon
@@ -43,7 +43,7 @@ const isLoaded = computed(() => !error.value && secondsUntilReset.value > 0)
           name="bxs:hourglass"
         />Reset in:
       </div>
-      <div>
+      <div class="space-y-1">
         <time
           class="text-xl font-semibold tabular-nums"
           :datetime="timeRemainingUntilReset"
@@ -54,7 +54,7 @@ const isLoaded = computed(() => !error.value && secondsUntilReset.value > 0)
         <ProgressBar
           :value="progress"
           :show-value="false"
-          class="mt-1 h-1.5"
+          class="h-1.5"
           :pt="{
             value: {
               style: progressColor ? { backgroundColor: progressColor, transition: 'background-color 1s ease' } : undefined,
