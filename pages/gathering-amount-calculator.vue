@@ -8,6 +8,55 @@ useHead({
   title: 'Gathering Amount Calculator',
 })
 
+const DEFAULT_NODES: Record<string, ResourceNode> = {
+  /* eslint-disable perfectionist/sort-objects */
+  MEAT: {
+    boostPercent: 100,
+    expeditionSkillLevel: 5,
+    heroImagePath: '/img/hero-cloris.webp',
+    heroName: 'Cloris',
+    maxAmount: 14_000_000,
+    rssImagePath: '/img/rss-meat.webp',
+    rssName: 'Meat',
+  },
+  WOOD: {
+    boostPercent: 100,
+    expeditionSkillLevel: 5,
+    heroImagePath: '/img/hero-eugene.webp',
+    heroName: 'Eugene',
+    maxAmount: 14_000_000,
+    rssImagePath: '/img/rss-wood.webp',
+    rssName: 'Wood',
+  },
+  COAL: {
+    boostPercent: 100,
+    expeditionSkillLevel: 5,
+    heroImagePath: '/img/hero-charlie.webp',
+    heroName: 'Charlie',
+    maxAmount: 2_800_000,
+    rssImagePath: '/img/rss-coal.webp',
+    rssName: 'Coal',
+  },
+  IRON: {
+    boostPercent: 100,
+    expeditionSkillLevel: 5,
+    heroImagePath: '/img/hero-smith.webp',
+    heroName: 'Smith',
+    maxAmount: 700_000,
+    rssImagePath: '/img/rss-iron.webp',
+    rssName: 'Iron',
+  },
+  /* eslint-enable perfectionist/sort-objects */
+}
+
+const EXPEDITION_SKILL_OPTIONS: ExpeditionSkillOption[] = [
+  { label: 'Lv. 1', level: 1, percentage: 5 },
+  { label: 'Lv. 2', level: 2, percentage: 10 },
+  { label: 'Lv. 3', level: 3, percentage: 15 },
+  { label: 'Lv. 4', level: 4, percentage: 20 },
+  { label: 'Lv. 5', level: 5, percentage: 25 },
+]
+
 const STORAGE_PREFIX = useRuntimeConfig().public.storagePrefix
 const BASE_TIME_SECONDS = 117_847 // 32:44:7.275
 const CITY_BONUS_PERCENT = 100
@@ -30,47 +79,6 @@ const availableGatheringSeconds = computed(() => {
 
   return secondsUntilReset.value - travelTimeTotal.value
 })
-
-const DEFAULT_NODES: Record<string, ResourceNode> = {
-  /* eslint-disable perfectionist/sort-objects */
-  MEAT: {
-    boostPercent: 225.5,
-    expeditionSkillLevel: 5,
-    heroImagePath: '/img/hero-cloris.webp',
-    heroName: 'Cloris',
-    maxAmount: 14_000_000,
-    rssImagePath: '/img/rss-meat.webp',
-    rssName: 'Meat',
-  },
-  WOOD: {
-    boostPercent: 225.5,
-    expeditionSkillLevel: 5,
-    heroImagePath: '/img/hero-eugene.webp',
-    heroName: 'Eugene',
-    maxAmount: 14_000_000,
-    rssImagePath: '/img/rss-wood.webp',
-    rssName: 'Wood',
-  },
-  COAL: {
-    boostPercent: 225,
-    expeditionSkillLevel: 5,
-    heroImagePath: '/img/hero-charlie.webp',
-    heroName: 'Charlie',
-    maxAmount: 2_800_000,
-    rssImagePath: '/img/rss-coal.webp',
-    rssName: 'Coal',
-  },
-  IRON: {
-    boostPercent: 225,
-    expeditionSkillLevel: 5,
-    heroImagePath: '/img/hero-smith.webp',
-    heroName: 'Smith',
-    maxAmount: 700_000,
-    rssImagePath: '/img/rss-iron.webp',
-    rssName: 'Iron',
-  },
-  /* eslint-enable perfectionist/sort-objects */
-}
 
 const resourceNodes = useLocalStorage<Record<string, ResourceNode>>(`${STORAGE_PREFIX}resource-nodes`, DEFAULT_NODES)
 
@@ -102,7 +110,7 @@ for (const [key, node] of Object.entries(resourceNodes.value)) {
   if (route.query[skillLevelKey]) {
     const level = Number(route.query[skillLevelKey])
     if (level >= 1 && level <= 5) {
-      node.expeditionSkillLevel = level as 1 | 2 | 3 | 4 | 5
+      node.expeditionSkillLevel = level as ResourceNode['expeditionSkillLevel']
     }
   }
 }
@@ -115,14 +123,6 @@ watch(resourceNodes, () => {
     },
   })
 }, { deep: true })
-
-const EXPEDITION_SKILL_OPTIONS: ExpeditionSkillOption[] = [
-  { label: 'Lv. 1', level: 1, percentage: 5 },
-  { label: 'Lv. 2', level: 2, percentage: 10 },
-  { label: 'Lv. 3', level: 3, percentage: 15 },
-  { label: 'Lv. 4', level: 4, percentage: 20 },
-  { label: 'Lv. 5', level: 5, percentage: 25 },
-]
 
 function calculateGatherTime(node: ResourceNode, useExpeditionBoost = false, useCityBonus = false) {
   let totalBoostPercent = node.boostPercent
