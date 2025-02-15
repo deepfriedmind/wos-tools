@@ -9,6 +9,7 @@ useHead({
     lang="en"
     class="dark"
   >
+    <Toast />
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>

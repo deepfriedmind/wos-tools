@@ -384,6 +384,24 @@ defineExpose({
           </div>
         </div>
       </div>
+
+      <div>
+        <CopyButton
+          v-tooltip.top="'Copy the URL for these settings'"
+          success-class="text-green-500"
+          copy-string="currentUrl"
+          error-class="text-red-500"
+          variant="link"
+          rounded
+          class="ml-[-15px] mt-[-15px] size-12"
+        >
+          <Icon
+            name="fluent:copy-link-24-regular"
+            size="24"
+            aria-label="Save URL"
+          />
+        </CopyButton>
+      </div>
     </div>
 
     <div class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

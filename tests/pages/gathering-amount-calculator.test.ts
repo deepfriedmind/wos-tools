@@ -1,6 +1,7 @@
 import type { VueWrapper } from '@vue/test-utils'
 import { mount } from '@vue/test-utils'
 import PrimeVue from 'primevue/config'
+import ToastService from 'primevue/toastservice'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import GatheringAmountCalculator from '~/pages/gathering-amount-calculator.vue'
@@ -22,7 +23,7 @@ describe('gatheringAmountCalculator', () => {
 
     wrapper = mount(GatheringAmountCalculator, {
       global: {
-        plugins: [PrimeVue],
+        plugins: [PrimeVue, ToastService],
         stubs: {
           Divider: true,
           Icon: true,
