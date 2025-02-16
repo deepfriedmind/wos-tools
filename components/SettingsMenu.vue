@@ -39,7 +39,7 @@ function toggle(event: MouseEvent) {
             class="flex gap-2"
           >
             <span>{{ localSettings.timezoneShort }}</span>
-            <ToggleSwitch
+            <ToggleSwitchArrow
               v-model="localSettings.useUtcTime"
               aria-label="Toggle UTC time display"
             />
@@ -64,7 +64,7 @@ function toggle(event: MouseEvent) {
             class="flex gap-2"
           >
             <span>12h</span>
-            <ToggleSwitch
+            <ToggleSwitchArrow
               v-model="localSettings.use24HourFormat"
               aria-label="Toggle 24-hour time format"
             />
