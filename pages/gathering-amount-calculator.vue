@@ -477,6 +477,7 @@ defineExpose({
             Based on the type of node you gather fastest.<br>
             <ToggleSwitch
               v-model="localSettings.useUtcTime"
+              v-tooltip.top="`Switch to ${localSettings.useUtcTime ? 'local time' : 'UTC'}`"
               class="-mr-1 origin-left translate-y-1.5 scale-75"
               aria-label="Toggle between UTC and local time display"
             />Times are in {{ calculations.timezoneShort }} <span v-if="!localSettings.useUtcTime">({{ calculations.timezone }})</span>
