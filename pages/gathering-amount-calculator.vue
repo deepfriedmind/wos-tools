@@ -254,6 +254,8 @@ function onInputFocus(event: Event) {
   activate()
 }
 
+const showGatheringBonusDialog = ref(false)
+
 defineExpose({
   fastestGatheredNode,
   resourceCards,
@@ -274,7 +276,32 @@ defineExpose({
     >
       <div class="flex flex-col justify-around">
         <div class="text-lg">
-          Base gathering boosts:
+          Base gathering bonus:<Button
+            v-tooltip.top="'Where do I find this?'"
+            variant="text"
+            rounded
+            size="small"
+            icon="pi pi-question-circle"
+            aria-label="Where do I find this?"
+            @click="showGatheringBonusDialog = true"
+          />
+          <Dialog
+            v-model:visible="showGatheringBonusDialog"
+            modal
+            dismissable-mask
+            header="Where do I find my base gathering bonus?"
+          >
+            <div class="flex justify-center">
+              <Image
+                preview
+                class="overflow-hidden rounded-xl border border-surface"
+                src="/img/bonus-overview-gathering@2x.webp"
+                width="592"
+                height="1049"
+                alt="Screenshot of Bonus Overview screen in game"
+              />
+            </div>
+          </Dialog>
         </div>
         <div class="text-lg">
           Hero expedition skill levels:

@@ -34,6 +34,11 @@ const ThemeConfiguration = definePreset(Aura, {
       900: '#324964',
       950: '#202e3f',
     },
+    overlay: {
+      modal: {
+        padding: '2rem',
+      },
+    },
   },
 }) as Record<string, unknown>
 
