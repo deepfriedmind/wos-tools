@@ -16,8 +16,6 @@ Use destructuring syntax for props and emits with default values.
 
 Use interfaces for props and emits with JSDoc comments.
 
-Use `defineOptions({ inheritAttrs: false })`, `twMerge` and `v-bind="{ ...attributes, class: null }"` for components with default Tailwind classes.
-
 Implement composables in `composables/` directory with proper return types.
 
 Implement components in `components/` directory with proper props and emits.

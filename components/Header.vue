@@ -5,7 +5,7 @@
         to="/"
         class="inline-block"
       >
-        <Logo />
+        <Logo class="text-6xl" />
       </RouterLink>
       <div>
         <ResetCountdown />

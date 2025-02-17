@@ -1,32 +1,22 @@
 <script setup lang="ts">
 defineOptions({ inheritAttrs: false })
 
-const { as = 'h1' } = defineProps<Properties>()
-
-/**
- * Site logo
- */
-interface Properties {
-  /**
-   * Element or component to render the logo as
-   * @default 'h1'
-   */
+const { as = 'h1' } = defineProps<{
   as?: Component | string
-}
+}>()
 
 const attributes = useAttrs()
 const baseClasses = tw`
-  flex
+  inline-flex
   select-none
   items-center
   font-logo
-  text-6xl
   font-semibold
   tracking-tighter
   drop-shadow
   [text-shadow:0.0333em_0.033em_0_rgb(36_65_102_/_90%)]
 `
-const classes = computed(() => twMerge(baseClasses, useAttrs().class as string))
+const classes = computed(() => twMerge(baseClasses, attributes.class as string))
 </script>
 
 <template>

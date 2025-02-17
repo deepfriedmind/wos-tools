@@ -75,8 +75,20 @@ export default defineNuxtConfig({
     },
   },
   compatibilityDate: '2025-01-08',
+  nitro: {
+    runtimeConfig: {
+      public: {
+        buildTime: '',
+      },
+    },
+  },
   typescript: {
     typeCheck: true,
+  },
+  hooks: {
+    'nitro:build:before': (nitro) => {
+      nitro.options.runtimeConfig.public.buildTime = new Date().toISOString()
+    },
   },
   dayjs: {
     plugins: ['utc', 'duration', 'localizedFormat'],
