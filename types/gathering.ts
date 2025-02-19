@@ -41,4 +41,5 @@ export interface ExposedProperties {
 
 export interface ResourceCard extends ResourceNode {
   amounts: Record<BoostTypeValue, string>
+  startTimes: Record<BoostTypeValue, string>
 }

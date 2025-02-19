@@ -211,6 +211,22 @@ const calculations = computed<ResourceCalculations>(() => {
   }
 })
 
+function calculateLatestStartTime(node: ResourceNode, boostType: BoostTypeValue) {
+  const useExpeditionBoost = boostType === BOOST_TYPES.EXPEDITION || boostType === BOOST_TYPES.BOTH
+  const useCityBonus = boostType === BOOST_TYPES.CITY || boostType === BOOST_TYPES.BOTH
+  const gatherTime = calculateGatherTime(node, useExpeditionBoost, useCityBonus)
+
+  const now = dayjs()
+  const utcMidnight = now.utc().add(1, 'day').startOf('day')
+  const startTimeUTC = utcMidnight.subtract(gatherTime + travelTimeTotal.value, 'seconds').toDate()
+
+  return localSettings.useUtcTime ?
+      dayjs(startTimeUTC).utc().format(TIME_FORMATS.SHORT_TIME)
+    : startTimeUTC.toLocaleTimeString(undefined, localSettings.use24HourFormat ?
+        TIME_DISPLAY_OPTIONS.HOUR_24
+        : TIME_DISPLAY_OPTIONS.HOUR_12)
+}
+
 function isMaxAmount(node: ResourceNode, amount: string) {
   const numericAmount = Number.parseInt(amount.replaceAll(/\D/g, ''))
 
@@ -225,16 +241,22 @@ const resourceCards = computed<ResourceCard[]>(() => {
   const nodes = Object.values(resourceNodes.value)
 
   return nodes.map(node => ({
+    /* eslint-disable perfectionist/sort-objects */
     ...node,
     amounts: {
-      /* eslint-disable perfectionist/sort-objects */
       [BOOST_TYPES.NONE]: normalizeNumber(calculateMaxResources(node)),
       [BOOST_TYPES.EXPEDITION]: normalizeNumber(calculateMaxResources(node, true, false)),
       [BOOST_TYPES.CITY]: normalizeNumber(calculateMaxResources(node, false, true)),
       [BOOST_TYPES.BOTH]: normalizeNumber(calculateMaxResources(node, true, true)),
-      /* eslint-enable perfectionist/sort-objects */
+    } as Record<BoostTypeValue, string>,
+    startTimes: {
+      [BOOST_TYPES.NONE]: calculateLatestStartTime(node, BOOST_TYPES.NONE),
+      [BOOST_TYPES.EXPEDITION]: calculateLatestStartTime(node, BOOST_TYPES.EXPEDITION),
+      [BOOST_TYPES.CITY]: calculateLatestStartTime(node, BOOST_TYPES.CITY),
+      [BOOST_TYPES.BOTH]: calculateLatestStartTime(node, BOOST_TYPES.BOTH),
     } as Record<BoostTypeValue, string>,
   }))
+  /* eslint-enable perfectionist/sort-objects */
 })
 
 function selectOnFocus(event: Event) {
@@ -431,7 +453,7 @@ defineExpose({
       </div>
     </div>
 
-    <div class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="mb-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
       <Card
         v-for="node in resourceCards"
         :key="node.rssName"
@@ -459,6 +481,10 @@ defineExpose({
             >
               <span class="text-sm">{{ label }}:</span>
               <span
+                v-tooltip.top="{
+                  value: isMaxAmount(node, amount) ? `Start before ${node.startTimes[label]} (${calculations.timezoneShort})` : undefined,
+                  pt: { root: 'max-w-none ', text: 'whitespace-nowrap text-sm' },
+                }"
                 class="font-medium tabular-nums"
                 :class="{
                   'text-green-500': isMaxAmount(node, amount),
