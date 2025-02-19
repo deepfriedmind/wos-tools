@@ -34,7 +34,7 @@ const isLoaded = computed(() => !error.value && secondsUntilReset.value > 0)
   >
     <div
       v-if="isLoaded"
-      class="flex flex-col items-end gap-0.5"
+      class="flex flex-col items-end gap-2.5 leading-none"
     >
       <div>
         <Icon
@@ -43,25 +43,23 @@ const isLoaded = computed(() => !error.value && secondsUntilReset.value > 0)
           name="bxs:hourglass"
         />Reset in:
       </div>
-      <div class="space-y-1">
-        <time
-          class="text-xl font-semibold tabular-nums"
-          :datetime="timeRemainingUntilReset"
-          aria-label="countdown timer"
-        >
-          {{ timeRemainingUntilReset }}
-        </time>
-        <ProgressBar
-          :value="progress"
-          :show-value="false"
-          class="h-1.5"
-          :pt="{
-            value: {
-              style: progressColor ? { backgroundColor: progressColor, transition: 'background-color 1s ease' } : undefined,
-            },
-          }"
-        />
-      </div>
+      <time
+        class="text-xl/none font-semibold tabular-nums"
+        :datetime="timeRemainingUntilReset"
+        aria-label="countdown timer"
+      >
+        {{ timeRemainingUntilReset }}
+      </time>
+      <ProgressBar
+        :value="progress"
+        :show-value="false"
+        class="h-1.5 w-full"
+        :pt="{
+          value: {
+            style: progressColor ? { backgroundColor: progressColor, transition: 'background-color 1s ease' } : undefined,
+          },
+        }"
+      />
     </div>
   </Transition>
 </template>

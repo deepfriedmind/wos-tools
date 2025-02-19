@@ -10,7 +10,7 @@ function toggle(event: MouseEvent) {
 </script>
 
 <template>
-  <div class="flex justify-end pr-6 pt-2 xl:pr-12 2xl:pr-2">
+  <div class="flex justify-end">
     <Button
       severity="contrast"
       size="large"

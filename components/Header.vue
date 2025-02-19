@@ -1,15 +1,27 @@
+<script setup lang="ts">
+const { isScrolled, shouldHideHeader } = useScrollHeader()
+</script>
+
 <template>
-  <header class="mb-8">
-    <div class="mb-4 flex items-center justify-between">
-      <RouterLink
-        to="/"
-        class="inline-block"
-      >
-        <Logo class="text-6xl" />
-      </RouterLink>
-      <div>
+  <header
+    class="sticky top-0 z-10 transition-all will-change-transform"
+    :class="{
+      'bg-surface-950/95 pb-8 shadow-md backdrop-blur-md': isScrolled,
+      '-translate-y-full': shouldHideHeader,
+    }"
+  >
+    <nav class="space-y-8 px-8 pt-8 2xl:container xl:px-16">
+      <SettingsMenu />
+      <div class="flex items-end justify-between">
+        <RouterLink
+          to="/"
+          class="-mb-1.5 inline-block"
+          aria-label="Home"
+        >
+          <Logo class="text-6xl/none" />
+        </RouterLink>
         <ResetCountdown />
       </div>
-    </div>
+    </nav>
   </header>
 </template>
