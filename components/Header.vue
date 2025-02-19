@@ -10,7 +10,7 @@ const { isScrolled, shouldHideHeader } = useScrollHeader()
       '-translate-y-full': shouldHideHeader,
     }"
   >
-    <nav class="space-y-8 px-8 pt-8 2xl:container xl:px-16">
+    <nav class="space-y-5 px-8 pt-8 2xl:container xl:px-16">
       <SettingsMenu />
       <div class="flex items-end justify-between">
         <RouterLink

@@ -18,7 +18,7 @@ function toggle(event: MouseEvent) {
       icon="pi pi-cog"
       aria-haspopup="true"
       aria-controls="settings_menu"
-      class="mr-[-3px] p-2 xl:-mr-px"
+      class="-mr-3 -mt-3 p-2"
       rounded
       aria-label="Settings"
       variant="text"

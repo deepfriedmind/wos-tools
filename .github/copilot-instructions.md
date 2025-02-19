@@ -8,7 +8,7 @@ Use best practices and patterns for Nuxt 3 with Vue 3, TypeScript, Tailwind CSS,
 
 Don't suggest code that is not idiomatic for Nuxt 3, Vue 3, TypeScript, Tailwind CSS, or PrimeVue.
 
-Don't add imports for anything that is auto-imported via Nuxt.
+Don't add imports for anything that is auto-imported via Nuxt, e.g. from `vue`, `vue-router`, `@vueuse`, `pinia`, `primevue`, `dayjs` etc.
 
 Use `<script setup lang="ts">` with `defineProps` and `defineEmits`.
 

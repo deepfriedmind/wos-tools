@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "check": "pnpm type-check && pnpm lint && pnpm vitest run && pnpm build",
+    "check": "pnpm lint:fix && pnpm type-check && pnpm vitest run && pnpm build",
     "coverage": "vitest run --coverage",
     "dev": "nuxt dev",
     "generate": "nuxt generate",

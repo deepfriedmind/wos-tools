@@ -414,7 +414,7 @@ defineExpose({
 
       <div>
         <CopyButton
-          v-tooltip.top="'Copy the URL for these settings'"
+          v-tooltip.top="'Copy link to current settings'"
           success-class="text-green-500"
           copy-string="currentUrl"
           error-class="text-red-500"
@@ -480,8 +480,9 @@ defineExpose({
       <template #header>
         <div class="flex items-center gap-2">
           <Icon
-            name="flat-color-icons:info"
+            name="material-symbols:info-outline-rounded"
             size="20"
+            class="text-primary"
           />
           <h4 class="mr-1 text-lg font-bold">
             At what time should I start gathering to automatically finish shortly <em>after</em> reset?

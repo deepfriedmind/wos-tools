@@ -5,7 +5,7 @@ const { as = 'h1' } = defineProps<{
   as?: Component | string
 }>()
 
-const attributes = useAttrs()
+const attributes: Record<string, unknown> = useAttrs()
 const baseClasses = tw`
   inline-flex
   select-none

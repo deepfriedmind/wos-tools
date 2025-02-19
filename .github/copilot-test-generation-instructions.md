@@ -1,8 +1,10 @@
-Place test files in the same directory as the file being tested, except for pages and layouts.
+Place test files in the same directory as the file being tested (co-located), except for `/pages` and `/layouts`, which should be placed in their respective directories in `/tests`.
+
+Put reusable mocks in `tests/helpers/mocks.ts`.
+
+Put PrimeVue component mocks in `tests/helpers/primevue.ts`.
 
 Use Vitest with `@nuxt/test-utils` for testing.
-
-Use `filename.nuxt.test.ts` when a Nuxt runtime environment is needed.
 
 Use `setup()` from `@nuxt/test-utils` in test files.
 
