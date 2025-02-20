@@ -10,41 +10,69 @@ interface RallyComposition {
   total: number
 }
 
+interface Settings {
+  deployment: number
+  infantryPercent: number
+  lancersPercent: number
+  marksmenPercent: number
+  rallyCount: number
+  rallyOptions: Array<{ value: number }>
+  snowApe: {
+    enabled: boolean
+    level: number
+  }
+  totalMarksmen: number
+  useDeploymentBoostI: boolean
+  useDeploymentBoostII: boolean
+}
+
 const route = useRoute()
 const router = useRouter()
 
-const totalMarksmen = ref(100_000)
-const squadDeploymentCapacity = ref(100_000)
-const rallyCount = ref(Math.min(Math.max(Number(route.query.rallies) || 6, 1), 6))
-const rallyOptions = Array.from({ length: 6 }, (_, index) => ({ value: index + 1 }))
+const STORAGE_PREFIX = useRuntimeConfig().public.storagePrefix
 
-const marksmenPercent = ref(69)
-const lancersPercent = ref(19)
-const infantryPercent = ref(12)
+const settings = useLocalStorage<Settings>(`${STORAGE_PREFIX}bear-rally-settings`, {
+  deployment: 100_000,
+  infantryPercent: 12,
+  lancersPercent: 19,
+  marksmenPercent: 69,
+  rallyCount: Math.min(Math.max(Number(route.query.rallies) || 6, 1), 6),
+  rallyOptions: Array.from({ length: 6 }, (_, index) => ({ value: index + 1 })),
+  snowApe: {
+    enabled: true,
+    level: 1,
+  },
+  totalMarksmen: 100_000,
+  useDeploymentBoostI: false,
+  useDeploymentBoostII: false,
+})
 
 // Computed percentages as decimals
-const MARKSMEN_PERCENT = computed(() => marksmenPercent.value / 100)
-const LANCERS_PERCENT = computed(() => lancersPercent.value / 100)
-const INFANTRY_PERCENT = computed(() => infantryPercent.value / 100)
+const MARKSMEN_PERCENT = computed(() => settings.value.marksmenPercent / 100)
+const LANCERS_PERCENT = computed(() => settings.value.lancersPercent / 100)
+const INFANTRY_PERCENT = computed(() => settings.value.infantryPercent / 100)
 
+const formatNumber = (number: number) => new Intl.NumberFormat().format(number)
+
+// Load from URL params if present
 if (route.query.marksmen) {
   const amount = Number(route.query.marksmen)
   if (!Number.isNaN(amount)) {
-    totalMarksmen.value = amount
+    settings.value.totalMarksmen = amount
   }
 }
 
 if (route.query.deployment) {
   const amount = Number(route.query.deployment)
   if (!Number.isNaN(amount)) {
-    squadDeploymentCapacity.value = amount
+    settings.value.deployment = amount
   }
 }
 
 if (route.query.rallies) {
   const amount = Number(route.query.rallies)
   if (!Number.isNaN(amount)) {
-    rallyCount.value = amount
+    settings.value.rallyCount = amount
   }
 }
 
@@ -54,28 +82,89 @@ if (route.query.marksmenPercent && route.query.lancersPercent && route.query.inf
   const lancersPercentValue = Number(route.query.lancersPercent)
   const infantryPercentValue = Number(route.query.infantryPercent)
   if (!Number.isNaN(marksmenPercentValue) && !Number.isNaN(lancersPercentValue) && !Number.isNaN(infantryPercentValue)) {
-    marksmenPercent.value = marksmenPercentValue
-    lancersPercent.value = lancersPercentValue
-    infantryPercent.value = infantryPercentValue
+    settings.value.marksmenPercent = marksmenPercentValue
+    settings.value.lancersPercent = lancersPercentValue
+    settings.value.infantryPercent = infantryPercentValue
   }
 }
 
-// Also watch and save percentages in URL
-watch([totalMarksmen, squadDeploymentCapacity, rallyCount, marksmenPercent, lancersPercent, infantryPercent], () => {
-  router.replace({
-    query: {
-      deployment: squadDeploymentCapacity.value.toString(),
-      infantryPercent: infantryPercent.value.toString(),
-      lancersPercent: lancersPercent.value.toString(),
-      marksmen: totalMarksmen.value.toString(),
-      marksmenPercent: marksmenPercent.value.toString(),
-      rallies: rallyCount.value.toString(),
-    },
-  })
+// Handle URL params for deployment boosts
+if (route.query.deploymentBoostI === '1') {
+  settings.value.useDeploymentBoostI = true
+  settings.value.useDeploymentBoostII = false
+}
+
+if (route.query.deploymentBoostII === '1') {
+  settings.value.useDeploymentBoostII = true
+  settings.value.useDeploymentBoostI = false
+}
+
+// Watch deployment boosts to ensure mutual exclusivity
+watch(() => settings.value.useDeploymentBoostI, (newValue) => {
+  if (newValue && settings.value.useDeploymentBoostII)
+    settings.value.useDeploymentBoostII = false
 })
 
+watch(() => settings.value.useDeploymentBoostII, (newValue) => {
+  if (newValue && settings.value.useDeploymentBoostI)
+    settings.value.useDeploymentBoostI = false
+})
+
+if (route.query.snowApe === '0') {
+  settings.value.snowApe.enabled = false
+}
+
+if (route.query.snowApeLevel) {
+  const level = Number(route.query.snowApeLevel)
+  if (!Number.isNaN(level) && level >= 1 && level <= 10) {
+    settings.value.snowApe.level = level
+  }
+}
+
+const SNOW_APE_LEVELS = Array.from({ length: 10 }, (_, index) => ({
+  bonus: (index + 1) * 1500,
+  label: `Lv. ${index + 1} (+${formatNumber((index + 1) * 1500)})`,
+  value: index + 1,
+}))
+
+const effectiveCapacity = computed(() => {
+  let capacity = settings.value.deployment
+
+  // Apply deployment boosts if enabled
+  if (settings.value.useDeploymentBoostI)
+    capacity *= 1.1
+  else if (settings.value.useDeploymentBoostII)
+    capacity *= 1.2
+
+  // Apply Snow Ape bonus if enabled
+  if (settings.value.snowApe.enabled) {
+    const { bonus } = SNOW_APE_LEVELS[settings.value.snowApe.level - 1]
+    capacity += bonus
+  }
+
+  return Math.floor(capacity)
+})
+
+// Watch settings and update URL
+watch(settings, () => {
+  router.replace({
+    query: {
+      deployment: settings.value.deployment.toString(),
+      deploymentBoostI: settings.value.useDeploymentBoostI ? '1' : '0',
+      deploymentBoostII: settings.value.useDeploymentBoostII ? '1' : '0',
+      infantryPercent: settings.value.infantryPercent.toString(),
+      lancersPercent: settings.value.lancersPercent.toString(),
+      marksmen: settings.value.totalMarksmen.toString(),
+      marksmenPercent: settings.value.marksmenPercent.toString(),
+      rallies: settings.value.rallyCount.toString(),
+      snowApe: settings.value.snowApe.enabled ? '1' : '0',
+      snowApeLevel: settings.value.snowApe.level.toString(),
+    },
+  })
+}, { deep: true })
+
 const rallyLeader = computed<RallyComposition>(() => {
-  const total = squadDeploymentCapacity.value
+  const total = effectiveCapacity.value
 
   return {
     infantry: Math.floor(total * INFANTRY_PERCENT.value),
@@ -85,9 +174,9 @@ const rallyLeader = computed<RallyComposition>(() => {
   }
 })
 
-const remainingMarksmen = computed(() => totalMarksmen.value - rallyLeader.value.marksmen)
+const remainingMarksmen = computed(() => settings.value.totalMarksmen - rallyLeader.value.marksmen)
 const joiningRallyComposition = computed<RallyComposition>(() => {
-  const marksmenPerRally = Math.floor(remainingMarksmen.value / rallyCount.value)
+  const marksmenPerRally = Math.floor(remainingMarksmen.value / settings.value.rallyCount)
   const total = Math.floor(marksmenPerRally / MARKSMEN_PERCENT.value)
 
   return {
@@ -101,35 +190,33 @@ const joiningRallyComposition = computed<RallyComposition>(() => {
 // Total troops composition (rally leader + joining rallies)
 const totalComposition = computed<RallyComposition>(() => {
   // Calculate total troops based on rally leader plus joining rallies
-  const infantry = rallyLeader.value.infantry + (joiningRallyComposition.value.infantry * rallyCount.value)
-  const lancers = rallyLeader.value.lancers + (joiningRallyComposition.value.lancers * rallyCount.value)
-  const marksmen = rallyLeader.value.marksmen + (joiningRallyComposition.value.marksmen * rallyCount.value)
+  const infantry = rallyLeader.value.infantry + (joiningRallyComposition.value.infantry * settings.value.rallyCount)
+  const lancers = rallyLeader.value.lancers + (joiningRallyComposition.value.lancers * settings.value.rallyCount)
+  const marksmen = rallyLeader.value.marksmen + (joiningRallyComposition.value.marksmen * settings.value.rallyCount)
   const total = infantry + lancers + marksmen
 
   return { infantry, lancers, marksmen, total }
 })
 
-const formatNumber = (number: number) => new Intl.NumberFormat().format(number)
-
 // Troop type distribution configuration
 const troopInputs = [
-  [infantryPercent, 'Infantry'],
-  [lancersPercent, 'Lancers'],
-  [marksmenPercent, 'Marksmen'],
+  ['infantryPercent', 'Infantry'],
+  ['lancersPercent', 'Lancers'],
+  ['marksmenPercent', 'Marksmen'],
 ] as const
 
-const totalPercentage = computed(() => infantryPercent.value + lancersPercent.value + marksmenPercent.value)
+const totalPercentage = computed(() => settings.value.infantryPercent + settings.value.lancersPercent + settings.value.marksmenPercent)
 const isTotalValid = computed(() => totalPercentage.value === 100)
 const isMarksmenHighest = computed(() => {
-  const currentMarksmenPercent = marksmenPercent.value
+  const currentMarksmenPercent = settings.value.marksmenPercent
 
-  return currentMarksmenPercent > infantryPercent.value && currentMarksmenPercent > lancersPercent.value
+  return currentMarksmenPercent > settings.value.infantryPercent && currentMarksmenPercent > settings.value.lancersPercent
 })
 
 const rallyLeaderRows = computed(() => [
-  { label: `Infantry (${infantryPercent.value}%):`, value: rallyLeader.value.infantry },
-  { label: `Lancers (${lancersPercent.value}%):`, value: rallyLeader.value.lancers },
-  { label: `Marksmen (${marksmenPercent.value}%):`, value: rallyLeader.value.marksmen },
+  { label: `Infantry (${settings.value.infantryPercent}%):`, value: rallyLeader.value.infantry },
+  { label: `Lancers (${settings.value.lancersPercent}%):`, value: rallyLeader.value.lancers },
+  { label: `Marksmen (${settings.value.marksmenPercent}%):`, value: rallyLeader.value.marksmen },
 ])
 
 const joiningRallySections = computed(() => {
@@ -146,14 +233,14 @@ const joiningRallySections = computed(() => {
   ]
 
   // Only show total joining rallies section if there's more than 1 rally
-  if (rallyCount.value > 1) {
+  if (settings.value.rallyCount > 1) {
     sections.push({
-      title: `All ${rallyCount.value} joining rallies`,
+      title: `All ${settings.value.rallyCount} joining rallies`,
       values: {
-        infantry: joiningRallyComposition.value.infantry * rallyCount.value,
-        lancers: joiningRallyComposition.value.lancers * rallyCount.value,
-        marksmen: joiningRallyComposition.value.marksmen * rallyCount.value,
-        total: joiningRallyComposition.value.total * rallyCount.value,
+        infantry: joiningRallyComposition.value.infantry * settings.value.rallyCount,
+        lancers: joiningRallyComposition.value.lancers * settings.value.rallyCount,
+        marksmen: joiningRallyComposition.value.marksmen * settings.value.rallyCount,
+        total: joiningRallyComposition.value.total * settings.value.rallyCount,
       },
     })
   }
@@ -248,7 +335,7 @@ function handleBearClick() {
             class="w-72 text-lg"
           >Total marksmen (highest tier):</label>
           <InputNumber
-            v-model="totalMarksmen"
+            v-model="settings.totalMarksmen"
             input-id="totalMarksmen"
             :max-fraction-digits="0"
             :min="1"
@@ -259,49 +346,127 @@ function handleBearClick() {
             size="large"
           />
         </div>
+
         <div class="flex items-center gap-4">
           <label
             for="squadDeploymentCapacity"
             class="w-72 text-lg"
           >Squad deployment capacity:</label>
-          <InputNumber
-            v-model="squadDeploymentCapacity"
-            input-id="squadDeploymentCapacity"
-            :max-fraction-digits="0"
-            :min="1"
-            class="w-36"
-            fluid
-            input-class="tabular-nums"
-            show-buttons
-            size="large"
-          />
+          <div class="flex items-center gap-4">
+            <InputNumber
+              v-model="settings.deployment"
+              input-id="squadDeploymentCapacity"
+              :max-fraction-digits="0"
+              :min="1"
+              class="w-36"
+              fluid
+              input-class="tabular-nums"
+              show-buttons
+              size="large"
+            />
+          </div>
         </div>
+
+        <Fieldset
+          legend="Deployment capacity boosts"
+          toggleable
+          :collapsed="!settings.snowApe.enabled && !settings.useDeploymentBoostI && !settings.useDeploymentBoostII"
+        >
+          <div class="flex items-center justify-between gap-4">
+            <div class="space-y-8">
+              <div class="flex min-h-16 items-center gap-4">
+                <ToggleSwitch
+                  v-model="settings.snowApe.enabled"
+                  input-id="useSnowApe"
+                />
+                <label
+                  for="useSnowApe"
+                  class="cursor-pointer w-[213px]"
+                >Use Snow Ape skill</label>
+                <IftaLabel v-if="settings.snowApe.enabled">
+                  <Select
+                    v-model="settings.snowApe.level"
+                    :options="SNOW_APE_LEVELS"
+                    option-label="label"
+                    option-value="value"
+                    label-id="snowApeLevel"
+                  />
+                  <label
+                    for="snowApeLevel"
+                    class="font-bold"
+                  >Skill level</label>
+                </IftaLabel>
+              </div>
+              <div class="flex items-center gap-4">
+                <div class="flex items-center gap-4">
+                  <ToggleSwitch
+                    v-model="settings.useDeploymentBoostI"
+                    input-id="deploymentBoostI"
+                    class="min-w-10"
+                  />
+                  <label
+                    for="deploymentBoostI"
+                    class="cursor-pointer"
+                  >Use Deployment Capacity Boost I <span class="align-text-bottom text-sm">(+10%)</span></label>
+                </div>
+                <div class="flex items-center gap-4">
+                  <ToggleSwitch
+                    v-model="settings.useDeploymentBoostII"
+                    input-id="deploymentBoostII"
+                    class="min-w-10"
+                  />
+                  <label
+                    for="deploymentBoostII"
+                    class="cursor-pointer"
+                  >Use Deployment Capacity Boost II <span class="align-text-bottom text-sm">(+20%)</span>
+                    <Button
+                      v-tooltip.top="'Applied to base capacity. Only one City Bonus can be used at a time.'"
+                      class="cursor-help"
+                      variant="text"
+                      icon="pi pi-info-circle"
+                      aria-label="Applied to base capacity. Only one City Bonus can be used at a time.'"
+                      rounded
+                    />
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div
+              v-if="settings.snowApe.enabled || settings.useDeploymentBoostI || settings.useDeploymentBoostII"
+              class="font-medium tabular-nums xl:text-lg"
+            >
+              {{ formatNumber(effectiveCapacity) }} total capacity
+            </div>
+          </div>
+        </Fieldset>
+
         <div class="flex items-center gap-4">
           <label
             for="rallyCount"
             class="w-72 text-lg"
           >Number of joining rallies:</label>
-          <Dropdown
-            v-model="rallyCount"
+          <Select
+            v-model="settings.rallyCount"
             label-id="rallyCount"
-            :options="rallyOptions"
+            :options="settings.rallyOptions"
             option-label="value"
             option-value="value"
           />
         </div>
+
         <div class="items-center gap-4 lg:flex">
           <div class="w-72 text-lg max-lg:mb-4">
             Troop type distribution %:
           </div>
           <div class="flex justify-start gap-4">
             <div
-              v-for="[percent, label] in troopInputs"
-              :key="label"
+              v-for="[key, label] in troopInputs"
+              :key="key"
               class="flex justify-start gap-4"
             >
               <IftaLabel>
                 <InputNumber
-                  v-model="percent.value"
+                  v-model="settings[key]"
                   :max-fraction-digits="0"
                   :max="100"
                   :min="0"
