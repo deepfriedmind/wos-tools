@@ -131,6 +131,7 @@ export default withNuxt(
           singleline: 1,
         },
       ],
+      'vue/no-multiple-template-root': 'off',
     },
   },
   {
