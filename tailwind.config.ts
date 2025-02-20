@@ -94,10 +94,29 @@ export default <Partial<Config>>{
       },
     },
     extend: {
+      animation: {
+        shake: 'shake 0.82s cubic-bezier(.36,.07,.19,.97) both',
+      },
       fontFamily: {
         logo: ['Atma', ...defaultTheme.fontFamily.sans],
         mono: ['"Space Mono"', ...defaultTheme.fontFamily.mono],
         sans: ['"Space Grotesk"', ...defaultTheme.fontFamily.sans],
+      },
+      keyframes: {
+        shake: {
+          '10%, 90%': {
+            transform: 'scale(1.1) translate3d(-1px, 0, 0)',
+          },
+          '20%, 80%': {
+            transform: 'scale(1.1) translate3d(2px, 0, 0)',
+          },
+          '30%, 50%, 70%': {
+            transform: 'scale(1.1) translate3d(-4px, 0, 0)',
+          },
+          '40%, 60%': {
+            transform: 'scale(1.1) translate3d(4px, 0, 0)',
+          },
+        },
       },
       transitionTimingFunction: {
         'out-back': 'cubic-bezier(.34,1.56,.64,1)',

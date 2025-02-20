@@ -342,16 +342,18 @@ defineExpose({
             <IftaLabel>
               <InputNumber
                 v-model="node.boostPercent"
-                :name="node.rssName"
-                :min="0"
-                :step="0.5"
-                :min-fraction-digits="0"
                 :max-fraction-digits="1"
-                input-class="w-32"
+                :min-fraction-digits="0"
+                :min="0"
+                :name="node.rssName"
+                :step="0.5"
+                class="w-32"
+                fluid
+                input-class="tabular-nums"
+                input-mode="decimal"
                 show-buttons
                 size="large"
                 suffix="%"
-                input-mode="decimal"
                 @focus="onInputFocus"
               />
               <label
@@ -406,27 +408,28 @@ defineExpose({
         <div class="flex items-center gap-4">
           <InputNumber
             v-model="travelTimeMinutes"
+            fluid
             :max="59"
             :min="0"
             :step="1"
-            input-class="w-28"
+            class="w-28"
             show-buttons
             size="large"
             suffix=" min"
             @focus="onInputFocus"
           />
           <InputNumber
-            v-model="travelTimeSeconds"
             :max="59"
             :min="0"
             :step="1"
-            input-class="w-28"
+            class="w-28"
+            v-model="travelTimeSeconds"
+            fluid
             show-buttons
             size="large"
             suffix=" sec"
             @focus="onInputFocus"
           />
-
           <div class="text-xs">
             <p>Round trip: <span class="tabular-nums">{{ calculations.travelTimeTotal }}</span></p>
             <p>Available gathering time: <span class="tabular-nums">{{ calculations.availableTime }}</span></p>
@@ -447,7 +450,7 @@ defineExpose({
           <Icon
             name="fluent:copy-link-24-regular"
             size="24"
-            aria-label="Save URL"
+            aria-label="Copy link to current settings"
           />
         </CopyButton>
       </div>

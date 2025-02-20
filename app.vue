@@ -9,7 +9,7 @@ useHead({
     lang="en"
     class="dark"
   >
-    <Toast />
+    <Toast position="top-center" />
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
