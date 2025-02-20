@@ -1,8 +1,16 @@
 <script lang="ts" setup>
-const { copyString, successClass } = defineProps<{
-  copyString: string // 'currentUrl' or any string
-  successClass: string
-}>()
+import type { ButtonProps } from 'primevue/button'
+
+interface Properties extends /* @vue-ignore */ ButtonProps {
+  /** String to copy - either 'currentUrl' or any string */
+  copyString: string
+  /** CSS class to apply when copy is successful */
+  successClass?: string
+}
+
+const props = withDefaults(defineProps<Properties>(), {
+  successClass: 'text-green-500',
+})
 
 const clipboardSuccess = ref(false)
 
@@ -10,16 +18,16 @@ const toast = useToast()
 
 async function clipboardWrite() {
   try {
-    if (copyString === '') {
+    if (props.copyString === '') {
       return
     }
 
-    if (copyString === 'currentUrl') {
+    if (props.copyString === 'currentUrl') {
       const { href } = useRequestURL()
       await navigator.clipboard.writeText(href)
     }
     else {
-      await navigator.clipboard.writeText(copyString)
+      await navigator.clipboard.writeText(props.copyString)
     }
 
     clipboardSuccess.value = true
@@ -36,7 +44,7 @@ async function clipboardWrite() {
 
 <template>
   <Button
-    :class="{ [successClass]: clipboardSuccess }"
+    :class="{ [props.successClass]: clipboardSuccess }"
     @click="clipboardWrite"
   >
     <slot />

@@ -98,7 +98,9 @@ export default withNuxt(
           ignore: [String.raw`^README\.md$`],
         },
       ],
-      'unicorn/prevent-abbreviations': ['error', { checkFilenames: false }],
+      'unicorn/prevent-abbreviations': ['error', { allowList: {
+        props: true,
+      }, checkFilenames: false }],
     },
   },
   {
