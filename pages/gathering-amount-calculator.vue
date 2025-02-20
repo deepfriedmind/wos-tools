@@ -286,12 +286,30 @@ defineExpose({
 
 <template>
   <div class="animate-fadeinright rounded-3xl bg-surface-950/95 p-8 shadow-2xl shadow-blue-200 backdrop-blur-md animate-once">
-    <h2 class="mb-2 text-2xl font-medium">
-      Gathering Amount Calculator
-    </h2>
-    <h3 class="mb-12 text-xl">
-      How much should I gather from a <strong>lv. 8</strong> resource node to automatically finish just before reset?
-    </h3>
+    <div class="flex justify-between">
+      <div>
+        <h2 class="mb-2 text-2xl font-medium">
+          Gathering Amount Calculator
+        </h2>
+        <h3 class="mb-12 text-xl">
+          How much should I gather from a <strong>lv. 8</strong> resource node to automatically finish just before reset?
+        </h3>
+      </div>
+      <CopyButton
+        v-tooltip.top="'Copy link to current settings'"
+        copy-string="currentUrl"
+        variant="text"
+        rounded
+        class="-mr-3.5 -mt-3.5 size-12"
+      >
+        <Icon
+          name="fluent:copy-link-24-regular"
+          size="24"
+          aria-label="Copy link to current settings"
+        />
+      </CopyButton>
+    </div>
+
     <div
       ref="inputsContainer"
       class="mb-8 flex items-stretch gap-4"
@@ -419,11 +437,11 @@ defineExpose({
             @focus="onInputFocus"
           />
           <InputNumber
+            v-model="travelTimeSeconds"
             :max="59"
             :min="0"
             :step="1"
             class="w-28"
-            v-model="travelTimeSeconds"
             fluid
             show-buttons
             size="large"
@@ -435,24 +453,6 @@ defineExpose({
             <p>Available gathering time: <span class="tabular-nums">{{ calculations.availableTime }}</span></p>
           </div>
         </div>
-      </div>
-
-      <div>
-        <CopyButton
-          v-tooltip.top="'Copy link to current settings'"
-          success-class="text-green-500"
-          copy-string="currentUrl"
-          error-class="text-red-500"
-          variant="link"
-          rounded
-          class="ml-[-15px] mt-[-15px] size-12"
-        >
-          <Icon
-            name="fluent:copy-link-24-regular"
-            size="24"
-            aria-label="Copy link to current settings"
-          />
-        </CopyButton>
       </div>
     </div>
 
