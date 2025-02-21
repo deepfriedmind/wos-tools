@@ -509,6 +509,11 @@ function handleBearClick() {
         <Card>
           <template #title>
             <h3 class="text-xl font-bold">
+              <Icon
+                name="fluent-emoji-flat:1st-place-medal"
+                size="24"
+                class="align-text-top"
+              />
               Rally leader composition
             </h3>
           </template>
@@ -531,18 +536,23 @@ function handleBearClick() {
         <Card class="flex-1">
           <template #title>
             <h3 class="text-xl font-bold">
+              <Icon
+                name="fluent-emoji-flat:2nd-place-medal"
+                size="24"
+                class="align-text-top"
+              />
               Joining rallies composition
             </h3>
           </template>
           <template #content>
             <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
               <div
-                v-for="(section, sIndex) in joiningRallySections"
-                :key="sIndex"
+                v-for="{ title, values } in joiningRallySections"
+                :key="title"
                 class="space-y-2"
               >
                 <h3 class="font-bold">
-                  {{ section.title }}
+                  {{ title }}
                 </h3>
                 <div class="inline-block space-y-2">
                   <div
@@ -550,14 +560,14 @@ function handleBearClick() {
                     :key="troopType"
                     class="flex h-10 items-center justify-between gap-2"
                   >
-                    <span>{{ useChangeCase(troopType, 'capitalCase') }}:</span>
+                    <span v-if="title === 'Per rally'">{{ useChangeCase(troopType, 'capitalCase') }}:</span>
                     <span
                       class="font-medium tabular-nums"
-                      :class="{ 'text-green-500': section.title === 'Per rally' }"
-                    >{{ formatNumber(section.values[troopType]) }}<CopyButton
-                      v-if="section.title === 'Per rally'"
+                      :class="{ 'text-green-500': title === 'Per rally' }"
+                    >{{ formatNumber(values[troopType]) }}<CopyButton
+                      v-if="title === 'Per rally'"
                       v-tooltip.top="{ value: 'Copy value', showDelay: 700 }"
-                      :copy-string="String(section.values[troopType])"
+                      :copy-string="String(values[troopType])"
                       variant="text"
                       rounded
                       size="small"
@@ -568,7 +578,7 @@ function handleBearClick() {
                   <Divider type="dotted" />
                   <div class="flex justify-between gap-2 pt-2 font-medium tabular-nums">
                     <span>Total:</span>
-                    <span>{{ formatNumber(section.values.total) }}</span>
+                    <span>{{ formatNumber(values.total) }}</span>
                   </div>
                 </div>
               </div>
