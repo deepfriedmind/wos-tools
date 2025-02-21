@@ -6,8 +6,9 @@ const { isScrolled, shouldHideHeader } = useScrollHeader()
   <header
     class="sticky top-0 z-10 transition-all will-change-transform"
     :class="{
-      'bg-surface-950/95 pb-8 shadow-md backdrop-blur-md': isScrolled,
+      'bg-surface-950/95 pb-8 backdrop-blur-md': isScrolled,
       '-translate-y-full': shouldHideHeader,
+      'shadow-md': isScrolled && !shouldHideHeader,
     }"
   >
     <nav class="space-y-5 px-8 pt-8 2xl:container xl:px-16">
