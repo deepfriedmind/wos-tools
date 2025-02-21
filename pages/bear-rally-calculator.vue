@@ -587,7 +587,7 @@ function handleBearClick() {
           href="https://outof.games/realms/whiteoutsurvival/guides/397-everything-you-need-to-know-about-bear-hunt-in-whiteout-survival/"
           target="_blank"
           rel="external noopener noreferrer"
-          class="text-sm text-primary hover:underline"
+          class="text-sm text-primary transition-colors hover:text-primary-300 hover:underline"
         >Good Bear guide</a>
       </div>
     </div>
