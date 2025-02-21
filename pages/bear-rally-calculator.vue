@@ -272,7 +272,6 @@ function handleBearClick() {
   let randomIndex
   do {
     randomIndex = Math.floor(Math.random() * POLAR_BEAR_FACTS.length)
-    console.log('🟡 | handleBearClick | randomIndex:', randomIndex)
   } while (randomIndex === lastFactIndex.value)
 
   lastFactIndex.value = randomIndex
@@ -288,15 +287,13 @@ function handleBearClick() {
 <template>
   <Transition
     appear
-    enter-active-class="duration-[2s] delay-[3s] ease-out-back"
-    enter-from-class="translate-y-full opacity-0"
+    enter-active-class="duration-[1.1s] delay-[3s] ease-out-back"
+    enter-from-class="translate-y-[1%] opacity-0"
     leave-to-class="translate-y-[-56%] opacity-100"
   >
-    <div class="group absolute left-1/2 -translate-x-1/2 translate-y-[-56%] transition duration-300 ease-out-back leading-0 hover:translate-y-[-79%]">
-      <Icon
-        name="noto:polar-bear"
-        size="60"
-        class="origin-bottom cursor-pointer drop-shadow-lg transition-transform duration-300 ease-out-back will-change-transform group-hover:scale-110"
+    <div class="group absolute left-1/2 -translate-x-1/2 translate-y-[-56%] transition duration-300 ease-out-back leading-0 hover:translate-y-[-78%]">
+      <PolarBear
+        class="origin-bottom cursor-pointer transition-transform duration-300 ease-out-back will-change-transform group-hover:scale-110"
         :class="{ 'animate-shake': isShaking }"
         @click="handleBearClick"
       />
@@ -422,7 +419,7 @@ function handleBearClick() {
                     for="deploymentBoostII"
                     class="cursor-pointer"
                   >Use Deployment Capacity Boost II <span class="mr-2 align-text-bottom text-sm">(+20%)</span>
-                    <ToolTip value="Applied to base capacity. Only one City Bonus can be used at a time." />
+                    <ToolTip value="Applied to base capacity. Only one City Bonus for deployment capacity can be active." />
                   </label>
                 </div>
               </div>
