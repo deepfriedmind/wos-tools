@@ -321,7 +321,6 @@ defineExpose({
             v-tooltip.top="'Where do I find this?'"
             variant="text"
             rounded
-            size="small"
             icon="pi pi-question-circle"
             aria-label="Where do I find this?"
             @click="showGatheringBonusDialog = true"

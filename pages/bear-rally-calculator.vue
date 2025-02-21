@@ -334,7 +334,9 @@ function handleBearClick() {
           <label
             for="totalMarksmen"
             class="w-72 text-lg"
-          >Total marksmen (highest tier):</label>
+          >Total marksmen:
+            <ToolTip value="Highest tier. Don't join with lower tiers." />
+          </label>
           <InputNumber
             v-model="settings.totalMarksmen"
             input-id="totalMarksmen"
@@ -419,15 +421,8 @@ function handleBearClick() {
                   <label
                     for="deploymentBoostII"
                     class="cursor-pointer"
-                  >Use Deployment Capacity Boost II <span class="align-text-bottom text-sm">(+20%)</span>
-                    <Button
-                      v-tooltip.top="'Applied to base capacity. Only one City Bonus can be used at a time.'"
-                      class="cursor-help"
-                      variant="text"
-                      icon="pi pi-info-circle"
-                      aria-label="Applied to base capacity. Only one City Bonus can be used at a time.'"
-                      rounded
-                    />
+                  >Use Deployment Capacity Boost II <span class="mr-2 align-text-bottom text-sm">(+20%)</span>
+                    <ToolTip value="Applied to base capacity. Only one City Bonus can be used at a time." />
                   </label>
                 </div>
               </div>
