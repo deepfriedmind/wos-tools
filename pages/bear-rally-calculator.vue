@@ -314,11 +314,12 @@ function handleBearClick() {
           </h3>
         </div>
         <CopyButton
+          v-if="route.query.marksmen"
           v-tooltip.top="'Copy link to current settings'"
           copy-string="currentUrl"
           variant="text"
           rounded
-          class="-mr-3.5 -mt-3.5 size-12"
+          class="-mr-3.5 -mt-3.5 size-12 animate-zoomin animate-once"
         >
           <Icon
             name="fluent:copy-link-24-regular"
