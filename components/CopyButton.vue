@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import type { ButtonProps } from 'primevue/button'
 
-interface Properties extends /* @vue-ignore */ ButtonProps {
+interface Props extends /* @vue-ignore */ ButtonProps {
   /** String to copy - either 'currentUrl' or any string */
   copyString: string
   /** CSS class to apply when copy is successful */
   successClass?: string
 }
 
-const props = withDefaults(defineProps<Properties>(), {
+const props = withDefaults(defineProps<Props>(), {
   successClass: 'text-green-500',
 })
 

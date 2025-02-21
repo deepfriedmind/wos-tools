@@ -100,6 +100,7 @@ export default withNuxt(
       ],
       'unicorn/prevent-abbreviations': ['error', { allowList: {
         props: true,
+        Props: true,
       }, checkFilenames: false }],
     },
   },
