@@ -10,11 +10,9 @@ Don't suggest code that is not idiomatic for Nuxt 3, Vue 3, TypeScript, Tailwind
 
 Don't add imports for anything that is auto-imported via Nuxt, e.g. from `vue`, `vue-router`, `@vueuse`, `pinia`, `primevue`, `dayjs` etc.
 
-Use `<script setup lang="ts">` with `defineProps` and `defineEmits`.
+Use `<script setup lang="ts">` for single-file components.
 
-Use destructuring syntax for props and emits with default values.
-
-Use interfaces for props and emits with JSDoc comments.
+Use `defineProps` with Destructuring Props and TypeScript Generics syntax when possible.
 
 Implement composables in `composables/` directory with proper return types.
 
