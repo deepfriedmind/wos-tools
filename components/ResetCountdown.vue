@@ -26,15 +26,10 @@ const isLoaded = computed(() => !error.value && secondsUntilReset.value > 0)
 </script>
 
 <template>
-  <Transition
-    enter-active-class="transition duration-300 ease-out-back delay-500"
-    enter-from-class="scale-90 opacity-0 will-change-transform"
-    leave-active-class="transition ease-in"
-    leave-to-class="scale-90 opacity-0 will-change-transform"
-  >
+  <div class="min-h-[rem(65)]">
     <div
       v-if="isLoaded"
-      class="flex flex-col items-end gap-2.5 leading-none"
+      class="flex animate-zoomin flex-col items-end gap-2.5 leading-none animate-once"
     >
       <div>
         <Icon
@@ -61,5 +56,5 @@ const isLoaded = computed(() => !error.value && secondsUntilReset.value > 0)
         }"
       />
     </div>
-  </Transition>
+  </div>
 </template>

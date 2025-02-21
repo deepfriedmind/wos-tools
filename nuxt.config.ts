@@ -1,6 +1,8 @@
 import { definePreset } from '@primevue/themes'
 import Aura from '@primevue/themes/aura'
 
+import rem from './utils/rem'
+
 const ThemeConfiguration = definePreset(Aura, {
   semantic: {
     colorScheme: {
@@ -102,6 +104,13 @@ export default defineNuxtConfig({
   },
   typescript: {
     typeCheck: true,
+  },
+  postcss: {
+    plugins: {
+      'postcss-functions': {
+        functions: { rem },
+      },
+    },
   },
   hooks: {
     'nitro:build:before': (nitro) => {
