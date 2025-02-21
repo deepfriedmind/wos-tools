@@ -333,7 +333,7 @@ function handleBearClick() {
         <div class="flex items-center gap-4">
           <label
             for="totalMarksmen"
-            class="w-72 text-lg"
+            class="w-64 text-lg"
           >Total marksmen:
             <ToolTip value="Highest tier. Don't join with lower tiers." />
           </label>
@@ -353,7 +353,7 @@ function handleBearClick() {
         <div class="flex items-center gap-4">
           <label
             for="squadDeploymentCapacity"
-            class="w-72 text-lg"
+            class="w-64 text-lg"
           >Squad deployment capacity:</label>
           <div class="flex items-center gap-4">
             <InputNumber
@@ -384,7 +384,7 @@ function handleBearClick() {
                 />
                 <label
                   for="useSnowApe"
-                  class="w-[213px] cursor-pointer"
+                  class="w-[rem(181)] cursor-pointer"
                 >Use Snow Ape skill</label>
                 <IftaLabel v-if="settings.snowApe.enabled">
                   <Select
@@ -436,7 +436,7 @@ function handleBearClick() {
         <div class="flex items-center gap-4">
           <label
             for="rallyCount"
-            class="w-72 text-lg"
+            class="w-64 text-lg"
           >Number of joining rallies:</label>
           <Select
             v-model="settings.rallyCount"
@@ -448,7 +448,7 @@ function handleBearClick() {
         </div>
 
         <div class="items-center gap-4 lg:flex">
-          <div class="w-72 text-lg max-lg:mb-4">
+          <div class="w-64 text-lg max-lg:mb-4">
             Troop type distribution %:
           </div>
           <div class="flex justify-start gap-4">
