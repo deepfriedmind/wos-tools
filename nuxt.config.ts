@@ -63,6 +63,10 @@ export default defineNuxtConfig({
         from: 'tailwind-merge',
         imports: ['twJoin', 'twMerge'],
       },
+      {
+        from: '@vueuse/integrations/useChangeCase',
+        imports: ['useChangeCase'],
+      },
     ],
   },
   devtools: { enabled: true },

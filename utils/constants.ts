@@ -42,7 +42,7 @@ export const POLAR_BEAR_FACTS = [
   'Polar bear livers contain toxic vitamin A levels',
   'Polar bears are classified as marine mammals',
   'Polar bears can weigh as much as 10 adult humans',
-  'Polar bears are called "maritime bears" in Latin',
+  'Polar bears are called "ursus maritimus" in Latin, which translates to "sea bear."',
   'Polar bears live 25-30 years in the wild',
   'Polar bears can eat 45kg (100 lbs) of blubber in one sitting',
   'Polar bears are excellent swimmers from birth',
@@ -143,4 +143,5 @@ export const POLAR_BEAR_FACTS = [
   'Polar bears use breathing holes as hunting posts',
   'Polar bears maintain consistent migration routes',
   'Polar bears show strong swimming abilities from youth',
+  'Please don\'t kill me',
 ] as const

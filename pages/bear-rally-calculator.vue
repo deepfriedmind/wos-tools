@@ -381,7 +381,7 @@ function handleBearClick() {
                 />
                 <label
                   for="useSnowApe"
-                  class="cursor-pointer w-[213px]"
+                  class="w-[213px] cursor-pointer"
                 >Use Snow Ape skill</label>
                 <IftaLabel v-if="settings.snowApe.enabled">
                   <Select
@@ -431,11 +431,8 @@ function handleBearClick() {
                 </div>
               </div>
             </div>
-            <div
-              v-if="settings.snowApe.enabled || settings.useDeploymentBoostI || settings.useDeploymentBoostII"
-              class="font-medium tabular-nums xl:text-lg"
-            >
-              {{ formatNumber(effectiveCapacity) }} total capacity
+            <div v-if="settings.snowApe.enabled || settings.useDeploymentBoostI || settings.useDeploymentBoostII">
+              <span class="font-medium tabular-nums xl:text-lg">{{ formatNumber(effectiveCapacity) }}</span> total capacity
             </div>
           </div>
         </Fieldset>
@@ -519,14 +516,14 @@ function handleBearClick() {
               <div
                 v-for="(row, index) in rallyLeaderRows"
                 :key="index"
-                class="flex h-10 items-center justify-between gap-4"
+                class="flex h-10 items-center justify-between gap-2"
               >
                 <span>{{ row.label }}</span>
                 <span class="font-medium tabular-nums">{{ formatNumber(row.value) }}</span>
               </div>
             </div>
             <Divider type="dotted" />
-            Marksmen left for joining rallies: <span class="font-bold tabular-nums">{{ formatNumber(remainingMarksmen) }}</span>
+            Marksmen left for joining rallies: <span class="font-medium tabular-nums">{{ formatNumber(remainingMarksmen) }}</span>
           </template>
         </Card>
 
@@ -548,18 +545,18 @@ function handleBearClick() {
                 </h3>
                 <div class="inline-block space-y-2">
                   <div
-                    v-for="value in ['infantry', 'lancers', 'marksmen'] as const"
-                    :key="value"
-                    class="flex h-10 items-center justify-between gap-4"
+                    v-for="troopType in ['infantry', 'lancers', 'marksmen'] as const"
+                    :key="troopType"
+                    class="flex h-10 items-center justify-between gap-2"
                   >
-                    <span>{{ value.charAt(0).toUpperCase() + value.slice(1) }}:</span>
+                    <span>{{ useChangeCase(troopType, 'capitalCase') }}:</span>
                     <span
                       class="font-medium tabular-nums"
                       :class="{ 'text-green-500': section.title === 'Per rally' }"
-                    >{{ formatNumber(section.values[value]) }}<CopyButton
+                    >{{ formatNumber(section.values[troopType]) }}<CopyButton
                       v-if="section.title === 'Per rally'"
                       v-tooltip.top="{ value: 'Copy value', showDelay: 700 }"
-                      :copy-string="String(section.values[value])"
+                      :copy-string="String(section.values[troopType])"
                       variant="text"
                       rounded
                       size="small"
@@ -568,11 +565,9 @@ function handleBearClick() {
                     /></span>
                   </div>
                   <Divider type="dotted" />
-                  <div class="flex justify-between gap-4 pt-2">
-                    <span class="font-bold">Total:</span>
-                    <span class="font-bold tabular-nums">
-                      {{ formatNumber(section.values.total) }}
-                    </span>
+                  <div class="flex justify-between gap-2 pt-2 font-medium tabular-nums">
+                    <span>Total:</span>
+                    <span>{{ formatNumber(section.values.total) }}</span>
                   </div>
                 </div>
               </div>

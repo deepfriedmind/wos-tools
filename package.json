@@ -25,6 +25,7 @@
     "@vueuse/core": "^12.5.0",
     "@vueuse/integrations": "^12.5.0",
     "@vueuse/nuxt": "12.5.0",
+    "change-case": "^5",
     "dayjs": "^1.11.13",
     "dayjs-nuxt": "^2.1.11",
     "focus-trap": "^7.6.4",
