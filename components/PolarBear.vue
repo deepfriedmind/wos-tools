@@ -22,7 +22,7 @@ const isBlinking = ref(false)
 const BLINK_MIN_INTERVAL = 6000
 const BLINK_MAX_INTERVAL = 12_000
 const BLINK_DURATION = 120
-const DOUBLE_BLINK_CHANCE = 0.333
+const DOUBLE_BLINK_CHANCE = 0.25
 const DOUBLE_BLINK_DELAY = 180
 let blinkTimeoutId: NodeJS.Timeout
 
