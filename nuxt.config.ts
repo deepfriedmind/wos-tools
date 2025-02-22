@@ -127,6 +127,7 @@ export default defineNuxtConfig({
     prefix: 'use',
     alias: [
       ['head', 'headArray'],
+      ['memoize', 'memoizeEs'],
     ],
     utilities: ['math', 'predicate', 'string', 'util', 'object', 'function', 'array'],
   },
