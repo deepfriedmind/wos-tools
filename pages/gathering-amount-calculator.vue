@@ -113,14 +113,14 @@ for (const [key, node] of Object.entries(resourceNodes.value)) {
   }
 }
 
-watch(resourceNodes, () => {
+watchDebounced(resourceNodes, () => {
   router.replace({
     query: {
       ...route.query,
       ...queryParameters.value,
     },
   })
-}, { deep: true })
+}, { debounce: 250, deep: true })
 
 function calculateGatherTime(node: ResourceNode, useExpeditionBoost = false, useCityBonus = false) {
   let totalBoostPercent = node.boostPercent

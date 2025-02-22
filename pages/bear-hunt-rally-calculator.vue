@@ -146,9 +146,10 @@ const effectiveCapacity = computed(() => {
 })
 
 // Watch settings and update URL
-watch(settings, () => {
+watchDebounced(settings, () => {
   router.replace({
     query: {
+      ...route.query,
       deployment: settings.value.deployment.toString(),
       deploymentBoostI: settings.value.useDeploymentBoostI ? '1' : '0',
       deploymentBoostII: settings.value.useDeploymentBoostII ? '1' : '0',
@@ -161,7 +162,7 @@ watch(settings, () => {
       snowApeLevel: settings.value.snowApe.level.toString(),
     },
   })
-}, { deep: true })
+}, { debounce: 250, deep: true })
 
 const rallyLeader = computed<RallyComposition>(() => {
   const total = effectiveCapacity.value
