@@ -102,16 +102,14 @@ for (const [key, node] of Object.entries(resourceNodes.value)) {
 
   if (route.query[boostKey]) {
     const boost = Number(route.query[boostKey])
-    if (!Number.isNaN(boost)) {
+    if (!Number.isNaN(boost))
       node.boostPercent = boost
-    }
   }
 
   if (route.query[skillLevelKey]) {
     const level = Number(route.query[skillLevelKey])
-    if (level >= 1 && level <= 5) {
+    if (level >= 1 && level <= 5)
       node.expeditionSkillLevel = level as ResourceNode['expeditionSkillLevel']
-    }
   }
 }
 
@@ -221,7 +219,7 @@ function calculateLatestStartTime(node: ResourceNode, boostType: BoostTypeValue)
 function isMaxAmount(node: ResourceNode, amount: string) {
   const numericAmount = Number.parseInt(amount.replaceAll(/\D/g, ''))
 
-  return Number.isNaN(numericAmount) ? true : numericAmount === node.maxAmount
+  return Number.isNaN(numericAmount) || numericAmount === node.maxAmount
 }
 
 function normalizeNumber(number: number) {
