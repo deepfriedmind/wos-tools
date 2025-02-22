@@ -150,17 +150,8 @@ function calculateMaxResources(node: ResourceNode, useExpeditionBoost = false, u
 
 const fastestGatheredNode = computed(() => {
   const nodes = Object.values(resourceNodes.value)
-  const [initialNode] = nodes
-  let fastest = initialNode
 
-  for (const current of nodes) {
-    const currentTotal = calculateGatherTime(current, true, true)
-    const fastestTime = calculateGatherTime(fastest, true, true)
-    if (currentTotal < fastestTime)
-      fastest = current
-  }
-
-  return fastest
+  return useMinBy(nodes, node => calculateGatherTime(node, true, true)) ?? nodes[0]
 })
 
 const { localSettings } = useLocalSettings()
