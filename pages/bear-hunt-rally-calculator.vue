@@ -1,6 +1,6 @@
 <script setup lang="ts">
 useHead({
-  title: 'Bear Rally Calculator 🐻‍❄️',
+  title: 'Bear Hunt Rally Calculator 🐻‍❄️',
 })
 
 interface RallyComposition {
