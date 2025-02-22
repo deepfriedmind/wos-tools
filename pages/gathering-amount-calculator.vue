@@ -80,7 +80,7 @@ const availableGatheringSeconds = computed(() => {
   return secondsUntilReset.value - travelTimeTotal.value
 })
 
-const resourceNodes = useLocalStorage<Record<string, ResourceNode>>(`${STORAGE_PREFIX}resource-nodes`, DEFAULT_NODES)
+const resourceNodes = useLocalStorage<Record<string, ResourceNode>>(`${STORAGE_PREFIX}gathering-settings`, DEFAULT_NODES)
 
 const route = useRoute()
 const router = useRouter()
