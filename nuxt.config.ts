@@ -54,6 +54,7 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@pinia/nuxt',
     '@primevue/nuxt-module',
+    '@selemondev/nuxt-es-tool-kit',
     '@vueuse/nuxt',
     'dayjs-nuxt',
     'pinia-plugin-persistedstate/nuxt',
@@ -64,10 +65,6 @@ export default defineNuxtConfig({
       {
         from: 'tailwind-merge',
         imports: ['twJoin', 'twMerge'],
-      },
-      {
-        from: '@vueuse/integrations/useChangeCase',
-        imports: ['useChangeCase'],
       },
     ],
   },
@@ -94,7 +91,7 @@ export default defineNuxtConfig({
       storagePrefix: 'wos-tools_',
     },
   },
-  compatibilityDate: '2025-01-08',
+  compatibilityDate: '2025-02-22',
   nitro: {
     runtimeConfig: {
       public: {
@@ -125,6 +122,13 @@ export default defineNuxtConfig({
       standalone: false,
       stylistic: true,
     },
+  },
+  esToolkit: {
+    prefix: 'use',
+    alias: [
+      ['head', 'headArray'],
+    ],
+    utilities: ['math', 'predicate', 'string', 'util', 'object', 'function', 'array'],
   },
   fonts: {
     defaults: {
