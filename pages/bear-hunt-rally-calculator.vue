@@ -552,7 +552,7 @@ function handleBearClick() {
                     :key="troopType"
                     class="flex h-10 items-center justify-between gap-2"
                   >
-                    <span v-if="title === 'Per rally'">{{ useChangeCase(troopType, 'capitalCase') }}:</span>
+                    <span v-if="title === 'Per rally'">{{ useCapitalize(troopType) }}:</span>
                     <span
                       class="font-medium tabular-nums"
                       :class="{ 'text-green-500': title === 'Per rally' }"
