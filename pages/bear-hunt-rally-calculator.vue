@@ -304,10 +304,10 @@ function handleBearClick() {
       <div class="flex items-start justify-between">
         <div>
           <h2 class="mb-2 text-2xl font-medium">
-            Bear Rally Calculator
+            Bear Hunt Rally Calculator
           </h2>
           <h3 class="text-xl">
-            Calculate the max. number of troops for joining bear rallies.
+            Calculate the max. number of troops for joining bear hunt rallies.
           </h3>
         </div>
         <CopyButton
@@ -585,7 +585,7 @@ function handleBearClick() {
           target="_blank"
           rel="external noopener noreferrer"
           class="text-sm text-primary transition-colors hover:text-primary-300 hover:underline"
-        >Good Bear guide</a>
+        >Good Bear Hunt guide</a>
       </div>
     </div>
   </div>
