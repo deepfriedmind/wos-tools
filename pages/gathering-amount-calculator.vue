@@ -5,7 +5,7 @@ import type { BoostTypeValue, ExpeditionSkillOption, ResourceCalculations, Resou
 import { BOOST_TYPES } from '~/types/gathering'
 
 useHead({
-  title: 'Gathering Amount Calculator',
+  title: 'Gathering Amount Calculator 🪵',
 })
 
 const DEFAULT_NODES: Record<string, ResourceNode> = {
