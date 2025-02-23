@@ -16,6 +16,7 @@
     "type-check": "nuxi typecheck"
   },
   "dependencies": {
+    "@formkit/auto-animate": "^0.8.2",
     "@nuxt/eslint": "1.0.1",
     "@nuxt/fonts": "0.10.3",
     "@nuxt/icon": "1.10.3",

@@ -41,7 +41,10 @@ const pages = [
         <AccordionPanel value="0">
           <AccordionHeader><span class="inline-flex items-center gap-2 text-xl"><i class="pi pi-cog" />Settings</span></AccordionHeader>
           <AccordionContent>
-            <div class="space-y-4 py-4">
+            <div
+              v-auto-animate
+              class="space-y-4 py-4"
+            >
               <div class="space-y-2">
                 <div>Show times in:</div>
                 <div

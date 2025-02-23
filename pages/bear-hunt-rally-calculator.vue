@@ -373,7 +373,10 @@ function handleBearClick() {
           toggleable
           :collapsed="!settings.snowApe.enabled && !settings.useDeploymentBoostI && !settings.useDeploymentBoostII"
         >
-          <div class="flex items-center justify-between gap-4">
+          <div
+            v-auto-animate
+            class="flex items-center justify-between gap-4"
+          >
             <div class="space-y-8">
               <div class="flex min-h-16 items-center gap-4">
                 <ToggleSwitch
