@@ -4,7 +4,8 @@ import { useFocusTrap } from '@vueuse/integrations/useFocusTrap'
 import type { BoostTypeValue, ExpeditionSkillOption, ResourceCalculations, ResourceCard, ResourceNode } from '~/types/gathering'
 import { BOOST_TYPES } from '~/types/gathering'
 
-useHead({
+definePageMeta({
+  description: 'Calculate how much to gather from a resource node to finish just before reset in Whiteout Survival.',
   title: 'Gathering Amount Calculator 🪵',
 })
 

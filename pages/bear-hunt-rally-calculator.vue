@@ -1,5 +1,6 @@
 <script setup lang="ts">
-useHead({
+definePageMeta({
+  description: 'Calculate the max. number of troops for joining bear hunt rallies in Whiteout Survival.',
   title: 'Bear Hunt Rally Calculator 🐻‍❄️',
 })
 
