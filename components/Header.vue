@@ -19,7 +19,10 @@ const { isScrolled, shouldHideHeader } = useScrollHeader()
           class="-mb-1.5 inline-block"
           aria-label="Home"
         >
-          <Logo class="text-6xl/none transition-transform hover:scale-105" />
+          <Logo
+            as="h1"
+            class="text-6xl/none transition-transform hover:scale-105"
+          />
         </RouterLink>
         <ResetCountdown />
       </div>

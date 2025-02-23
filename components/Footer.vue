@@ -11,10 +11,7 @@ const dayjs = useDayjs()
     <div class="container [text-shadow:1px_1px_0px_rgb(36_65_102_/_50%)]">
       <p class="font-medium">
         &copy;{{ dayjs(buildTime).year() }}
-        <Logo
-          class="text-lg"
-          as="span"
-        />– Made with <img
+        <Logo class="text-lg" />– Made with <img
           src="/img/fc.webp"
           width="24"
           height="24"

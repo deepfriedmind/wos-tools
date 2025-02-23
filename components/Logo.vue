@@ -1,7 +1,7 @@
 <script setup lang="ts">
 defineOptions({ inheritAttrs: false })
 
-const { as = 'h1' } = defineProps<{
+const { as = 'span' } = defineProps<{
   as?: Component | string
 }>()
 
