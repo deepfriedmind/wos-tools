@@ -22,7 +22,11 @@ const visible = ref(false)
       position="right"
     >
       <template #header>
-        <Logo class="text-2xl/none" />
+        <Logo
+          :as="resolveComponent('RouterLink')"
+          to="/"
+          class="text-3xl/none"
+        />
       </template>
       <div class="space-y-4">
         <div class="space-y-2">
