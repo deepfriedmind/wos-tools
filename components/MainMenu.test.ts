@@ -33,6 +33,12 @@ const ToggleSwitchStub = defineComponent({
   template: '<div class="p-toggleswitch" role="switch" @click="$emit(\'update:modelValue\', !modelValue)"></div>',
 })
 
+const RouterLinkStub = {
+  name: 'RouterLink',
+  props: ['to'],
+  template: '<a><slot /></a>',
+}
+
 function mountComponent(): VueWrapper<InstanceType<typeof MainMenu>> {
   return mount<typeof MainMenu>(MainMenu, {
     global: {
@@ -42,6 +48,7 @@ function mountComponent(): VueWrapper<InstanceType<typeof MainMenu>> {
       })],
       stubs: {
         Drawer: DrawerStub,
+        RouterLink: RouterLinkStub,
         ToggleSwitch: ToggleSwitchStub,
       },
     },
