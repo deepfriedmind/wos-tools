@@ -2,6 +2,12 @@
 const { localSettings } = useLocalSettings()
 const drawerVisible = ref(false)
 
+const route = useRoute()
+
+watch(() => route.fullPath, () => {
+  drawerVisible.value = false
+})
+
 const pages = [
   { name: 'Bear Hunt Rally Calculator', path: '/bear-hunt-rally-calculator' },
   { name: 'Gathering Amount Calculator', path: '/gathering-amount-calculator' },
