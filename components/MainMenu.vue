@@ -3,15 +3,19 @@ const { localSettings } = useLocalSettings()
 const drawerVisible = ref(false)
 
 const route = useRoute()
+const router = useRouter()
+
+const pages = computed(() => router.getRoutes()
+  .filter(route => route.path !== '/' && !route.path.includes(':'))
+  .map(route => ({
+    name: route.meta?.title ?? useStartCase(route.path),
+    path: route.path,
+  })),
+)
 
 watch(() => route.fullPath, () => {
   drawerVisible.value = false
 })
-
-const pages = [
-  { name: 'Bear Hunt Rally Calculator', path: '/bear-hunt-rally-calculator' },
-  { name: 'Gathering Amount Calculator', path: '/gathering-amount-calculator' },
-]
 </script>
 
 <template>
@@ -31,7 +35,7 @@ const pages = [
       id="mainMenu"
       v-model:visible="drawerVisible"
       position="right"
-      class="w-full sm:w-[rem(350)]"
+      class="w-full sm:w-[rem(380)]"
     >
       <template #header>
         <Logo
