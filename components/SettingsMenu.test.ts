@@ -7,21 +7,22 @@ import SettingsMenu from '~/components/SettingsMenu.vue'
 import { useLocalSettings } from '~/stores/local-settings'
 import { setupPrimeVue } from '~/tests/helpers/primevue'
 
-const PopoverStub = defineComponent({
+const DrawerStub = defineComponent({
   data() {
     return {
       isVisible: false,
     }
   },
-  methods: {
-    toggle() {
-      this.isVisible = !this.isVisible
+  props: {
+    position: { default: 'right', type: String },
+    visible: { default: false, type: Boolean },
+  },
+  template: '<div class="p-drawer" :class="{ \'p-drawer-visible\': isVisible }"><slot name="header" /><slot /></div>',
+  watch: {
+    visible(value: boolean) {
+      this.isVisible = value
     },
   },
-  props: {
-    showOnFocus: { default: false, type: Boolean },
-  },
-  template: '<div class="p-popover-mock" :class="{ \'p-popover-hidden\': !isVisible }"><slot /></div>',
 })
 
 const ToggleSwitchStub = defineComponent({
@@ -40,7 +41,7 @@ function mountComponent(): VueWrapper<InstanceType<typeof SettingsMenu>> {
         createSpy: vi.fn,
       })],
       stubs: {
-        Popover: PopoverStub,
+        Drawer: DrawerStub,
         ToggleSwitch: ToggleSwitchStub,
       },
     },
@@ -52,23 +53,19 @@ describe('settingsMenu', () => {
     it('renders settings button', () => {
       const wrapper = mountComponent()
       expect(wrapper.find('button').exists()).toBe(true)
-      expect(wrapper.find('.pi-cog').exists()).toBe(true)
+      expect(wrapper.find('.pi-bars').exists()).toBe(true)
     })
 
-    it('toggles popover visibility on button click', async () => {
+    it('toggles drawer visibility on button click', async () => {
       const wrapper = mountComponent()
 
-      // Initial state - popover should be hidden
-      const popover = wrapper.find('.p-popover-mock')
-      expect(popover.classes()).toContain('p-popover-hidden')
+      // Initial state - drawer should be hidden
+      const drawer = wrapper.find('.p-drawer')
+      expect(drawer.classes()).not.toContain('p-drawer-visible')
 
-      // Click settings button to show popover
+      // Click settings button to show drawer
       await wrapper.find('button').trigger('click')
-      expect(popover.classes()).not.toContain('p-popover-hidden')
-
-      // Click again to hide
-      await wrapper.find('button').trigger('click')
-      expect(popover.classes()).toContain('p-popover-hidden')
+      expect(drawer.classes()).toContain('p-drawer-visible')
     })
   })
 

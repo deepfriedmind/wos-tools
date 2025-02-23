@@ -1,12 +1,6 @@
 <script setup lang="ts">
-import type Popover from 'primevue/popover'
-
 const { localSettings } = useLocalSettings()
-const popover = ref<InstanceType<typeof Popover>>()
-
-function toggle(event: MouseEvent) {
-  popover.value?.toggle(event)
-}
+const visible = ref(false)
 </script>
 
 <template>
@@ -14,21 +8,22 @@ function toggle(event: MouseEvent) {
     <Button
       severity="contrast"
       size="large"
-      type="button"
-      icon="pi pi-cog"
-      aria-haspopup="true"
-      aria-controls="settings_menu"
-      class="-mr-3 -mt-3 p-2"
+      icon="pi pi-bars"
+      aria-controls="settingsMenu"
+      class="-mr-3 -mt-3"
       rounded
-      aria-label="Settings"
+      aria-label="Menu"
       variant="text"
-      @click="toggle"
+      @click="visible = true"
     />
-    <Popover
-      id="settings_menu"
-      ref="popover"
-      class="mt-1 p-3"
+    <Drawer
+      id="settingsMenu"
+      v-model:visible="visible"
+      position="right"
     >
+      <template #header>
+        <Logo class="text-2xl/none" />
+      </template>
       <div class="space-y-4">
         <div class="space-y-2">
           <div>
@@ -72,6 +67,6 @@ function toggle(event: MouseEvent) {
           </div>
         </div>
       </div>
-    </Popover>
+    </Drawer>
   </div>
 </template>
