@@ -3,7 +3,7 @@ import type { VueWrapper } from '@vue/test-utils'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 
-import SettingsMenu from '~/components/SettingsMenu.vue'
+import MainMenu from '~/components/MainMenu.vue'
 import { useLocalSettings } from '~/stores/local-settings'
 import { setupPrimeVue } from '~/tests/helpers/primevue'
 
@@ -33,8 +33,8 @@ const ToggleSwitchStub = defineComponent({
   template: '<div class="p-toggleswitch" role="switch" @click="$emit(\'update:modelValue\', !modelValue)"></div>',
 })
 
-function mountComponent(): VueWrapper<InstanceType<typeof SettingsMenu>> {
-  return mount<typeof SettingsMenu>(SettingsMenu, {
+function mountComponent(): VueWrapper<InstanceType<typeof MainMenu>> {
+  return mount<typeof MainMenu>(MainMenu, {
     global: {
       ...setupPrimeVue().global,
       plugins: [createTestingPinia({
@@ -48,9 +48,9 @@ function mountComponent(): VueWrapper<InstanceType<typeof SettingsMenu>> {
   })
 }
 
-describe('settingsMenu', () => {
+describe('mainMenu', () => {
   describe('rendering', () => {
-    it('renders settings button', () => {
+    it('renders menu button', () => {
       const wrapper = mountComponent()
       expect(wrapper.find('button').exists()).toBe(true)
       expect(wrapper.find('.pi-bars').exists()).toBe(true)
@@ -63,7 +63,7 @@ describe('settingsMenu', () => {
       const drawer = wrapper.find('.p-drawer')
       expect(drawer.classes()).not.toContain('p-drawer-visible')
 
-      // Click settings button to show drawer
+      // Click menu button to show drawer
       await wrapper.find('button').trigger('click')
       expect(drawer.classes()).toContain('p-drawer-visible')
     })

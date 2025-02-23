@@ -12,7 +12,7 @@ const { isScrolled, shouldHideHeader } = useScrollHeader()
     }"
   >
     <nav class="space-y-5 px-8 pt-8 2xl:container xl:px-16">
-      <SettingsMenu />
+      <MainMenu />
       <div class="flex items-end justify-between">
         <RouterLink
           to="/"

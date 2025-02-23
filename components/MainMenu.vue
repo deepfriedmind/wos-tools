@@ -9,7 +9,7 @@ const visible = ref(false)
       severity="contrast"
       size="large"
       icon="pi pi-bars"
-      aria-controls="settingsMenu"
+      aria-controls="mainMenu"
       class="-mr-3 -mt-3"
       rounded
       aria-label="Menu"
@@ -17,7 +17,7 @@ const visible = ref(false)
       @click="visible = true"
     />
     <Drawer
-      id="settingsMenu"
+      id="mainMenu"
       v-model:visible="visible"
       position="right"
     >
