@@ -27,6 +27,9 @@ const DOUBLE_BLINK_DELAY = BLINK_DURATION * 1.5
 let blinkTimeoutId: NodeJS.Timeout
 
 function animateBlink() {
+  if (blinkTimeoutId)
+    clearTimeout(blinkTimeoutId)
+
   isBlinking.value = true
 
   setTimeout(() => {
@@ -48,6 +51,9 @@ function animateBlink() {
 }
 
 function animateTongue() {
+  if (tongueTimeoutId)
+    clearTimeout(tongueTimeoutId)
+
   // Start retracting tongue
   tongueExtension.value = 6
 
@@ -112,7 +118,13 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div ref="container">
+  <div
+    ref="container"
+    @click="() => {
+      animateBlink()
+      animateTongue()
+    }"
+  >
     <svg
       :width="size"
       :height="size"
