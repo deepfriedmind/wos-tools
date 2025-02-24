@@ -70,10 +70,13 @@ describe('gatheringAmountCalculator', () => {
 
   describe('user interactions', () => {
     it('selects input content on focus', async () => {
-      const inputs = wrapper.findAll('input')
+      const inputs = wrapper.findAll('input[type="number"]')
       for (const input of inputs) {
         const mockSelect = vi.fn()
-        input.element.select = mockSelect
+        Object.defineProperty(input.element, 'select', {
+          value: mockSelect,
+          writable: true,
+        })
         await input.trigger('focus')
         expect(mockSelect).toHaveBeenCalled()
       }

@@ -48,7 +48,10 @@ export function mockPrimeVueComponents() {
           min: this.min,
           name: this.name,
           onFocus: (event: FocusEvent) => {
-            (event.target as HTMLInputElement).select?.()
+            const input = event.target as HTMLInputElement
+            if (typeof input.select === 'function') {
+              input.select()
+            }
           },
           onInput: (event: Event) => {
             this.$emit('update:modelValue', Number((event.target as HTMLInputElement).value))
