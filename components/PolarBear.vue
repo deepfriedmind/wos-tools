@@ -26,6 +26,11 @@ const DOUBLE_BLINK_CHANCE = 0.2
 const DOUBLE_BLINK_DELAY = BLINK_DURATION * 1.5
 let blinkTimeoutId: NodeJS.Timeout
 
+const isEyesReset = ref(false)
+const hasMouseMovedSinceReset = ref(true)
+const previousMouseX = ref(mouseX.value)
+const previousMouseY = ref(mouseY.value)
+
 function animateBlink() {
   if (blinkTimeoutId)
     clearTimeout(blinkTimeoutId)
@@ -67,8 +72,33 @@ function animateTongue() {
   tongueTimeoutId = setTimeout(animateTongue, nextInterval)
 }
 
+function resetEyes() {
+  isEyesReset.value = true
+  hasMouseMovedSinceReset.value = false
+  previousMouseX.value = mouseX.value
+  previousMouseY.value = mouseY.value
+
+  if (leftEyeGroup.value && rightEyeGroup.value) {
+    for (const eye of [leftEyeGroup.value, rightEyeGroup.value]) {
+      eye.style.transform = 'translate(0px, 0px)'
+    }
+  }
+}
+
 function updateEyes() {
   if (!container.value || !leftEyeGroup.value || !rightEyeGroup.value) {
+    animationFrameId = requestAnimationFrame(updateEyes)
+
+    return
+  }
+
+  // Check if mouse has moved since reset
+  if (!hasMouseMovedSinceReset.value && (mouseX.value !== previousMouseX.value || mouseY.value !== previousMouseY.value)) {
+    hasMouseMovedSinceReset.value = true
+    isEyesReset.value = false
+  }
+
+  if (isEyesReset.value) {
     animationFrameId = requestAnimationFrame(updateEyes)
 
     return
@@ -122,6 +152,7 @@ onUnmounted(() => {
     ref="container"
     @click="() => {
       animateBlink()
+      resetEyes()
       animateTongue()
     }"
   >
