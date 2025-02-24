@@ -5,44 +5,15 @@ import { describe, expect, it, vi } from 'vitest'
 
 import MainMenu from '~/components/MainMenu.vue'
 import { useLocalSettings } from '~/stores/local-settings'
+import { DrawerStub, RouterLinkStub, ToggleSwitchStub } from '~/tests/helpers/mocks'
+import { setupGlobalPlugins } from '~/tests/helpers/plugins'
 import { setupPrimeVue } from '~/tests/helpers/primevue'
-
-const DrawerStub = defineComponent({
-  data() {
-    return {
-      isVisible: false,
-    }
-  },
-  props: {
-    position: { default: 'right', type: String },
-    visible: { default: false, type: Boolean },
-  },
-  template: '<div class="p-drawer" :class="{ \'p-drawer-visible\': isVisible }"><slot name="header" /><slot /></div>',
-  watch: {
-    visible(value: boolean) {
-      this.isVisible = value
-    },
-  },
-})
-
-const ToggleSwitchStub = defineComponent({
-  emits: ['update:modelValue'],
-  props: {
-    modelValue: { required: true, type: Boolean },
-  },
-  template: '<div class="p-toggleswitch" role="switch" @click="$emit(\'update:modelValue\', !modelValue)"></div>',
-})
-
-const RouterLinkStub = {
-  name: 'RouterLink',
-  props: ['to'],
-  template: '<a><slot /></a>',
-}
 
 function mountComponent(): VueWrapper<InstanceType<typeof MainMenu>> {
   return mount<typeof MainMenu>(MainMenu, {
     global: {
       ...setupPrimeVue().global,
+      ...setupGlobalPlugins().global,
       plugins: [createTestingPinia({
         createSpy: vi.fn,
       })],

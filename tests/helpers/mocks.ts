@@ -1,5 +1,4 @@
 import { vi } from 'vitest'
-import { ref } from 'vue'
 
 interface MockStorageReturn {
   clear: () => void
@@ -58,4 +57,36 @@ export function mockResetCountdown(): void {
       secondsUntilReset: ref(24 * 3600), // 24 hours in seconds
     }),
   }))
+}
+
+export const DrawerStub = defineComponent({
+  data() {
+    return {
+      isVisible: false,
+    }
+  },
+  props: {
+    position: { default: 'right', type: String },
+    visible: { default: false, type: Boolean },
+  },
+  template: '<div class="p-drawer" :class="{ \'p-drawer-visible\': isVisible }"><slot name="header" /><slot /></div>',
+  watch: {
+    visible(value: boolean) {
+      this.isVisible = value
+    },
+  },
+})
+
+export const ToggleSwitchStub = defineComponent({
+  emits: ['update:modelValue'],
+  props: {
+    modelValue: { required: true, type: Boolean },
+  },
+  template: '<div class="p-toggleswitch" role="switch" @click="$emit(\'update:modelValue\', !modelValue)"></div>',
+})
+
+export const RouterLinkStub = {
+  name: 'RouterLink',
+  props: ['to'],
+  template: '<a><slot /></a>',
 }
