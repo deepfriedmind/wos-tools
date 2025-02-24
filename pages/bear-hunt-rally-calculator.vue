@@ -278,7 +278,10 @@ function handleBearClick() {
 
   lastFactIndex.value = randomIndex
   const randomPolarBearFact = POLAR_BEAR_FACTS[randomIndex]
-  toast.add({ detail: randomPolarBearFact, life: 5000, severity: 'info', summary: '🐻‍❄️ Did you know?' })
+  toast.removeAllGroups()
+  setTimeout(() => {
+    toast.add({ detail: randomPolarBearFact, life: 5000, severity: 'info', summary: '🐻‍❄️ Did you know?' })
+  }, 100)
 
   setTimeout(() => {
     isShaking.value = false
