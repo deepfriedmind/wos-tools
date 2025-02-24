@@ -301,33 +301,27 @@ function handleBearClick() {
       />
     </div>
   </Transition>
-  <div class="animate-fadeinright rounded-3xl bg-surface-950/95 p-8 shadow-2xl shadow-blue-200 backdrop-blur-md animate-once">
-    <div class="space-y-12">
-      <div class="flex items-start justify-between">
-        <div>
-          <h2 class="mb-2 text-2xl font-medium">
-            Bear Hunt Rally Calculator
-          </h2>
-          <h3 class="text-xl">
-            Calculate the max. number of troops for joining bear hunt rallies.
-          </h3>
-        </div>
-        <CopyButton
-          v-if="route.query.marksmen"
-          v-tooltip.top="'Copy link to current settings'"
-          copy-string="currentUrl"
-          variant="text"
-          rounded
-          class="-mr-3.5 -mt-3.5 size-12 animate-zoomin animate-once"
-        >
-          <Icon
-            name="fluent:copy-link-24-regular"
-            size="24"
-            aria-label="Copy link to current settings"
-          />
-        </CopyButton>
-      </div>
 
+  <MainContentCard
+    heading="Bear Hunt Rally Calculator"
+    sub-heading="Calculate the max. number of troops for joining bear hunt rallies."
+  >
+    <CopyButton
+      v-if="route.query.marksmen"
+      v-tooltip.top="'Copy link to current settings'"
+      copy-string="currentUrl"
+      variant="text"
+      rounded
+      class="!absolute right-[rem(18)] top-[rem(18)] size-12 animate-zoomin animate-once"
+    >
+      <Icon
+        name="fluent:copy-link-24-regular"
+        size="24"
+        aria-label="Copy link to current settings"
+      />
+    </CopyButton>
+
+    <div class="space-y-12">
       <div class="space-y-8">
         <div class="flex items-center gap-4">
           <label
@@ -505,9 +499,9 @@ function handleBearClick() {
       <div class="gap-8 max-xl:space-y-8 xl:flex">
         <Card>
           <template #title>
-            <h3 class="text-xl font-bold">
+            <h3 class="text-xl font-semibold">
               <Icon
-                name="fluent-emoji-flat:1st-place-medal"
+                name="fluent-emoji:1st-place-medal"
                 size="24"
                 class="align-text-top"
               />
@@ -532,9 +526,9 @@ function handleBearClick() {
 
         <Card class="flex-1">
           <template #title>
-            <h3 class="text-xl font-bold">
+            <h3 class="text-xl font-semibold">
               <Icon
-                name="fluent-emoji-flat:2nd-place-medal"
+                name="fluent-emoji:2nd-place-medal"
                 size="24"
                 class="align-text-top"
               />
@@ -544,11 +538,11 @@ function handleBearClick() {
           <template #content>
             <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
               <div
-                v-for="{ title, values } in joiningRallySections"
+                v-for="{ title, values }, index in joiningRallySections"
                 :key="title"
                 class="space-y-2"
               >
-                <h3 class="font-bold">
+                <h3 class="font-semibold">
                   {{ title }}
                 </h3>
                 <div class="inline-block space-y-2">
@@ -557,12 +551,12 @@ function handleBearClick() {
                     :key="troopType"
                     class="flex h-10 items-center justify-between gap-2"
                   >
-                    <span v-if="title === 'Per rally'">{{ useCapitalize(troopType) }}:</span>
+                    <span v-if="index === 0">{{ useCapitalize(troopType) }}:</span>
                     <span
                       class="font-medium tabular-nums"
-                      :class="{ 'text-green-500': title === 'Per rally' }"
+                      :class="{ 'text-green-500': index === 0 }"
                     >{{ formatNumber(values[troopType]) }}<CopyButton
-                      v-if="title === 'Per rally'"
+                      v-if="index === 0"
                       v-tooltip.top="{ value: 'Copy value', showDelay: 700 }"
                       :copy-string="String(values[troopType])"
                       variant="text"
@@ -574,7 +568,7 @@ function handleBearClick() {
                   </div>
                   <Divider type="dotted" />
                   <div class="flex justify-between gap-2 pt-2 font-medium tabular-nums">
-                    <span>Total:</span>
+                    <span v-if="index === 0">Total:</span>
                     <span>{{ formatNumber(values.total) }}</span>
                   </div>
                 </div>
@@ -593,5 +587,5 @@ function handleBearClick() {
         >Good Bear Hunt guide</a>
       </div>
     </div>
-  </div>
+  </MainContentCard>
 </template>

@@ -275,262 +275,254 @@ defineExpose({
 </script>
 
 <template>
-  <div class="animate-fadeinright rounded-3xl bg-surface-950/95 p-8 shadow-2xl shadow-blue-200 backdrop-blur-md animate-once">
-    <div class="flex justify-between">
-      <div>
-        <h2 class="mb-2 text-2xl font-medium">
-          Gathering Amount Calculator
-        </h2>
-        <h3 class="mb-12 text-xl">
-          How much should I gather from a <strong>lv. 8</strong> resource node to automatically finish just before reset?
-        </h3>
-      </div>
-      <CopyButton
-        v-if="route.query.meat_boost"
-        v-tooltip.top="'Copy link to current settings'"
-        copy-string="currentUrl"
-        variant="text"
-        rounded
-        class="-mr-3.5 -mt-3.5 size-12 animate-zoomin animate-once"
-      >
-        <Icon
-          name="fluent:copy-link-24-regular"
-          size="24"
-          aria-label="Copy link to current settings"
-        />
-      </CopyButton>
-    </div>
-
-    <div
-      ref="inputsContainer"
-      class="mb-8 flex items-stretch gap-4"
+  <MainContentCard
+    heading="Gathering Amount Calculator"
+    sub-heading="How much should I gather from a lv. 8 resource node to automatically finish just before reset?"
+  >
+    <CopyButton
+      v-if="route.query.meat_boost"
+      v-tooltip.top="'Copy link to current settings'"
+      copy-string="currentUrl"
+      variant="text"
+      rounded
+      class="!absolute right-[rem(18)] top-[rem(18)] size-12 animate-zoomin animate-once"
     >
-      <div class="flex flex-col justify-around">
-        <div class="text-lg">
-          Base gathering bonus:<Button
-            v-tooltip.top="'Where do I find this?'"
-            variant="text"
-            rounded
-            icon="pi pi-question-circle"
-            aria-label="Where do I find this?"
-            @click="showGatheringBonusDialog = true"
-          />
-          <Dialog
-            v-model:visible="showGatheringBonusDialog"
-            modal
-            dismissable-mask
-            header="Where do I find my base gathering bonus?"
-          >
-            <div class="flex justify-center">
-              <Image
-                preview
-                class="overflow-hidden rounded-xl border border-surface"
-                src="/img/bonus-overview-gathering@2x.webp"
-                width="592"
-                height="1049"
-                alt="Screenshot of Bonus Overview screen in game"
-              />
+      <Icon
+        name="fluent:copy-link-24-regular"
+        size="24"
+        aria-label="Copy link to current settings"
+      />
+    </CopyButton>
+
+    <div class="space-y-12">
+      <div
+        ref="inputsContainer"
+        class="flex items-stretch gap-4"
+      >
+        <div class="flex flex-col justify-around">
+          <div class="text-lg">
+            Base gathering bonus:<Button
+              v-tooltip.top="'Where do I find this?'"
+              variant="text"
+              rounded
+              icon="pi pi-question-circle"
+              aria-label="Where do I find this?"
+              @click="showGatheringBonusDialog = true"
+            />
+            <Dialog
+              v-model:visible="showGatheringBonusDialog"
+              modal
+              dismissable-mask
+              header="Where do I find my base gathering bonus?"
+            >
+              <div class="flex justify-center">
+                <Image
+                  preview
+                  class="overflow-hidden rounded-xl border border-surface"
+                  src="/img/bonus-overview-gathering@2x.webp"
+                  width="592"
+                  height="1049"
+                  alt="Screenshot of Bonus Overview screen in game"
+                />
+              </div>
+            </Dialog>
+          </div>
+          <div class="text-lg">
+            Hero expedition skill levels:
+          </div>
+          <div class="flex translate-y-2 items-center text-lg">
+            Travel time to resource node:
+          </div>
+        </div>
+        <div class="space-y-6">
+          <div class="flex items-center gap-6">
+            <div
+              v-for="(node, key) in resourceNodes"
+              :key="key"
+            >
+              <IftaLabel>
+                <InputNumber
+                  v-model="node.boostPercent"
+                  :max-fraction-digits="1"
+                  :min-fraction-digits="0"
+                  :min="0"
+                  :name="node.rssName"
+                  :step="0.5"
+                  class="w-32"
+                  fluid
+                  input-class="tabular-nums"
+                  input-mode="decimal"
+                  show-buttons
+                  size="large"
+                  suffix="%"
+                  @focus="onInputFocus"
+                />
+                <label
+                  :for="node.rssName"
+                  class="flex gap-2 font-bold"
+                >
+                  <div>{{ node.rssName }}</div>
+                  <img
+                    :src="node.rssImagePath"
+                    :alt="node.rssName"
+                    width="22"
+                    height="22"
+                    class="-translate-y-1"
+                  >
+                </label>
+              </IftaLabel>
             </div>
-          </Dialog>
-        </div>
-        <div class="text-lg">
-          Hero expedition skill levels:
-        </div>
-        <div class="flex translate-y-2 items-center text-lg">
-          Travel time to resource node:
+          </div>
+          <div class="flex items-center gap-6">
+            <div
+              v-for="(node, key) in resourceNodes"
+              :key="key"
+            >
+              <IftaLabel>
+                <Select
+                  v-model="node.expeditionSkillLevel"
+                  :options="EXPEDITION_SKILL_OPTIONS"
+                  option-label="label"
+                  option-value="level"
+                  class="w-32"
+                >
+                  <template #option="slotProps">
+                    <span>{{ slotProps.option.label }}</span>
+                    <span class="ml-2 text-sm">{{ `(+${slotProps.option.percentage}%)` }}</span>
+                  </template>
+                </Select>
+                <label class="flex gap-2 font-bold">
+                  <div>{{ node.heroName }}</div>
+                  <img
+                    :src="node.heroImagePath"
+                    :alt="node.heroName"
+                    width="22"
+                    height="22"
+                    class="-translate-y-1 rounded-full"
+                  >
+                </label>
+              </IftaLabel>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <InputNumber
+              v-model="travelTimeMinutes"
+              fluid
+              :max="59"
+              :min="0"
+              :step="1"
+              class="w-28"
+              show-buttons
+              size="large"
+              suffix=" min"
+              @focus="onInputFocus"
+            />
+            <InputNumber
+              v-model="travelTimeSeconds"
+              :max="59"
+              :min="0"
+              :step="1"
+              class="w-28"
+              fluid
+              show-buttons
+              size="large"
+              suffix=" sec"
+              @focus="onInputFocus"
+            />
+            <div class="text-xs">
+              <p>Round trip: <span class="tabular-nums">{{ calculations.travelTimeTotal }}</span></p>
+              <p>Available gathering time: <span class="tabular-nums">{{ calculations.availableTime }}</span></p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="space-y-6">
-        <div class="flex items-center gap-6">
-          <div
-            v-for="(node, key) in resourceNodes"
-            :key="key"
-          >
-            <IftaLabel>
-              <InputNumber
-                v-model="node.boostPercent"
-                :max-fraction-digits="1"
-                :min-fraction-digits="0"
-                :min="0"
-                :name="node.rssName"
-                :step="0.5"
-                class="w-32"
-                fluid
-                input-class="tabular-nums"
-                input-mode="decimal"
-                show-buttons
-                size="large"
-                suffix="%"
-                @focus="onInputFocus"
-              />
-              <label
-                :for="node.rssName"
-                class="flex gap-2"
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card
+          v-for="node in resourceCards"
+          :key="node.rssName"
+        >
+          <template #header>
+            <div class="rounded-t-xl bg-gradient-to-bl from-surface-900 to-surface-950 p-2">
+              <img
+                :src="node.rssImagePath"
+                :alt="node.rssName"
+                width="52"
+                height="52"
+                class="mx-auto drop-shadow-lg"
               >
-                <div>{{ node.rssName }}</div>
-                <img
-                  :src="node.rssImagePath"
-                  :alt="node.rssName"
-                  width="22"
-                  height="22"
-                  class="-translate-y-1"
-                >
-              </label>
-            </IftaLabel>
-          </div>
-        </div>
-
-        <div class="flex items-center gap-6">
-          <div
-            v-for="(node, key) in resourceNodes"
-            :key="key"
-          >
-            <IftaLabel>
-              <Select
-                v-model="node.expeditionSkillLevel"
-                :options="EXPEDITION_SKILL_OPTIONS"
-                option-label="label"
-                option-value="level"
-                class="w-32"
+            </div>
+          </template>
+          <template #title>
+            {{ node.rssName }}
+          </template>
+          <template #content>
+            <ul class="m-0 list-none space-y-2 p-0">
+              <li
+                v-for="(amount, label) in node.amounts"
+                :key="label"
+                class="flex items-center justify-between"
               >
-                <template #option="slotProps">
-                  <span>{{ slotProps.option.label }}</span>
-                  <span class="ml-2 text-sm">{{ `(+${slotProps.option.percentage}%)` }}</span>
-                </template>
-              </Select>
-              <label class="flex gap-2">
-                <div>{{ node.heroName }}</div>
-                <img
-                  :src="node.heroImagePath"
-                  :alt="node.heroName"
-                  width="22"
-                  height="22"
-                  class="-translate-y-1 rounded-full"
-                >
-              </label>
-            </IftaLabel>
-          </div>
-        </div>
-
-        <div class="flex items-center gap-4">
-          <InputNumber
-            v-model="travelTimeMinutes"
-            fluid
-            :max="59"
-            :min="0"
-            :step="1"
-            class="w-28"
-            show-buttons
-            size="large"
-            suffix=" min"
-            @focus="onInputFocus"
-          />
-          <InputNumber
-            v-model="travelTimeSeconds"
-            :max="59"
-            :min="0"
-            :step="1"
-            class="w-28"
-            fluid
-            show-buttons
-            size="large"
-            suffix=" sec"
-            @focus="onInputFocus"
-          />
-          <div class="text-xs">
-            <p>Round trip: <span class="tabular-nums">{{ calculations.travelTimeTotal }}</span></p>
-            <p>Available gathering time: <span class="tabular-nums">{{ calculations.availableTime }}</span></p>
-          </div>
-        </div>
+                <span class="text-sm">{{ label }}:</span>
+                <span
+                  v-tooltip.top="{
+                    value: isMaxAmount(node, amount) ? `Start before ${node.startTimes[label]} (${calculations.timezoneShort})` : undefined,
+                    pt: { root: 'max-w-none ', text: 'whitespace-nowrap text-sm' },
+                  }"
+                  class="font-medium tabular-nums"
+                  :class="{
+                    'text-green-500': isMaxAmount(node, amount),
+                    'text-yellow-500': amount !== '0' && !isMaxAmount(node, amount),
+                    'text-red-500': amount === '0',
+                  }"
+                >{{ amount }}</span>
+              </li>
+            </ul>
+          </template>
+        </Card>
       </div>
-    </div>
 
-    <div class="mb-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <Card
-        v-for="node in resourceCards"
-        :key="node.rssName"
+      <Panel
+        toggleable
+        collapsed
+        class="w-max"
       >
         <template #header>
-          <div class="rounded-t-xl bg-gradient-to-bl from-surface-900 to-surface-950 p-2">
-            <img
-              :src="node.rssImagePath"
-              :alt="node.rssName"
-              width="52"
-              height="52"
-              class="mx-auto drop-shadow-lg"
-            >
+          <div class="flex items-center gap-2">
+            <Icon
+              name="material-symbols:info-outline-rounded"
+              size="20"
+              class="text-primary"
+            />
+            <h4 class="mr-1 text-lg font-semibold">
+              At what time should I start gathering to automatically finish shortly <em>after</em> reset?
+            </h4>
           </div>
         </template>
-        <template #title>
-          {{ node.rssName }}
+        <ul class="inline-block list-inside list-disc pl-7">
+          <li
+            v-for="{ label, time } in calculations.startTimes"
+            :key="label"
+            class="flex justify-between gap-2"
+          >
+            <span class="font-medium">{{ label }}:</span>
+            <span class="tabular-nums">{{ time }}</span>
+          </li>
+        </ul>
+        <template #footer>
+          <div>
+            <p class="mb-2 text-sm italic">
+              Based on the type of node you gather fastest.<br>
+              <ToggleSwitch
+                v-model="localSettings.useUtcTime"
+                v-tooltip.top="`Switch to ${localSettings.useUtcTime ? 'local time' : 'UTC'}`"
+                class="-mr-1 origin-left translate-y-1.5 scale-75"
+                aria-label="Toggle between UTC and local time display"
+              />Times are in {{ calculations.timezoneShort }} <span v-if="!localSettings.useUtcTime">({{ calculations.timezone }})</span>
+            </p>
+          </div>
         </template>
-        <template #content>
-          <ul class="m-0 list-none space-y-2 p-0">
-            <li
-              v-for="(amount, label) in node.amounts"
-              :key="label"
-              class="flex items-center justify-between"
-            >
-              <span class="text-sm">{{ label }}:</span>
-              <span
-                v-tooltip.top="{
-                  value: isMaxAmount(node, amount) ? `Start before ${node.startTimes[label]} (${calculations.timezoneShort})` : undefined,
-                  pt: { root: 'max-w-none ', text: 'whitespace-nowrap text-sm' },
-                }"
-                class="font-medium tabular-nums"
-                :class="{
-                  'text-green-500': isMaxAmount(node, amount),
-                  'text-yellow-500': amount !== '0' && !isMaxAmount(node, amount),
-                  'text-red-500': amount === '0',
-                }"
-              >{{ amount }}</span>
-            </li>
-          </ul>
-        </template>
-      </Card>
+      </Panel>
     </div>
-
-    <Panel
-      toggleable
-      collapsed
-      class="w-max"
-    >
-      <template #header>
-        <div class="flex items-center gap-2">
-          <Icon
-            name="material-symbols:info-outline-rounded"
-            size="20"
-            class="text-primary"
-          />
-          <h4 class="mr-1 text-lg font-bold">
-            At what time should I start gathering to automatically finish shortly <em>after</em> reset?
-          </h4>
-        </div>
-      </template>
-      <ul class="inline-block list-inside list-disc pl-7">
-        <li
-          v-for="{ label, time } in calculations.startTimes"
-          :key="label"
-          class="flex justify-between gap-2"
-        >
-          <span class="font-medium">{{ label }}:</span>
-          <span class="tabular-nums">{{ time }}</span>
-        </li>
-      </ul>
-      <template #footer>
-        <div>
-          <p class="mb-2 text-sm italic">
-            Based on the type of node you gather fastest.<br>
-            <ToggleSwitch
-              v-model="localSettings.useUtcTime"
-              v-tooltip.top="`Switch to ${localSettings.useUtcTime ? 'local time' : 'UTC'}`"
-              class="-mr-1 origin-left translate-y-1.5 scale-75"
-              aria-label="Toggle between UTC and local time display"
-            />Times are in {{ calculations.timezoneShort }} <span v-if="!localSettings.useUtcTime">({{ calculations.timezone }})</span>
-          </p>
-        </div>
-      </template>
-    </Panel>
-  </div>
+  </MainContentCard>
 </template>
