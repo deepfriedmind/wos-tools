@@ -443,13 +443,11 @@ defineExpose({
           :key="node.rssName"
         >
           <template #header>
-            <div class="rounded-t-xl bg-gradient-to-bl from-surface-900 to-surface-950 p-2">
+            <div class="h-20 rounded-t-xl bg-gradient-to-bl from-surface-900 to-surface-950 p-2">
               <img
                 :src="node.rssImagePath"
                 :alt="node.rssName"
-                width="52"
-                height="52"
-                class="mx-auto drop-shadow-lg"
+                class="mx-auto h-[140%] drop-shadow-lg"
               >
             </div>
           </template>
