@@ -1,7 +1,6 @@
 import type { Config } from 'tailwindcss'
 import defaultTheme from 'tailwindcss/defaultTheme'
 import plugin from 'tailwindcss/plugin'
-// @ts-expect-error no declared types at this time
 import primeui from 'tailwindcss-primeui'
 
 export default <Partial<Config>>{
