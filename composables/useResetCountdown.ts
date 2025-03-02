@@ -5,6 +5,7 @@ interface CountdownReturn {
 }
 
 const DEBUG = false
+const DEBUG_TIME = { hours: 2, minutes: 0, seconds: 3 } as const
 
 /**
  * Composable that provides a countdown timer to daily reset (UTC midnight).
@@ -34,12 +35,12 @@ const DEBUG = false
  */
 export default function useResetCountdown(): CountdownReturn {
   const dayjs = useDayjs()
-  const secondsUntilReset = ref(DEBUG ? 2.001 * 3600 : 0)
+  const secondsUntilReset = ref(DEBUG ? dayjs.duration(DEBUG_TIME).asSeconds() : 0)
   const hasError = ref(false)
   const timeRemainingUntilReset = computed(() => dayjs.duration(secondsUntilReset.value, 'seconds').format(TIME_FORMATS.LONG_TIME))
 
   if (DEBUG) {
-    // Debug mode - simple countdown from manual seconds
+    // Debug mode - simple countdown from specified time
     const secondsUntilResetOriginal = secondsUntilReset.value
     useIntervalFn(() => {
       if (secondsUntilReset.value > 0) {
