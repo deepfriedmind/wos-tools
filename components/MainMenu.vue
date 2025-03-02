@@ -19,7 +19,7 @@ watch(() => route.fullPath, () => {
 </script>
 
 <template>
-  <div class="flex justify-end">
+  <div class="order-last flex justify-end">
     <Button
       severity="contrast"
       size="large"

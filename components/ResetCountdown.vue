@@ -17,7 +17,7 @@ const progressColor = computed(() => {
   if (secondsUntilReset.value <= 60 * 60) // 1 hour
     return _orange[500]
   if (secondsUntilReset.value <= 2 * 60 * 60) // 2 hours
-    return _yellow[500]
+    return _yellow[400]
 
   return false
 })
@@ -26,32 +26,33 @@ const isLoaded = computed(() => !error.value && secondsUntilReset.value > 0)
 </script>
 
 <template>
-  <div class="min-h-[rem(65)]">
+  <div class="md:min-h-[rem(65)]">
     <div
       v-if="isLoaded"
-      class="flex animate-zoomin flex-col items-end gap-2.5 leading-none animate-once"
+      class="flex animate-zoomin items-end gap-1 leading-none animate-once sm:gap-2.5 md:flex-col"
     >
       <div>
         <Icon
-          class="inline translate-y-[0.15em]"
+          class="inline translate-y-[0.15em] max-sm:hidden"
           size="16"
           name="bxs:hourglass"
         />Reset in:
       </div>
       <time
-        class="text-xl/none font-semibold tabular-nums"
+        class="font-semibold tabular-nums sm:text-lg/none md:text-xl/none"
         :datetime="timeRemainingUntilReset"
         aria-label="countdown timer"
+        :style="progressColor ? { color: progressColor, transition: 'color 1s ease-out' } : undefined"
       >
         {{ timeRemainingUntilReset }}
       </time>
       <ProgressBar
         :value="progress"
         :show-value="false"
-        class="h-1.5 w-full"
+        class="h-1.5 w-full max-md:hidden"
         :pt="{
           value: {
-            style: progressColor ? { backgroundColor: progressColor, transition: 'background-color 1s ease' } : undefined,
+            style: progressColor ? { backgroundColor: progressColor, transition: 'background-color 1s ease-out' } : undefined,
           },
         }"
       />
