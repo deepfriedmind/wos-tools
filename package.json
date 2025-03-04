@@ -6,7 +6,7 @@
     "build": "nuxt build",
     "check": "pnpm lint:fix && pnpm type-check && pnpm vitest run && pnpm build",
     "coverage": "vitest run --coverage",
-    "dev": "nuxt dev",
+    "dev": "nuxt dev --host",
     "generate": "nuxt generate",
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
