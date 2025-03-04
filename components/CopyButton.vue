@@ -12,9 +12,10 @@ const props = withDefaults(defineProps<Props>(), {
   successClass: 'text-green-500',
 })
 
-const clipboardSuccess = ref(false)
-
 const toast = useToast()
+const { copied, copy } = useClipboard({ legacy: true })
+
+const clipboardSuccess = computed(() => copied.value)
 
 async function clipboardWrite() {
   try {
@@ -22,18 +23,13 @@ async function clipboardWrite() {
       return
     }
 
+    let textToCopy = props.copyString
     if (props.copyString === 'currentUrl') {
       const { href } = useRequestURL()
-      await navigator.clipboard.writeText(href)
-    }
-    else {
-      await navigator.clipboard.writeText(props.copyString)
+      textToCopy = href
     }
 
-    clipboardSuccess.value = true
-    setTimeout(() => {
-      clipboardSuccess.value = false
-    }, 2000)
+    await copy(textToCopy)
   }
   catch (error) {
     toast.add({ detail: 'Could not copy to clipboard.', life: 3000, severity: 'error', summary: 'Error' })
