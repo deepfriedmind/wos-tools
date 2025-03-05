@@ -2,6 +2,7 @@ import type { MountingOptions } from '@vue/test-utils'
 import Button from 'primevue/button'
 import PrimeVue from 'primevue/config'
 import Popover from 'primevue/popover'
+import ToastService from 'primevue/toastservice'
 import ToggleSwitch from 'primevue/toggleswitch'
 import { vi } from 'vitest'
 import type { VNode } from 'vue'
@@ -15,6 +16,10 @@ interface InputNumberInstance {
   modelValue?: number
   name?: string
   step?: number
+}
+
+export const mockToast = {
+  add: vi.fn(),
 }
 
 export function mockPrimeVueComponents() {
@@ -80,6 +85,12 @@ export function mockPrimeVueComponents() {
   }))
 }
 
+export function mockPrimeVueToast(): void {
+  vi.mock('primevue/usetoast', () => ({
+    default: () => mockToast,
+  }))
+}
+
 export function setupPrimeVue(config: Partial<MountingOptions<any>> = {}): Partial<MountingOptions<any>> {
   return {
     global: {
@@ -88,7 +99,7 @@ export function setupPrimeVue(config: Partial<MountingOptions<any>> = {}): Parti
         Popover,
         ToggleSwitch,
       },
-      plugins: [PrimeVue],
+      plugins: [PrimeVue, ToastService],
       ...config.global,
     },
   }
