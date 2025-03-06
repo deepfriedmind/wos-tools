@@ -8,6 +8,7 @@ import GatheringAmountCalculator from '~/pages/gathering-amount-calculator.vue'
 import { mockDayjs, mockFocusTrap, mockLocalStorage, mockResetCountdown } from '~/tests/helpers/mocks'
 import { mockPrimeVueComponents } from '~/tests/helpers/primevue'
 import type { ExposedProperties } from '~/types/gathering'
+import { BOOST_TYPES } from '~/types/gathering'
 
 type TestedComponent = VueWrapper<ExposedProperties>
 
@@ -60,10 +61,10 @@ describe('gatheringAmountCalculator', () => {
     it('shows correct resource amounts for different boost combinations', () => {
       const { resourceCards } = wrapper.vm
       for (const { amounts } of resourceCards) {
-        expect(amounts).toHaveProperty('Using both')
-        expect(amounts).toHaveProperty('Using city boost (+100%)')
-        expect(amounts).toHaveProperty('Using hero expedition skill')
-        expect(amounts).toHaveProperty('With no extra boost')
+        expect(amounts).toHaveProperty(BOOST_TYPES.BOTH)
+        expect(amounts).toHaveProperty(BOOST_TYPES.CITY)
+        expect(amounts).toHaveProperty(BOOST_TYPES.EXPEDITION)
+        expect(amounts).toHaveProperty(BOOST_TYPES.NONE)
       }
     })
   })
