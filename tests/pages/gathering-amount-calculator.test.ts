@@ -6,6 +6,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import GatheringAmountCalculator from '~/pages/gathering-amount-calculator.vue'
 import { mockDayjs, mockFocusTrap, mockLocalStorage, mockResetCountdown } from '~/tests/helpers/mocks'
+import { setupGlobalPlugins } from '~/tests/helpers/plugins'
 import { mockPrimeVueComponents } from '~/tests/helpers/primevue'
 import type { ExposedProperties } from '~/types/gathering'
 import { BOOST_TYPES } from '~/types/gathering'
@@ -24,6 +25,7 @@ describe('gatheringAmountCalculator', () => {
 
     wrapper = mount(GatheringAmountCalculator, {
       global: {
+        ...setupGlobalPlugins().global,
         plugins: [PrimeVue, ToastService],
         stubs: {
           Divider: true,
