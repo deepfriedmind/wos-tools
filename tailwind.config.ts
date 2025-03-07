@@ -1,7 +1,7 @@
 import type { Config } from 'tailwindcss'
 import defaultTheme from 'tailwindcss/defaultTheme'
 import plugin from 'tailwindcss/plugin'
-import primeui from 'tailwindcss-primeui'
+import PrimeUI from 'tailwindcss-primeui'
 
 export default <Partial<Config>>{
   content: [
@@ -10,7 +10,7 @@ export default <Partial<Config>>{
   ],
   darkMode: 'selector',
   plugins: [
-    primeui,
+    PrimeUI,
     // eslint-disable-next-line ts/unbound-method
     plugin(({ addUtilities, addVariant, theme }) => {
       addUtilities({

@@ -26,9 +26,9 @@ importers:
       '@pinia/nuxt':
         specifier: ^0.10.1
         version: 0.10.1(magicast@0.3.5)(pinia@3.0.1(typescript@5.8.2)(vue@3.5.13(typescript@5.8.2)))
-      '@primevue/themes':
-        specifier: ^4.3.1
-        version: 4.3.1
+      '@primeuix/themes':
+        specifier: ^1.0.0
+        version: 1.0.0
       '@selemondev/nuxt-es-tool-kit':
         specifier: 1.0.4
         version: 1.0.4(magicast@0.3.5)
@@ -1022,11 +1022,6 @@ packages:
   '@primevue/nuxt-module@4.3.1':
     resolution: {integrity: sha512-SCuVT5y+YNpQgFJM01noeN+WGFewNNsoqjqAFm8xdylgcHy8YPT3FENbH0QxHf0QNgsld6BEd7Qd9djVJbIaKA==}
     engines: {node: '>=12.11.0'}
-
-  '@primevue/themes@4.3.1':
-    resolution: {integrity: sha512-aC7V5BkMoMxEMoq7hIf+PNEaY/AS5EAgVg96Gf3bvV1JqZ36hSQ2CV1SfuNsWeEvIPF/u4L5qvjwC/LGjT4qgw==}
-    engines: {node: '>=12.11.0'}
-    deprecated: This package is deprecated. Use @primeuix/themes instead.
 
   '@redocly/ajv@8.11.2':
     resolution: {integrity: sha512-io1JpnwtIcvojV7QKDUSIuMN/ikdOUd1ReEnUnMKGfDVridQZ31J0MmIuqwuRjWDZfmvr+Q0MqCcfHM2gTivOg==}
@@ -6589,11 +6584,6 @@ snapshots:
       - rollup
       - supports-color
       - vue
-
-  '@primevue/themes@4.3.1':
-    dependencies:
-      '@primeuix/styled': 0.5.0
-      '@primeuix/themes': 1.0.0
 
   '@redocly/ajv@8.11.2':
     dependencies:

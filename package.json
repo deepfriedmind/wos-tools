@@ -22,7 +22,7 @@
     "@nuxt/icon": "1.10.3",
     "@nuxtjs/tailwindcss": "npm:@nuxtjs/tailwindcss@nightly",
     "@pinia/nuxt": "^0.10.1",
-    "@primevue/themes": "^4.3.1",
+    "@primeuix/themes": "^1.0.0",
     "@selemondev/nuxt-es-tool-kit": "1.0.4",
     "@vueuse/core": "^12.7.0",
     "@vueuse/nuxt": "12.7.0",
