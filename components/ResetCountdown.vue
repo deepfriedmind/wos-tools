@@ -13,7 +13,7 @@ const progress = computed(() => {
 
 const progressColor = computed(() => {
   if (secondsUntilReset.value <= 30 * 60) // 30 minutes
-    return _red[600]
+    return _red[500]
   if (secondsUntilReset.value <= 60 * 60) // 1 hour
     return _orange[500]
   if (secondsUntilReset.value <= 2 * 60 * 60) // 2 hours
@@ -29,7 +29,7 @@ const isLoaded = computed(() => !error.value && secondsUntilReset.value > 0)
   <div class="md:min-h-[rem(65)]">
     <div
       v-if="isLoaded"
-      class="flex animate-zoomin items-end gap-1 leading-none animate-once sm:gap-2.5 md:flex-col"
+      class="flex animate-zoomin items-end gap-1 leading-none animate-once text-shadow sm:gap-2.5 md:flex-col"
     >
       <div>
         <Icon

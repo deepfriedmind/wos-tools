@@ -14,7 +14,7 @@ defineProps<{
       <slot name="heading">
         <h2
           v-if="heading"
-          class=" text-2xl font-semibold"
+          class="text-xl font-semibold text-shadow md:text-2xl"
         >
           {{ heading }}
         </h2>
@@ -22,7 +22,7 @@ defineProps<{
       <slot name="subHeading">
         <h3
           v-if="subHeading"
-          class="text-xl"
+          class="text-lg md:text-xl"
         >
           {{ subHeading }}
         </h3>

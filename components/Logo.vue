@@ -14,7 +14,7 @@ const baseClasses = tw`
   font-semibold
   tracking-tighter
   drop-shadow
-  [text-shadow:0.0333em_0.033em_0_rgb(36_65_102_/_90%)]
+  text-shadow
 `
 const classes = computed(() => twMerge(baseClasses, attributes.class as string))
 </script>
