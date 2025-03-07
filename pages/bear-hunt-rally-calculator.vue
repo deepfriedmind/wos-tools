@@ -4,6 +4,8 @@ definePageMeta({
   title: 'Bear Hunt Rally Calculator 🐻‍❄️',
 })
 
+const MAX_MARCHES = 6
+
 interface RallyComposition {
   infantry: number
   lancers: number
@@ -37,8 +39,8 @@ const settings = useLocalStorage<Settings>(`${STORAGE_PREFIX}bear-rally-settings
   infantryPercent: 12,
   lancersPercent: 19,
   marksmenPercent: 69,
-  rallyCount: Math.min(Math.max(Number(route.query.rallies) || 6, 1), 6),
-  rallyOptions: Array.from({ length: 6 }, (_, index) => ({ value: index + 1 })),
+  rallyCount: useClamp(Number(route.query.rallies) || MAX_MARCHES, 1, MAX_MARCHES),
+  rallyOptions: Array.from({ length: MAX_MARCHES }, (_, index) => ({ value: index + 1 })),
   snowApe: {
     enabled: true,
     level: 1,
@@ -73,7 +75,18 @@ if (route.query.deployment) {
 if (route.query.rallies) {
   const amount = Number(route.query.rallies)
   if (!Number.isNaN(amount)) {
-    settings.value.rallyCount = amount
+    const clampedValue = useClamp(amount, 1, MAX_MARCHES)
+    settings.value.rallyCount = clampedValue
+
+    // Update URL if value was clamped
+    if (clampedValue !== amount) {
+      router.replace({
+        query: {
+          ...route.query,
+          rallies: String(clampedValue),
+        },
+      })
+    }
   }
 }
 
