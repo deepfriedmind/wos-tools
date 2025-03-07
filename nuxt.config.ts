@@ -168,5 +168,8 @@ export default defineNuxtConfig({
   },
   tailwindcss: {
     exposeConfig: true,
+    config: {
+      content: ['./pages/**/*.{vue,js,ts}', './components/**/*.{vue,js,ts}'],
+    },
   },
 })
