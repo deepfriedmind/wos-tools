@@ -135,11 +135,16 @@ if (route.query.snowApeLevel) {
   }
 }
 
-const SNOW_APE_LEVELS = Array.from({ length: 10 }, (_, index) => ({
-  bonus: (index + 1) * 1500,
-  label: `Lv. ${index + 1} (+${formatNumber((index + 1) * 1500)})`,
-  value: index + 1,
-}))
+const SNOW_APE_LEVELS = Array.from({ length: 10 }, (_, index) => {
+  const level = index + 1
+  const bonus = level * 1500
+
+  return {
+    bonus,
+    label: `Lv. ${level} (+${formatNumber(bonus)})`,
+    value: level,
+  }
+})
 
 const effectiveCapacity = computed(() => {
   let capacity = settings.value.deployment
