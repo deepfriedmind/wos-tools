@@ -281,11 +281,11 @@ defineExpose({
   >
     <CopyButton
       v-if="route.query.meat_boost"
-      v-tooltip.top="'Copy link to current settings'"
+      v-tooltip="'Copy link to current settings'"
       copy-string="currentUrl"
       variant="text"
       rounded
-      class="!absolute right-[rem(18)] top-[rem(18)] size-12 animate-zoomin animate-once"
+      class="!absolute right-0 top-0 size-12 animate-zoomin animate-once md:right-[rem(18)] md:top-[rem(18)]"
     >
       <Icon
         name="fluent:copy-link-24-regular"
@@ -295,20 +295,22 @@ defineExpose({
     </CopyButton>
 
     <div class="space-y-12">
-      <div
-        ref="inputsContainer"
-        class="flex items-stretch gap-4"
-      >
-        <div class="flex flex-col justify-around">
-          <div class="text-lg">
-            Base gathering bonus:<Button
-              v-tooltip.top="'Where do I find this?'"
-              variant="text"
-              rounded
-              icon="pi pi-question-circle"
-              aria-label="Where do I find this?"
-              @click="showGatheringBonusDialog = true"
-            />
+      <div class="space-y-8">
+        <div
+          ref="inputsContainer"
+          class="space-y-8"
+        >
+          <div class="flex gap-4 max-md:flex-col">
+            <label class="text-lg lg:w-64">
+              Base gathering bonus:<Button
+                v-tooltip="'Where do I find this?'"
+                variant="text"
+                rounded
+                icon="pi pi-question-circle"
+                aria-label="Where do I find this?"
+                @click="showGatheringBonusDialog = true"
+              />
+            </label>
             <Dialog
               v-model:visible="showGatheringBonusDialog"
               modal
@@ -326,118 +328,125 @@ defineExpose({
                 />
               </div>
             </Dialog>
-          </div>
-          <div class="text-lg">
-            Hero expedition skill levels:
-          </div>
-          <div class="flex translate-y-2 items-center text-lg">
-            Travel time to resource node:
-          </div>
-        </div>
-        <div class="space-y-6">
-          <div class="flex items-center gap-6">
-            <div
-              v-for="(node, key) in resourceNodes"
-              :key="key"
-            >
-              <IftaLabel>
-                <InputNumber
-                  v-model="node.boostPercent"
-                  :max-fraction-digits="1"
-                  :min-fraction-digits="0"
-                  :min="0"
-                  :name="node.rssName"
-                  :step="0.5"
-                  class="w-32"
-                  fluid
-                  input-class="tabular-nums"
-                  input-mode="decimal"
-                  show-buttons
-                  size="large"
-                  suffix="%"
-                  @focus="onInputFocus"
-                />
-                <label
-                  :for="node.rssName"
-                  class="flex gap-2 font-bold"
-                >
-                  <div>{{ node.rssName }}</div>
-                  <img
-                    :src="node.rssImagePath"
-                    :alt="node.rssName"
-                    width="22"
-                    height="22"
-                    class="-translate-y-1"
+            <div class="flex flex-wrap items-center gap-6">
+              <div
+                v-for="(node, key) in resourceNodes"
+                :key="key"
+              >
+                <IftaLabel>
+                  <InputNumber
+                    v-model="node.boostPercent"
+                    highlight-on-focus
+                    :max-fraction-digits="1"
+                    :min-fraction-digits="0"
+                    :min="0"
+                    :name="node.rssName"
+                    :step="0.5"
+                    class="w-32"
+                    fluid
+                    input-class="tabular-nums"
+                    input-mode="decimal"
+                    show-buttons
+                    size="large"
+                    suffix="%"
+                    @focus="onInputFocus"
+                  />
+                  <label
+                    :for="node.rssName"
+                    class="flex gap-2 font-bold"
                   >
-                </label>
-              </IftaLabel>
+                    <div>{{ node.rssName }}</div>
+                    <img
+                      :src="node.rssImagePath"
+                      :alt="node.rssName"
+                      width="22"
+                      height="22"
+                      class="-translate-y-1"
+                    >
+                  </label>
+                </IftaLabel>
+              </div>
             </div>
           </div>
-          <div class="flex items-center gap-6">
-            <div
-              v-for="(node, key) in resourceNodes"
-              :key="key"
-            >
-              <IftaLabel>
-                <Select
-                  v-model="node.expeditionSkillLevel"
-                  :options="EXPEDITION_SKILL_OPTIONS"
-                  option-label="label"
-                  option-value="level"
-                  class="w-32"
-                >
-                  <template #option="slotProps">
-                    <span>{{ slotProps.option.label }}</span>
-                    <span class="ml-2 text-sm">{{ `(+${slotProps.option.percentage}%)` }}</span>
-                  </template>
-                </Select>
-                <label class="flex gap-2 font-bold">
-                  <div>{{ node.heroName }}</div>
-                  <img
-                    :src="node.heroImagePath"
-                    :alt="node.heroName"
-                    width="22"
-                    height="22"
-                    class="-translate-y-1 rounded-full"
+
+          <div class="flex gap-4 max-md:flex-col">
+            <label class="text-lg lg:w-64">
+              Hero expedition skill levels:
+            </label>
+            <div class="flex flex-wrap items-center gap-6">
+              <div
+                v-for="(node, key) in resourceNodes"
+                :key="key"
+              >
+                <IftaLabel>
+                  <Select
+                    v-model="node.expeditionSkillLevel"
+                    :options="EXPEDITION_SKILL_OPTIONS"
+                    option-label="label"
+                    option-value="level"
+                    class="w-32"
                   >
-                </label>
-              </IftaLabel>
+                    <template #option="slotProps">
+                      <span>{{ slotProps.option.label }}</span>
+                      <span class="ml-2 text-sm">{{ `(+${slotProps.option.percentage}%)` }}</span>
+                    </template>
+                  </Select>
+                  <label class="flex gap-2 font-bold">
+                    <div>{{ node.heroName }}</div>
+                    <img
+                      :src="node.heroImagePath"
+                      :alt="node.heroName"
+                      width="22"
+                      height="22"
+                      class="-translate-y-1 rounded-full"
+                    >
+                  </label>
+                </IftaLabel>
+              </div>
             </div>
           </div>
-          <div class="flex items-center gap-4">
-            <InputNumber
-              v-model="travelTimeMinutes"
-              fluid
-              :max="59"
-              :min="0"
-              :step="1"
-              class="w-28"
-              show-buttons
-              size="large"
-              suffix=" min"
-              @focus="onInputFocus"
-            />
-            <InputNumber
-              v-model="travelTimeSeconds"
-              :max="59"
-              :min="0"
-              :step="1"
-              class="w-28"
-              fluid
-              show-buttons
-              size="large"
-              suffix=" sec"
-              @focus="onInputFocus"
-            />
-            <div class="text-xs">
-              <p>Round trip: <span class="tabular-nums">{{ calculations.travelTimeTotal }}</span></p>
-              <p>Available gathering time: <span class="tabular-nums">{{ calculations.availableTime }}</span></p>
+
+          <div class="flex gap-4 max-md:flex-col">
+            <label class="text-lg lg:w-64">
+              Travel time to resource node:
+            </label>
+            <div class="flex flex-wrap gap-4">
+              <InputNumber
+                v-model="travelTimeMinutes"
+                highlight-on-focus
+                fluid
+                :max="59"
+                :min="0"
+                :step="1"
+                class="w-28"
+                show-buttons
+                size="large"
+                suffix=" min"
+                @focus="onInputFocus"
+              />
+              <InputNumber
+                v-model="travelTimeSeconds"
+                highlight-on-focus
+                :max="59"
+                :min="0"
+                :step="1"
+                class="w-28"
+                fluid
+                show-buttons
+                size="large"
+                suffix=" sec"
+                @focus="onInputFocus"
+              />
+              <div class="space-y-1 text-xs">
+                <p>Round trip: <span class="tabular-nums">{{ calculations.travelTimeTotal }}</span></p>
+                <p>Available gathering time: <span class="tabular-nums">{{ calculations.availableTime }}</span></p>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
         <Card
           v-for="node in resourceCards"
           :key="node.rssName"
@@ -463,11 +472,8 @@ defineExpose({
               >
                 <span class="text-sm">{{ label }}:</span>
                 <span
-                  v-tooltip.top="{
-                    value: isMaxAmount(node, amount) ? `Start before ${node.startTimes[label]} (${calculations.timezoneShort})` : undefined,
-                    pt: { root: 'max-w-none ', text: 'whitespace-nowrap text-sm' },
-                  }"
-                  class="font-medium tabular-nums"
+                  v-tooltip="isMaxAmount(node, amount) ? `Start before ${node.startTimes[label]} (${calculations.timezoneShort})` : undefined"
+                  class="select-none font-medium tabular-nums"
                   :class="{
                     'text-green-500': isMaxAmount(node, amount),
                     'text-yellow-500': amount !== '0' && !isMaxAmount(node, amount),
@@ -483,21 +489,21 @@ defineExpose({
       <Panel
         toggleable
         collapsed
-        class="w-max"
+        class="lg:w-max"
       >
         <template #header>
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-3">
             <Icon
-              name="material-symbols:info-outline-rounded"
+              name="fluent-emoji:snowflake"
               size="20"
-              class="text-primary"
+              class="shrink-0 text-primary max-sm:hidden"
             />
-            <h4 class="mr-1 text-lg font-semibold">
+            <h4 class="mr-1 font-semibold sm:text-lg/snug">
               At what time should I start gathering to automatically finish shortly <em>after</em> reset?
             </h4>
           </div>
         </template>
-        <ul class="inline-block list-inside list-disc pl-7">
+        <ul class="inline-block sm:pl-8">
           <li
             v-for="{ label, time } in calculations.startTimes"
             :key="label"
@@ -513,7 +519,7 @@ defineExpose({
               Based on the type of node you gather fastest.<br>
               <ToggleSwitch
                 v-model="localSettings.useUtcTime"
-                v-tooltip.top="`Switch to ${localSettings.useUtcTime ? 'local time' : 'UTC'}`"
+                v-tooltip="`Switch to ${localSettings.useUtcTime ? 'local time' : 'UTC'}`"
                 class="-mr-1 origin-left translate-y-1.5 scale-75"
                 aria-label="Toggle between UTC and local time display"
               />Times are in {{ calculations.timezoneShort }} <span v-if="!localSettings.useUtcTime">({{ calculations.timezone }})</span>

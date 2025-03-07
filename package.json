@@ -29,6 +29,7 @@
     "@vueuse/nuxt": "12.7.0",
     "dayjs": "^1.11.13",
     "dayjs-nuxt": "^2.1.11",
+    "floating-vue": "^5.2.2",
     "focus-trap": "^7.6.4",
     "nuxt": "^3.15.4",
     "pinia": "^3.0.1",

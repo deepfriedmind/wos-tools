@@ -53,6 +53,7 @@ export default defineNuxtConfig({
     '@selemondev/nuxt-es-tool-kit',
     '@vueuse/nuxt',
     'dayjs-nuxt',
+    'floating-vue/nuxt',
     'pinia-plugin-persistedstate/nuxt',
   ],
   imports: {
@@ -148,6 +149,9 @@ export default defineNuxtConfig({
     storage: 'localStorage',
   },
   primevue: {
+    directives: {
+      prefix: 'p',
+    },
     options: {
       ripple: true,
       theme: {
