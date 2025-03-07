@@ -63,6 +63,9 @@ export default <Partial<Config>>{
           },
           /* eslint-enable perfectionist/sort-objects */
         },
+        '.text-shadow': {
+          textShadow: '0.0333em 0.033em 0 rgb(36 65 102 / 90%)',
+        },
       })
       addVariant('link-active', [
         '&.router-link-active',

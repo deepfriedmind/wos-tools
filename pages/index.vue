@@ -11,8 +11,11 @@ const pages = computed(() => router.getRoutes()
 </script>
 
 <template>
-  <div class="flex h-full items-center">
-    <MainContentCard class="flex flex-1">
+  <div class="flex h-full flex-col items-center justify-center gap-4">
+    <h2 class="mb-2 text-3xl font-bold text-shadow">
+      Available tools:
+    </h2>
+    <MainContentCard class="flex">
       <ul class="mx-auto space-y-8 py-16">
         <li
           v-for="page in pages"
@@ -20,10 +23,13 @@ const pages = computed(() => router.getRoutes()
         >
           <RouterLink
             :to="page.path"
-            class="inline-block text-4xl font-bold text-primary-emphasis transition [text-shadow:0.0333em_0.033em_0_rgb(36_65_102_/_90%)] hover:scale-105 hover:text-primary-emphasis-alt"
+            class="inline-block origin-left text-3xl font-bold text-primary-emphasis transition text-shadow hover:scale-105 hover:text-primary-emphasis-alt md:text-4xl"
           >
             {{ page.name }}
           </RouterLink>
+        </li>
+        <li class="translate-y-full text-center text-lg">
+          More Coming Soon™
         </li>
       </ul>
     </MainContentCard>
