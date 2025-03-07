@@ -26,9 +26,9 @@ export interface ResourceNode {
 
 export const BOOST_TYPES = {
   BOTH: 'Using both',
-  CITY: 'Using city boost (+100%)',
-  EXPEDITION: 'Using hero expedition skill',
-  NONE: 'With no extra boost',
+  CITY: 'Using city boost',
+  EXPEDITION: 'Using hero skill',
+  NONE: 'No extra boost',
 } as const
 
 export type BoostType = keyof typeof BOOST_TYPES
