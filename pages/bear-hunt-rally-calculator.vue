@@ -274,7 +274,7 @@ const joiningRallySections = computed(() => {
 })
 
 const isShaking = ref(false)
-const lastFactIndex = ref(-1)
+let lastFactIndex = -1
 const toast = useToast()
 
 function handleBearClick() {
@@ -283,14 +283,13 @@ function handleBearClick() {
 
   isShaking.value = true
 
-  // Get a random index different from the last one
-  let randomIndex
+  // Get a random fact different from the last one
+  let randomPolarBearFact
   do {
-    randomIndex = Math.floor(Math.random() * POLAR_BEAR_FACTS.length)
-  } while (randomIndex === lastFactIndex.value)
+    randomPolarBearFact = useSample(POLAR_BEAR_FACTS)
+  } while (POLAR_BEAR_FACTS.indexOf(randomPolarBearFact) === lastFactIndex)
 
-  lastFactIndex.value = randomIndex
-  const randomPolarBearFact = POLAR_BEAR_FACTS[randomIndex]
+  lastFactIndex = POLAR_BEAR_FACTS.indexOf(randomPolarBearFact)
   toast.removeAllGroups()
   setTimeout(() => {
     toast.add({ detail: randomPolarBearFact, life: 5000, severity: 'info', summary: '🐻‍❄️ Did you know?' })
