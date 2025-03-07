@@ -31,8 +31,9 @@ interface Settings {
 
 const route = useRoute()
 const router = useRouter()
-
 const STORAGE_PREFIX = useRuntimeConfig().public.storagePrefix
+const toast = useToast()
+const { mobileScrollIntoView } = useMobileScrollIntoView()
 
 const settings = useLocalStorage<Settings>(`${STORAGE_PREFIX}bear-rally-settings`, {
   deployment: 100_000,
@@ -280,7 +281,6 @@ const joiningRallySections = computed(() => {
 
 const isShaking = ref(false)
 let lastFactIndex = -1
-const toast = useToast()
 
 function handleBearClick() {
   if (isShaking.value)
@@ -361,9 +361,10 @@ function handleBearClick() {
               :min="1"
               class="w-36"
               fluid
-              input-class="tabular-nums"
+              input-class="tabular-nums scroll-m-1"
               show-buttons
               size="large"
+              @focus="mobileScrollIntoView"
             />
           </div>
 
@@ -381,9 +382,10 @@ function handleBearClick() {
                 :min="1"
                 class="w-36"
                 fluid
-                input-class="tabular-nums"
+                input-class="tabular-nums scroll-m-1"
                 show-buttons
                 size="large"
+                @focus="mobileScrollIntoView"
               />
             </div>
           </div>
@@ -493,9 +495,10 @@ function handleBearClick() {
                     :min="0"
                     class="w-36"
                     fluid
-                    input-class="tabular-nums"
+                    input-class="tabular-nums scroll-m-1"
                     show-buttons
                     size="large"
+                    @focus="mobileScrollIntoView"
                   />
                   <label class="font-bold">{{ label }}</label>
                 </IftaLabel>

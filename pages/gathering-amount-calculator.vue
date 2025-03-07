@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { useFocusTrap } from '@vueuse/integrations/useFocusTrap'
-
 import type { BoostTypeValue, ExpeditionSkillOption, ResourceCalculations, ResourceCard, ResourceNode } from '~/types/gathering'
 import { BOOST_TYPES } from '~/types/gathering'
 
@@ -64,7 +62,10 @@ const CITY_BONUS_PERCENT = 100
 const travelTimeMinutes = ref(1)
 const travelTimeSeconds = ref(0)
 
+const route = useRoute()
+const router = useRouter()
 const dayjs = useDayjs()
+const { mobileScrollIntoView } = useMobileScrollIntoView()
 
 const travelTimeTotal = computed(() => dayjs.duration({
   minutes: travelTimeMinutes.value,
@@ -82,9 +83,6 @@ const availableGatheringSeconds = computed(() => {
 })
 
 const resourceNodes = useLocalStorage<Record<string, ResourceNode>>(`${STORAGE_PREFIX}gathering-settings`, DEFAULT_NODES)
-
-const route = useRoute()
-const router = useRouter()
 
 const queryParameters = computed(() => {
   const parameters: Record<string, string> = {}
@@ -249,29 +247,7 @@ const resourceCards = computed<ResourceCard[]>(() => {
   /* eslint-enable perfectionist/sort-objects */
 })
 
-function selectOnFocus(event: Event) {
-  const input = event.target as HTMLInputElement
-  input.select()
-}
-
-const inputsContainer = ref<HTMLElement>()
-const { activate, deactivate } = useFocusTrap(inputsContainer)
-
-onClickOutside(inputsContainer, () => {
-  deactivate()
-})
-
-function onInputFocus(event: Event) {
-  selectOnFocus(event)
-  activate()
-}
-
 const showGatheringBonusDialog = ref(false)
-
-defineExpose({
-  fastestGatheredNode,
-  resourceCards,
-})
 </script>
 
 <template>
@@ -296,10 +272,7 @@ defineExpose({
 
     <div class="space-y-12">
       <div class="space-y-8">
-        <div
-          ref="inputsContainer"
-          class="space-y-8"
-        >
+        <div class="space-y-8">
           <div class="flex gap-4 max-md:flex-col">
             <label class="text-lg lg:w-64">
               Base gathering bonus:<Button
@@ -344,12 +317,12 @@ defineExpose({
                     :step="0.5"
                     class="w-32"
                     fluid
-                    input-class="tabular-nums"
+                    input-class="tabular-nums scroll-m-1"
                     input-mode="decimal"
                     show-buttons
                     size="large"
                     suffix="%"
-                    @focus="onInputFocus"
+                    @focus="mobileScrollIntoView"
                   />
                   <label
                     :for="node.rssName"
@@ -413,29 +386,31 @@ defineExpose({
             <div class="flex flex-wrap gap-4">
               <InputNumber
                 v-model="travelTimeMinutes"
-                highlight-on-focus
-                fluid
                 :max="59"
                 :min="0"
                 :step="1"
                 class="w-28"
+                fluid
+                highlight-on-focus
+                input-class="scroll-m-1"
                 show-buttons
                 size="large"
                 suffix=" min"
-                @focus="onInputFocus"
+                @focus="mobileScrollIntoView"
               />
               <InputNumber
                 v-model="travelTimeSeconds"
-                highlight-on-focus
                 :max="59"
                 :min="0"
                 :step="1"
                 class="w-28"
                 fluid
+                highlight-on-focus
+                input-class="scroll-m-1"
                 show-buttons
                 size="large"
                 suffix=" sec"
-                @focus="onInputFocus"
+                @focus="mobileScrollIntoView"
               />
               <div class="space-y-1 text-xs">
                 <p>Round trip: <span class="tabular-nums">{{ calculations.travelTimeTotal }}</span></p>

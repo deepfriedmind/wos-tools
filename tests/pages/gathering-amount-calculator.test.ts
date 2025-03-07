@@ -5,7 +5,7 @@ import ToastService from 'primevue/toastservice'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import GatheringAmountCalculator from '~/pages/gathering-amount-calculator.vue'
-import { mockDayjs, mockFocusTrap, mockLocalStorage, mockResetCountdown } from '~/tests/helpers/mocks'
+import { mockDayjs, mockLocalStorage, mockResetCountdown } from '~/tests/helpers/mocks'
 import { setupGlobalPlugins } from '~/tests/helpers/plugins'
 import { mockPrimeVueComponents } from '~/tests/helpers/primevue'
 import type { ExposedProperties } from '~/types/gathering'
@@ -19,7 +19,6 @@ describe('gatheringAmountCalculator', () => {
   beforeEach(async () => {
     mockDayjs()
     mockPrimeVueComponents()
-    mockFocusTrap()
     mockResetCountdown()
     mockLocalStorage()
 

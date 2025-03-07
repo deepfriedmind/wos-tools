@@ -336,7 +336,7 @@ onUnmounted(() => {
         :style="{ transition: `d ${ANIMATION_DURATION}ms ease-in-out` }"
       />
 
-      <!-- Mouth (must come after tongue) -->
+      <!-- Mouth (must come after tongue for correct layering) -->
       <line
         x1="50"
         y1="84"

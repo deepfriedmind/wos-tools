@@ -23,15 +23,6 @@ export function mockDayjs(): void {
   }))
 }
 
-export function mockFocusTrap(): void {
-  vi.mock('@vueuse/integrations/useFocusTrap', () => ({
-    useFocusTrap: () => ({
-      activate: vi.fn(),
-      deactivate: vi.fn(),
-    }),
-  }))
-}
-
 export function mockLocalStorage(): MockStorageReturn {
   const mockStorage = new Map<string, unknown>()
 
