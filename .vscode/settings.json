@@ -92,6 +92,7 @@
   "nuxtr.vueFiles.script.defaultLanguage": "ts",
   "nuxtr.vueFiles.script.type": "setup",
   "nuxtr.vueFiles.style.addStyleTag": false,
+  "nuxtr.vueFiles.style.defaultLanguage": "postcss",
   "peacock.color": "#254166",
   "prettier.enable": false,
   "tailwindCSS.classAttributes": [
