@@ -64,4 +64,10 @@ Create reusable transition components.
 
 Type component methods with `expose`.
 
+After editing files, always check for problems and fix them until there are none left.
+
+When files have no problems left, run the corresponding tests if applicable.
+
 Run tests with `pnpm vitest run <filename>`.
+
+After making changes, don't add comments like `// Changed from` or `// Updated to` that would not make sense to include in a commit.
