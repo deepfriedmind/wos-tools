@@ -589,19 +589,21 @@ function handleBearClick() {
                       class="flex h-10 items-center justify-between gap-2"
                     >
                       <span :class="{ 'md:hidden': index !== 0 }">{{ useCapitalize(troopType) }}:</span>
-                      <span
-                        class="font-medium tabular-nums"
-                        :class="{ 'text-green-500': index === 0 }"
-                      >{{ formatNumber(values[troopType]) }}<CopyButton
+                      <CopyButton
                         v-if="index === 0"
                         v-tooltip="{ content: 'Copy value', delay: { show: 700 } }"
                         :copy-string="String(values[troopType])"
-                        variant="text"
-                        rounded
-                        size="small"
+                        :label="formatNumber(values[troopType])"
+                        class="font-medium tabular-nums text-green-500"
+                        icon-pos="right"
                         icon="pi pi-copy"
-                        class="-ml-1.5 -mr-2.5"
-                      /></span>
+                        variant="text"
+                        icon-class="text-primary"
+                      />
+                      <span
+                        v-else
+                        class="font-medium tabular-nums"
+                      >{{ formatNumber(values[troopType]) }}</span>
                     </div>
                     <Divider type="dotted" />
                     <div class="flex justify-between gap-2 pt-2 font-medium tabular-nums">

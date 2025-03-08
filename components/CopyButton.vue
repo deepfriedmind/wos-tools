@@ -41,8 +41,17 @@ async function clipboardWrite() {
 <template>
   <Button
     :class="{ [props.successClass]: clipboardSuccess }"
+    :data-copy-success="clipboardSuccess"
     @click="clipboardWrite"
   >
     <slot />
   </Button>
 </template>
+
+<style lang="postcss">
+/* If there's an icon in the slot, apply the same success color.
+Needs to be global to affect Button internals */
+[data-copy-success='true'] .p-button-icon {
+  @apply text-inherit transition-colors;
+}
+</style>
