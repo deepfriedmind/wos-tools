@@ -427,7 +427,7 @@ const showGatheringBonusDialog = ref(false)
           :key="node.rssName"
         >
           <template #header>
-            <div class="h-20 rounded-t-xl bg-gradient-to-bl from-surface-900 to-surface-950 p-2">
+            <div class="h-20 animate-gradient rounded-t-xl bg-gradient-to-bl from-surface-950 via-surface-900 to-surface-950 bg-[length:100%_400%] p-2">
               <img
                 :src="node.rssImagePath"
                 :alt="node.rssName"

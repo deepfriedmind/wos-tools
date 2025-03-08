@@ -97,6 +97,7 @@ export default <Partial<Config>>{
     },
     extend: {
       animation: {
+        gradient: 'gradient 8s linear infinite alternate',
         shake: 'shake 0.82s cubic-bezier(.36,.07,.19,.97) both',
       },
       fontFamily: {
@@ -105,6 +106,10 @@ export default <Partial<Config>>{
         sans: ['"Space Grotesk"', ...defaultTheme.fontFamily.sans],
       },
       keyframes: {
+        gradient: {
+          from: { backgroundPosition: '50% 0%' },
+          to: { backgroundPosition: '50% 100%' },
+        },
         shake: {
           '10%, 90%': {
             transform: 'scale(1.1) translate3d(-1px, 0, 0)',
