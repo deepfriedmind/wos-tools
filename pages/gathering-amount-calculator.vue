@@ -82,7 +82,9 @@ const availableGatheringSeconds = computed(() => {
   return secondsUntilReset.value - travelTimeTotal.value
 })
 
-const resourceNodes = useLocalStorage<Record<string, ResourceNode>>(`${STORAGE_PREFIX}gathering-settings`, DEFAULT_NODES)
+const resourceNodes = useLocalStorage<Record<string, ResourceNode>>(`${STORAGE_PREFIX}gathering-settings`, DEFAULT_NODES, {
+  initOnMounted: true,
+})
 
 const queryParameters = computed(() => {
   const parameters: Record<string, string> = {}
@@ -412,10 +414,12 @@ const showGatheringBonusDialog = ref(false)
                 suffix=" sec"
                 @focus="mobileScrollIntoView"
               />
+              <ClientOnly>
               <div class="space-y-1 text-xs">
                 <p>Round trip: <span class="tabular-nums">{{ calculations.travelTimeTotal }}</span></p>
                 <p>Available gathering time: <span class="tabular-nums">{{ calculations.availableTime }}</span></p>
               </div>
+              </ClientOnly>
             </div>
           </div>
         </div>
@@ -439,6 +443,7 @@ const showGatheringBonusDialog = ref(false)
             {{ node.rssName }}
           </template>
           <template #content>
+            <ClientOnly>
             <ul class="m-0 list-none space-y-2 p-0">
               <li
                 v-for="(amount, label) in node.amounts"
@@ -446,6 +451,7 @@ const showGatheringBonusDialog = ref(false)
                 class="flex items-center justify-between"
               >
                 <span class="text-sm">{{ label }}:</span>
+                <ClientOnly>
                 <span
                   v-tooltip="isMaxAmount(node, amount) ? `Start before ${node.startTimes[label]} (${calculations.timezoneShort})` : undefined"
                   class="select-none font-medium tabular-nums"
@@ -455,12 +461,12 @@ const showGatheringBonusDialog = ref(false)
                     'text-red-500': amount === '0',
                   }"
                 >{{ amount }}</span>
+                </ClientOnly>
               </li>
             </ul>
           </template>
         </Card>
       </div>
-
       <Panel
         toggleable
         collapsed
@@ -478,6 +484,7 @@ const showGatheringBonusDialog = ref(false)
             </h4>
           </div>
         </template>
+        <ClientOnly>
         <ul class="inline-block sm:pl-8">
           <li
             v-for="{ label, time } in calculations.startTimes"
@@ -488,16 +495,19 @@ const showGatheringBonusDialog = ref(false)
             <span class="tabular-nums">{{ time }}</span>
           </li>
         </ul>
+        </ClientOnly>
         <template #footer>
           <div>
             <p class="mb-2 text-sm italic">
               Based on the type of node you gather fastest.<br>
+              <ClientOnly>
               <ToggleSwitch
                 v-model="localSettings.useUtcTime"
                 v-tooltip="`Switch to ${localSettings.useUtcTime ? 'local time' : 'UTC'}`"
                 class="-mr-1 origin-left translate-y-1.5 scale-75"
                 aria-label="Toggle between UTC and local time display"
               />Times are in {{ calculations.timezoneShort }} <span v-if="!localSettings.useUtcTime">({{ calculations.timezone }})</span>
+              </ClientOnly>
             </p>
           </div>
         </template>
