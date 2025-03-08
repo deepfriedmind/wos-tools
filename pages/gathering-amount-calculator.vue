@@ -276,7 +276,7 @@ const showGatheringBonusDialog = ref(false)
       <div class="space-y-8">
         <div class="space-y-8">
           <div class="flex gap-4 max-md:flex-col md:items-center">
-            <label class="text-lg lg:w-64">
+            <div class="text-lg lg:w-64">
               Base gathering bonus:<Button
                 v-tooltip="'Where do I find this?'"
                 variant="text"
@@ -285,7 +285,7 @@ const showGatheringBonusDialog = ref(false)
                 aria-label="Where do I find this?"
                 @click="showGatheringBonusDialog = true"
               />
-            </label>
+            </div>
             <Dialog
               v-model:visible="showGatheringBonusDialog"
               modal
@@ -315,7 +315,7 @@ const showGatheringBonusDialog = ref(false)
                     :max-fraction-digits="1"
                     :min-fraction-digits="0"
                     :min="0"
-                    :name="node.rssName"
+                    :input-id="useKebabCase(node.rssName)"
                     :step="0.5"
                     class="w-32"
                     fluid
@@ -327,7 +327,7 @@ const showGatheringBonusDialog = ref(false)
                     @focus="mobileScrollIntoView"
                   />
                   <label
-                    :for="node.rssName"
+                    :for="useKebabCase(node.rssName)"
                     class="flex gap-2 font-bold"
                   >
                     <div>{{ node.rssName }}</div>
@@ -345,9 +345,9 @@ const showGatheringBonusDialog = ref(false)
           </div>
 
           <div class="flex gap-4 max-md:flex-col md:items-center">
-            <label class="text-lg lg:w-64">
+            <div class="text-lg lg:w-64">
               Hero expedition skill levels:
-            </label>
+            </div>
             <div class="flex flex-wrap items-center gap-6">
               <div
                 v-for="(node, key) in resourceNodes"
@@ -360,6 +360,7 @@ const showGatheringBonusDialog = ref(false)
                     option-label="label"
                     option-value="level"
                     class="w-32"
+                    :aria-label="node.heroName"
                   >
                     <template #option="slotProps">
                       <span>{{ slotProps.option.label }}</span>
@@ -382,9 +383,9 @@ const showGatheringBonusDialog = ref(false)
           </div>
 
           <div class="flex gap-4 max-md:flex-col md:items-center">
-            <label class="text-lg lg:w-64">
+            <div class="text-lg lg:w-64">
               Travel time to resource node:
-            </label>
+            </div>
             <div class="flex flex-wrap items-center gap-4">
               <InputNumber
                 v-model="travelTimeMinutes"
@@ -415,10 +416,10 @@ const showGatheringBonusDialog = ref(false)
                 @focus="mobileScrollIntoView"
               />
               <ClientOnly>
-              <div class="space-y-1 text-xs">
-                <p>Round trip: <span class="tabular-nums">{{ calculations.travelTimeTotal }}</span></p>
-                <p>Available gathering time: <span class="tabular-nums">{{ calculations.availableTime }}</span></p>
-              </div>
+                <div class="space-y-1 text-xs">
+                  <p>Round trip: <span class="tabular-nums">{{ calculations.travelTimeTotal }}</span></p>
+                  <p>Available gathering time: <span class="tabular-nums">{{ calculations.availableTime }}</span></p>
+                </div>
               </ClientOnly>
             </div>
           </div>
@@ -443,7 +444,6 @@ const showGatheringBonusDialog = ref(false)
             {{ node.rssName }}
           </template>
           <template #content>
-            <ClientOnly>
             <ul class="m-0 list-none space-y-2 p-0">
               <li
                 v-for="(amount, label) in node.amounts"
@@ -452,15 +452,15 @@ const showGatheringBonusDialog = ref(false)
               >
                 <span class="text-sm">{{ label }}:</span>
                 <ClientOnly>
-                <span
-                  v-tooltip="isMaxAmount(node, amount) ? `Start before ${node.startTimes[label]} (${calculations.timezoneShort})` : undefined"
-                  class="select-none font-medium tabular-nums"
-                  :class="{
-                    'text-green-500': isMaxAmount(node, amount),
-                    'text-yellow-500': amount !== '0' && !isMaxAmount(node, amount),
-                    'text-red-500': amount === '0',
-                  }"
-                >{{ amount }}</span>
+                  <span
+                    v-tooltip="isMaxAmount(node, amount) ? `Start before ${node.startTimes[label]} (${calculations.timezoneShort})` : undefined"
+                    class="select-none font-medium tabular-nums"
+                    :class="{
+                      'text-green-500': isMaxAmount(node, amount),
+                      'text-yellow-500': amount !== '0' && !isMaxAmount(node, amount),
+                      'text-red-500': amount === '0',
+                    }"
+                  >{{ amount }}</span>
                 </ClientOnly>
               </li>
             </ul>
@@ -485,28 +485,29 @@ const showGatheringBonusDialog = ref(false)
           </div>
         </template>
         <ClientOnly>
-        <ul class="inline-block sm:pl-8">
-          <li
-            v-for="{ label, time } in calculations.startTimes"
-            :key="label"
-            class="flex justify-between gap-2"
-          >
-            <span class="font-medium">{{ label }}:</span>
-            <span class="tabular-nums">{{ time }}</span>
-          </li>
-        </ul>
+          <ul class="inline-block sm:pl-8">
+            <li
+              v-for="{ label, time } in calculations.startTimes"
+              :key="label"
+              class="flex justify-between gap-2"
+            >
+              <span class="font-medium">{{ label }}:</span>
+              <span class="tabular-nums">{{ time }}</span>
+            </li>
+          </ul>
         </ClientOnly>
         <template #footer>
           <div>
             <p class="mb-2 text-sm italic">
               Based on the type of node you gather fastest.<br>
               <ClientOnly>
-              <ToggleSwitch
-                v-model="localSettings.useUtcTime"
-                v-tooltip="`Switch to ${localSettings.useUtcTime ? 'local time' : 'UTC'}`"
-                class="-mr-1 origin-left translate-y-1.5 scale-75"
-                aria-label="Toggle between UTC and local time display"
-              />Times are in {{ calculations.timezoneShort }} <span v-if="!localSettings.useUtcTime">({{ calculations.timezone }})</span>
+                <ToggleSwitch
+                  v-model="localSettings.useUtcTime"
+                  v-tooltip="`Switch to ${localSettings.useUtcTime ? 'local time' : 'UTC'}`"
+                  input-id="use-utc-time"
+                  class="-mr-1 origin-left translate-y-1.5 scale-75"
+                  aria-label="Toggle between UTC and local time display"
+                /><label for="use-utc-time">Times are in {{ calculations.timezoneShort }} <span v-if="!localSettings.useUtcTime">({{ calculations.timezone }})</span></label>
               </ClientOnly>
             </p>
           </div>
