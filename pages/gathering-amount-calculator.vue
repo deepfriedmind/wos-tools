@@ -57,7 +57,7 @@ const EXPEDITION_SKILL_OPTIONS: ExpeditionSkillOption[] = [
 ]
 
 const STORAGE_PREFIX = useRuntimeConfig().public.storagePrefix
-const BASE_TIME_SECONDS = 117_847 // 32:44:7.275
+const BASE_TIME_SECONDS = 117_847 // 32:44:7.275 = magic in-game number
 const CITY_BONUS_PERCENT = 100
 const travelTimeMinutes = ref(1)
 const travelTimeSeconds = ref(0)
@@ -273,7 +273,7 @@ const showGatheringBonusDialog = ref(false)
     <div class="space-y-12">
       <div class="space-y-8">
         <div class="space-y-8">
-          <div class="flex gap-4 max-md:flex-col">
+          <div class="flex gap-4 max-md:flex-col md:items-center">
             <label class="text-lg lg:w-64">
               Base gathering bonus:<Button
                 v-tooltip="'Where do I find this?'"
@@ -297,7 +297,7 @@ const showGatheringBonusDialog = ref(false)
                   src="/img/bonus-overview-gathering@2x.webp"
                   width="592"
                   height="1049"
-                  alt="Screenshot of Bonus Overview screen in game"
+                  alt="Screenshot of Bonus Overview screen in Whiteout Survival"
                 />
               </div>
             </Dialog>
@@ -342,7 +342,7 @@ const showGatheringBonusDialog = ref(false)
             </div>
           </div>
 
-          <div class="flex gap-4 max-md:flex-col">
+          <div class="flex gap-4 max-md:flex-col md:items-center">
             <label class="text-lg lg:w-64">
               Hero expedition skill levels:
             </label>
@@ -379,11 +379,11 @@ const showGatheringBonusDialog = ref(false)
             </div>
           </div>
 
-          <div class="flex gap-4 max-md:flex-col">
+          <div class="flex gap-4 max-md:flex-col md:items-center">
             <label class="text-lg lg:w-64">
               Travel time to resource node:
             </label>
-            <div class="flex flex-wrap gap-4">
+            <div class="flex flex-wrap items-center gap-4">
               <InputNumber
                 v-model="travelTimeMinutes"
                 :max="59"
