@@ -49,7 +49,7 @@ const settings = useLocalStorage<Settings>(`${STORAGE_PREFIX}bear-rally-settings
   totalMarksmen: 100_000,
   useDeploymentBoostI: false,
   useDeploymentBoostII: false,
-})
+}, { initOnMounted: true })
 
 // Computed percentages as decimals
 const MARKSMEN_PERCENT = computed(() => settings.value.marksmenPercent / 100)
@@ -308,20 +308,22 @@ function handleBearClick() {
 
 <template>
   <div class="max-md:mt-12">
-    <Transition
-      appear
-      enter-active-class="duration-[1.1s] delay-[3s] ease-out-back"
-      enter-from-class="translate-y-[1%] opacity-0"
-      leave-to-class="translate-y-[-56%] opacity-100"
-    >
-      <div class="group absolute left-1/2 -translate-x-1/2 translate-y-[-56%] transition duration-300 ease-out-back leading-0 hover:translate-y-[-78%]">
-        <PolarBear
-          class="origin-bottom cursor-pointer transition-transform duration-300 ease-out-back will-change-transform group-hover:scale-110"
-          :class="{ 'animate-shake': isShaking }"
-          @click="handleBearClick"
-        />
-      </div>
-    </Transition>
+    <ClientOnly>
+      <Transition
+        appear
+        enter-active-class="duration-[1.1s] delay-[3s] ease-out-back"
+        enter-from-class="translate-y-[1%] opacity-0"
+        leave-to-class="translate-y-[-56%] opacity-100"
+      >
+        <div class="group absolute left-1/2 -translate-x-1/2 translate-y-[-56%] transition duration-300 ease-out-back leading-0 hover:translate-y-[-78%]">
+          <PolarBear
+            class="origin-bottom cursor-pointer transition-transform duration-300 ease-out-back will-change-transform group-hover:scale-110"
+            :class="{ 'animate-shake': isShaking }"
+            @click="handleBearClick"
+          />
+        </div>
+      </Transition>
+    </ClientOnly>
 
     <MainContentCard
       heading="Bear Hunt Rally Calculator"
