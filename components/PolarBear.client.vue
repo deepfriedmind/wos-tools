@@ -51,7 +51,7 @@ function animateBlink() {
     }
   }, BLINK_DURATION)
 
-  const nextInterval = BLINK_MIN_INTERVAL + Math.random() * (BLINK_MAX_INTERVAL - BLINK_MIN_INTERVAL)
+  const nextInterval = useRandom(BLINK_MIN_INTERVAL, BLINK_MAX_INTERVAL)
   blinkTimeoutId = setTimeout(animateBlink, nextInterval)
 }
 
@@ -68,7 +68,7 @@ function animateTongue() {
   }, ANIMATION_DURATION)
 
   // Schedule next animation
-  const nextInterval = MIN_INTERVAL + Math.random() * (MAX_INTERVAL - MIN_INTERVAL)
+  const nextInterval = useRandom(MIN_INTERVAL, MAX_INTERVAL)
   tongueTimeoutId = setTimeout(animateTongue, nextInterval)
 }
 
