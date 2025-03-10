@@ -204,7 +204,7 @@ function calculateEyeMovement(
   const relativeY = deltaY / eyeMovementReference
 
   // Calculate magnitude of movement - taking direction into account
-  const magnitude = Math.min(MAX_MAGNITUDE, Math.hypot(relativeX, relativeY) * MAGNITUDE_SCALE)
+  const magnitude = useClamp(Math.hypot(relativeX, relativeY) * MAGNITUDE_SCALE, 0, MAX_MAGNITUDE)
 
   // Normalize direction vector
   let directionX = 0
