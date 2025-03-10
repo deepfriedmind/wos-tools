@@ -347,15 +347,15 @@ function updateEyes() {
   currentRightGleamX.value += (targetRightGleamX.value - currentRightGleamX.value) * GLEAM_MOVEMENT_EASING
   currentRightGleamY.value += (targetRightGleamY.value - currentRightGleamY.value) * GLEAM_MOVEMENT_EASING
 
-  const leftX = Number(currentLeftEyeX.value.toFixed(2))
-  const leftY = Number(currentLeftEyeY.value.toFixed(2))
-  const rightX = Number(currentRightEyeX.value.toFixed(2))
-  const rightY = Number(currentRightEyeY.value.toFixed(2))
+  const leftX = useRound(currentLeftEyeX.value, 2)
+  const leftY = useRound(currentLeftEyeY.value, 2)
+  const rightX = useRound(currentRightEyeX.value, 2)
+  const rightY = useRound(currentRightEyeY.value, 2)
 
-  const leftGleamX = Number(currentLeftGleamX.value.toFixed(2))
-  const leftGleamY = Number(currentLeftGleamY.value.toFixed(2))
-  const rightGleamX = Number(currentRightGleamX.value.toFixed(2))
-  const rightGleamY = Number(currentRightGleamY.value.toFixed(2))
+  const leftGleamX = useRound(currentLeftGleamX.value, 2)
+  const leftGleamY = useRound(currentLeftGleamY.value, 2)
+  const rightGleamX = useRound(currentRightGleamX.value, 2)
+  const rightGleamY = useRound(currentRightGleamY.value, 2)
 
   leftEyeGroup.value.style.transform = `translate(${leftX}px, ${leftY}px)`
   rightEyeGroup.value.style.transform = `translate(${rightX}px, ${rightY}px)`
