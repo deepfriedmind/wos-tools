@@ -3,8 +3,6 @@ const { size = 128 } = defineProps<{
   size?: number
 }>()
 
-// Increase maximum eye movement range for more visible response
-const MAX_EYE_MOVEMENT = 4
 const { x: mouseX, y: mouseY } = useMouse()
 const container = ref<HTMLDivElement>()
 const leftEyeGroup = ref<SVGGElement>()
@@ -13,14 +11,73 @@ const leftGleam = ref<SVGCircleElement>()
 const rightGleam = ref<SVGCircleElement>()
 let animationFrameId: number
 
-// Define eye center positions for more accurate tracking
+// SVG viewBox dimensions
+const SVG_WIDTH = 128
+const SVG_HEIGHT = 128
+
+const MAX_EYE_MOVEMENT = 4
+
+// Ear constants
+const LEFT_EAR_X = 30
+const LEFT_EAR_Y = 38
+const RIGHT_EAR_X = 98
+const RIGHT_EAR_Y = 38
+const EAR_OUTER_RADIUS = 17
+const EAR_INNER_RADIUS = 12
+const EAR_STROKE_WIDTH = 2
+
+// Head constants
+const HEAD_X = 64
+const HEAD_Y = 64
+const HEAD_RADIUS = 50
+
+// Eye center positions for accurate tracking
 const LEFT_EYE_X = 50
 const LEFT_EYE_Y = 52
 const RIGHT_EYE_X = 78
 const RIGHT_EYE_Y = 52
+const EYE_ELLIPSE_RX = 10
+const EYE_ELLIPSE_RY = 11
+const PUPIL_RADIUS = 6
+const GLEAM_RADIUS = 1.2
+const LEFT_GLEAM_X = 51
+const LEFT_GLEAM_Y = 51
+const RIGHT_GLEAM_X = 79
+const RIGHT_GLEAM_Y = 51
+
+// Blinking constants
+const LEFT_BLINK_X1 = 44
+const LEFT_BLINK_X2 = 60
+const LEFT_BLINK_Y = 52
+const RIGHT_BLINK_X1 = 68
+const RIGHT_BLINK_X2 = 84
+const RIGHT_BLINK_Y = 52
+const BLINK_STROKE_WIDTH = 2.5
+
+// Nose constants
+const NOSE_POINTS = '62.5,71 65.5,71 64,73'
+const NOSE_STROKE_WIDTH = 14
+
+// Mouth constants
+const MOUTH_X1 = 50
+const MOUTH_X2 = 78
+const MOUTH_Y = 84
+const MOUTH_STROKE_WIDTH = 2
+
+// Tongue constants
+const TONGUE_LEFT_X = 58
+const TONGUE_RIGHT_X = 70
+const TONGUE_TOP_Y = 84
+const TONGUE_GROOVE_X = 64
+const TONGUE_GROOVE_BASE_Y = 96
+const TONGUE_BASE_Y = 94
+const TONGUE_CURVE_Y = 100
+const TONGUE_STROKE_WIDTH = 1.5
+const TONGUE_GROOVE_STROKE_WIDTH = 1
 
 // Tongue animation state
 const tongueExtension = ref(0)
+const TONGUE_EXTENSION_VALUE = 6
 const MIN_INTERVAL = 6000
 const MAX_INTERVAL = 12_000
 const ANIMATION_DURATION = 500
@@ -60,9 +117,22 @@ const currentLeftGleamY = ref(0)
 const currentRightGleamX = ref(0)
 const currentRightGleamY = ref(0)
 
+// Eye movement constants
 const EYE_MOVEMENT_EASING = 0.25
 const GLEAM_MOVEMENT_EASING = 0.2
 const GLEAM_MOVEMENT_FACTOR = 0.85 // 85% of pupil movement
+const EYE_MOVEMENT_REFERENCE_MULTIPLIER = 20
+const DISTANCE_FACTOR_DIVISOR = 5
+const MIN_DISTANCE_FACTOR = 0.5
+const MAX_DISTANCE_FACTOR = 1
+const MAGNITUDE_SCALE = 0.7
+const MAX_MAGNITUDE = 1
+const ENHANCED_MAGNITUDE_FACTOR = 0.5
+const TIME_OSCILLATION_PERIOD = 3000
+const TIME_OSCILLATION_SCALE = 0.05
+const LEFT_GLEAM_OSCILLATION_Y_FACTOR = 0.5
+const RIGHT_GLEAM_OSCILLATION_X_FACTOR = 0.8
+const RIGHT_GLEAM_OSCILLATION_Y_FACTOR = 0.7
 
 function animateBlink() {
   if (blinkTimeoutId)
@@ -93,7 +163,7 @@ function animateTongue() {
     clearTimeout(tongueTimeoutId)
 
   // Start retracting tongue
-  tongueExtension.value = 6
+  tongueExtension.value = TONGUE_EXTENSION_VALUE
 
   // After animation duration, extend tongue back
   setTimeout(() => {
@@ -123,10 +193,10 @@ function calculateEyeMovement(
   const distance = Math.hypot(deltaX, deltaY)
 
   // Get the eye movement reference size (diameter of the eye socket)
-  const eyeMovementReference = 20 * scale
+  const eyeMovementReference = EYE_MOVEMENT_REFERENCE_MULTIPLIER * scale
 
   // Calculate distanceFactor - less movement for very close cursor
-  const distanceFactor = useClamp(distance / (eyeMovementReference * 5), 0.5, 1)
+  const distanceFactor = useClamp(distance / (eyeMovementReference * DISTANCE_FACTOR_DIVISOR), MIN_DISTANCE_FACTOR, MAX_DISTANCE_FACTOR)
 
   // Normalize with appropriate scaling for this specific eye
   // Smaller divisor = more sensitive movement
@@ -134,7 +204,7 @@ function calculateEyeMovement(
   const relativeY = deltaY / eyeMovementReference
 
   // Calculate magnitude of movement - taking direction into account
-  const magnitude = Math.min(1, Math.hypot(relativeX, relativeY) * 0.7)
+  const magnitude = Math.min(MAX_MAGNITUDE, Math.hypot(relativeX, relativeY) * MAGNITUDE_SCALE)
 
   // Normalize direction vector
   let directionX = 0
@@ -145,7 +215,7 @@ function calculateEyeMovement(
   }
 
   // Scale movement by MAX_EYE_MOVEMENT and add enhancement for close distances
-  const enhancedMagnitude = magnitude * (1 + (1 - distanceFactor) * 0.5)
+  const enhancedMagnitude = magnitude * (1 + (1 - distanceFactor) * ENHANCED_MAGNITUDE_FACTOR)
   const moveX = directionX * enhancedMagnitude * MAX_EYE_MOVEMENT
   const moveY = directionY * enhancedMagnitude * MAX_EYE_MOVEMENT
 
@@ -212,7 +282,7 @@ function updateEyes() {
   const rect = container.value.getBoundingClientRect()
   const svgX = rect.left
   const svgY = rect.top
-  const scale = rect.width / 128 // Scale factor (128 is SVG viewBox width)
+  const scale = rect.width / SVG_WIDTH // Scale factor (128 is SVG viewBox width)
 
   // Set eyes to center position initially
   if (mouseX.value === 0 && mouseY.value === 0) {
@@ -254,15 +324,15 @@ function updateEyes() {
     targetRightEyeY.value = rightEyeResult.moveY
 
     // Small time-based oscillation for subtle liveliness
-    const timeOscillation = Math.sin(Date.now() / 3000) * 0.05
+    const timeOscillation = Math.sin(Date.now() / TIME_OSCILLATION_PERIOD) * TIME_OSCILLATION_SCALE
 
     // Left gleam follows left pupil at increased rate
     targetLeftGleamX.value = leftEyeResult.moveX * GLEAM_MOVEMENT_FACTOR - timeOscillation
-    targetLeftGleamY.value = leftEyeResult.moveY * GLEAM_MOVEMENT_FACTOR - Math.abs(timeOscillation) * 0.5
+    targetLeftGleamY.value = leftEyeResult.moveY * GLEAM_MOVEMENT_FACTOR - Math.abs(timeOscillation) * LEFT_GLEAM_OSCILLATION_Y_FACTOR
 
     // Right gleam follows right pupil also at increased rate with slightly different oscillation
-    targetRightGleamX.value = rightEyeResult.moveX * GLEAM_MOVEMENT_FACTOR + timeOscillation * 0.8
-    targetRightGleamY.value = rightEyeResult.moveY * GLEAM_MOVEMENT_FACTOR - Math.abs(timeOscillation) * 0.7
+    targetRightGleamX.value = rightEyeResult.moveX * GLEAM_MOVEMENT_FACTOR + timeOscillation * RIGHT_GLEAM_OSCILLATION_X_FACTOR
+    targetRightGleamY.value = rightEyeResult.moveY * GLEAM_MOVEMENT_FACTOR - Math.abs(timeOscillation) * RIGHT_GLEAM_OSCILLATION_Y_FACTOR
   }
 
   // Apply smooth movement with easing for pupils
@@ -324,7 +394,7 @@ onUnmounted(() => {
     <svg
       :width="size"
       :height="size"
-      viewBox="0 0 128 128"
+      :viewBox="`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`"
       class="drop-shadow-lg"
     >
       <defs>
@@ -363,39 +433,39 @@ onUnmounted(() => {
 
       <!-- Ears -->
       <circle
-        cx="30"
-        cy="38"
-        r="17"
+        :cx="LEFT_EAR_X"
+        :cy="LEFT_EAR_Y"
+        :r="EAR_OUTER_RADIUS"
         fill="white"
       />
       <circle
-        cx="30"
-        cy="38"
-        r="12"
+        :cx="LEFT_EAR_X"
+        :cy="LEFT_EAR_Y"
+        :r="EAR_INNER_RADIUS"
         fill="none"
         stroke="#d8d8d8"
-        stroke-width="2"
+        :stroke-width="EAR_STROKE_WIDTH"
       />
       <circle
-        cx="98"
-        cy="38"
-        r="17"
+        :cx="RIGHT_EAR_X"
+        :cy="RIGHT_EAR_Y"
+        :r="EAR_OUTER_RADIUS"
         fill="white"
       />
       <circle
-        cx="98"
-        cy="38"
-        r="12"
+        :cx="RIGHT_EAR_X"
+        :cy="RIGHT_EAR_Y"
+        :r="EAR_INNER_RADIUS"
         fill="none"
         stroke="#d8d8d8"
-        stroke-width="2"
+        :stroke-width="EAR_STROKE_WIDTH"
       />
 
       <!-- Head -->
       <circle
-        cx="64"
-        cy="64"
-        r="50"
+        :cx="HEAD_X"
+        :cy="HEAD_Y"
+        :r="HEAD_RADIUS"
         fill="white"
       />
 
@@ -403,37 +473,37 @@ onUnmounted(() => {
       <g>
         <line
           v-if="isBlinking"
-          x1="44"
-          y1="52"
-          x2="60"
-          y2="52"
+          :x1="LEFT_BLINK_X1"
+          :y1="LEFT_BLINK_Y"
+          :x2="LEFT_BLINK_X2"
+          :y2="LEFT_BLINK_Y"
           stroke="#333"
-          stroke-width="2.5"
+          :stroke-width="BLINK_STROKE_WIDTH"
           stroke-linecap="round"
         />
         <template v-else>
           <ellipse
-            cx="50"
-            cy="52"
-            rx="10"
-            ry="11"
+            :cx="LEFT_EYE_X"
+            :cy="LEFT_EYE_Y"
+            :rx="EYE_ELLIPSE_RX"
+            :ry="EYE_ELLIPSE_RY"
             fill="url(#eyeGradient)"
           />
           <g ref="leftEyeGroup">
             <!-- Pupil -->
             <circle
-              cx="50"
-              cy="52"
-              r="6"
+              :cx="LEFT_EYE_X"
+              :cy="LEFT_EYE_Y"
+              :r="PUPIL_RADIUS"
               fill="#333"
             />
           </g>
           <!-- Gleam (independent from pupil) -->
           <circle
             ref="leftGleam"
-            cx="51"
-            cy="51"
-            r="1.2"
+            :cx="LEFT_GLEAM_X"
+            :cy="LEFT_GLEAM_Y"
+            :r="GLEAM_RADIUS"
             fill="white"
           />
         </template>
@@ -441,37 +511,37 @@ onUnmounted(() => {
       <g>
         <line
           v-if="isBlinking"
-          x1="68"
-          y1="52"
-          x2="84"
-          y2="52"
+          :x1="RIGHT_BLINK_X1"
+          :y1="RIGHT_BLINK_Y"
+          :x2="RIGHT_BLINK_X2"
+          :y2="RIGHT_BLINK_Y"
           stroke="#333"
-          stroke-width="2.5"
+          :stroke-width="BLINK_STROKE_WIDTH"
           stroke-linecap="round"
         />
         <template v-else>
           <ellipse
-            cx="78"
-            cy="52"
-            rx="10"
-            ry="11"
+            :cx="RIGHT_EYE_X"
+            :cy="RIGHT_EYE_Y"
+            :rx="EYE_ELLIPSE_RX"
+            :ry="EYE_ELLIPSE_RY"
             fill="url(#eyeGradient)"
           />
           <g ref="rightEyeGroup">
             <!-- Pupil -->
             <circle
-              cx="78"
-              cy="52"
-              r="6"
+              :cx="RIGHT_EYE_X"
+              :cy="RIGHT_EYE_Y"
+              :r="PUPIL_RADIUS"
               fill="#333"
             />
           </g>
           <!-- Gleam (independent from pupil) -->
           <circle
             ref="rightGleam"
-            cx="79"
-            cy="51"
-            r="1.2"
+            :cx="RIGHT_GLEAM_X"
+            :cy="RIGHT_GLEAM_Y"
+            :r="GLEAM_RADIUS"
             fill="white"
           />
         </template>
@@ -479,41 +549,41 @@ onUnmounted(() => {
 
       <!-- Nose -->
       <polygon
-        points="62.5,71 65.5,71 64,73"
+        :points="NOSE_POINTS"
         fill="#333"
         stroke="#333"
-        stroke-width="14"
+        :stroke-width="NOSE_STROKE_WIDTH"
         stroke-linejoin="round"
       />
 
       <!-- Tongue -->
       <path
-        :d="`M 58 84 L 58 ${94 - tongueExtension} C 58 ${100 - tongueExtension} 70 ${100 - tongueExtension} 70 ${94 - tongueExtension} L 70 84 L 58 84`"
+        :d="`M ${TONGUE_LEFT_X} ${TONGUE_TOP_Y} L ${TONGUE_LEFT_X} ${TONGUE_BASE_Y - tongueExtension} C ${TONGUE_LEFT_X} ${TONGUE_CURVE_Y - tongueExtension} ${TONGUE_RIGHT_X} ${TONGUE_CURVE_Y - tongueExtension} ${TONGUE_RIGHT_X} ${TONGUE_BASE_Y - tongueExtension} L ${TONGUE_RIGHT_X} ${TONGUE_TOP_Y} L ${TONGUE_LEFT_X} ${TONGUE_TOP_Y}`"
         fill="url(#tongueGradient)"
         stroke="#ff8aa8"
-        stroke-width="1.5"
+        :stroke-width="TONGUE_STROKE_WIDTH"
         stroke-linejoin="round"
         stroke-linecap="round"
         :style="{ transition: `d ${ANIMATION_DURATION}ms ease-in-out` }"
       />
       <!-- Tongue groove -->
       <path
-        :d="`M 64 84 L 64 ${96 - tongueExtension}`"
+        :d="`M ${TONGUE_GROOVE_X} ${TONGUE_TOP_Y} L ${TONGUE_GROOVE_X} ${TONGUE_GROOVE_BASE_Y - tongueExtension}`"
         fill="none"
         stroke="#ff8aa8"
-        stroke-width="1"
+        :stroke-width="TONGUE_GROOVE_STROKE_WIDTH"
         stroke-linecap="round"
         :style="{ transition: `d ${ANIMATION_DURATION}ms ease-in-out` }"
       />
 
       <!-- Mouth (must come after tongue for correct layering) -->
       <line
-        x1="50"
-        y1="84"
-        x2="78"
-        y2="84"
+        :x1="MOUTH_X1"
+        :y1="MOUTH_Y"
+        :x2="MOUTH_X2"
+        :y2="MOUTH_Y"
         stroke="#333"
-        stroke-width="2"
+        :stroke-width="MOUTH_STROKE_WIDTH"
         stroke-linecap="round"
       />
     </svg>
