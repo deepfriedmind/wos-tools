@@ -14,6 +14,9 @@ export default <Partial<Config>>{
     // eslint-disable-next-line ts/unbound-method
     plugin(({ addUtilities, addVariant, theme }) => {
       addUtilities({
+        '.content-auto': {
+          contentVisibility: 'auto',
+        },
         '.hitbox-50': {
           '&::after': {
             bottom: '-25%',
