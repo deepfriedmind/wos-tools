@@ -21,8 +21,8 @@ export function useScrollHeader(options: ScrollHeaderOptions = {}) {
   } = options
 
   const { y } = useWindowScroll()
-  const lastScrollY = ref(0)
-  const direction = ref<ScrollDirectionType>(ScrollDirection.UP)
+  const lastScrollY = shallowRef(0)
+  const direction = shallowRef<ScrollDirectionType>(ScrollDirection.UP)
 
   const updateScrollDirection = useThrottleFn(() => {
     const currentScrollY = y.value

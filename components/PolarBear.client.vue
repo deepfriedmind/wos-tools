@@ -244,10 +244,10 @@ const rightGleam = useTemplateRef('rightGleam')
 // Mouse tracking
 const { x: mouseX, y: mouseY } = useMouse()
 const debouncedMousePosition = computed(() => ({ x: mouseX.value, y: mouseY.value }))
-const previousMouseX = ref(mouseX.value)
-const previousMouseY = ref(mouseY.value)
-const isEyesReset = ref(false)
-const hasMouseMovedSinceReset = ref(true)
+const previousMouseX = shallowRef(mouseX.value)
+const previousMouseY = shallowRef(mouseY.value)
+const isEyesReset = shallowRef(false)
+const hasMouseMovedSinceReset = shallowRef(true)
 
 // Animation state and timeouts
 let tongueTimeoutId: NodeJS.Timeout | undefined
@@ -259,10 +259,10 @@ const { pause, resume } = useRafFn((callbackArguments: { timestamp: number }) =>
 }, { immediate: false })
 
 // Tongue animation state
-const tongueExtension = ref(0)
+const tongueExtension = shallowRef(0)
 
 // Blinking animation state
-const isBlinking = ref(false)
+const isBlinking = shallowRef(false)
 
 // Eye and gleam movement state
 const eyePositions = reactive<EyePositions>({
@@ -287,7 +287,7 @@ const gleamPositions = reactive<GleamPositions>({
   },
 })
 
-const svgRect = ref<DOMRect>()
+const svgRect = shallowRef<DOMRect>()
 const svgPosition = computed(() => {
   if (!svgRect.value)
     return { scale: 1, x: 0, y: 0 }

@@ -6,34 +6,46 @@ interface MockStorageReturn {
 }
 
 export function mockDayjs(): void {
-  vi.mock('#imports', () => ({
-    useDayjs: () => ({
-      duration: (value: number) => ({
-        asSeconds: () => value / 1000,
-        format: () => {
-          const totalSeconds = value / 1000
-          const hours = Math.floor(totalSeconds / 3600)
-          const minutes = Math.floor((totalSeconds % 3600) / 60)
-          const seconds = Math.floor(totalSeconds % 60)
+  vi.mock('#imports', async () => {
+    const actual = await vi.importActual('#imports')
 
-          return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
-        },
+    return {
+      ...(actual as Record<string, unknown>),
+      useDayjs: () => ({
+        duration: (value: number) => ({
+          asSeconds: () => value / 1000,
+          format: () => {
+            const totalSeconds = value / 1000
+            const hours = Math.floor(totalSeconds / 3600)
+            const minutes = Math.floor((totalSeconds % 3600) / 60)
+            const seconds = Math.floor(totalSeconds % 60)
+
+            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+          },
+        }),
       }),
-    }),
-  }))
+    }
+  })
 }
 
 export function mockLocalStorage(): MockStorageReturn {
   const mockStorage = new Map<string, unknown>()
 
-  vi.mock('#imports', () => ({
-    useLocalStorage: vi.fn(<T>(key: string, defaultValue: T) => {
-      if (!mockStorage.has(key))
-        mockStorage.set(key, defaultValue)
+  vi.mock('#imports', async () => {
+    const actual = await vi.importActual('#imports')
 
-      return ref<T>(mockStorage.get(key) as T)
-    }),
-  }))
+    return {
+      ...(actual as Record<string, unknown>),
+      useLocalStorage: vi.fn(<T>(key: string, defaultValue: T) => {
+        if (!mockStorage.has(key))
+          mockStorage.set(key, defaultValue)
+
+        return {
+          value: mockStorage.get(key) as T,
+        }
+      }),
+    }
+  })
 
   return {
     clear: () => mockStorage.clear(),
@@ -44,8 +56,8 @@ export function mockLocalStorage(): MockStorageReturn {
 export function mockResetCountdown(): void {
   vi.mock('~/composables/useResetCountdown', () => ({
     default: () => ({
-      error: ref(false),
-      secondsUntilReset: ref(24 * 3600), // 24 hours in seconds
+      error: shallowRef(false),
+      secondsUntilReset: shallowRef(24 * 3600), // 24 hours in seconds
     }),
   }))
 }

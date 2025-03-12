@@ -59,8 +59,8 @@ const EXPEDITION_SKILL_OPTIONS: ExpeditionSkillOption[] = [
 const STORAGE_PREFIX = useRuntimeConfig().public.storagePrefix
 const BASE_TIME_SECONDS = 117_847 // 32:44:7.275 = magic in-game number
 const CITY_BONUS_PERCENT = 100
-const travelTimeMinutes = ref(1)
-const travelTimeSeconds = ref(0)
+const travelTimeMinutes = shallowRef(1)
+const travelTimeSeconds = shallowRef(0)
 
 const route = useRoute()
 const router = useRouter()
@@ -249,7 +249,7 @@ const resourceCards = computed<ResourceCard[]>(() => {
   /* eslint-enable perfectionist/sort-objects */
 })
 
-const showGatheringBonusDialog = ref(false)
+const showGatheringBonusDialog = shallowRef(false)
 </script>
 
 <template>

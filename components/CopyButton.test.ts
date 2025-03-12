@@ -14,7 +14,7 @@ interface Props {
 
 const mockCopy = vi.fn()
 const mockClipboard = {
-  copied: ref(false),
+  copied: shallowRef(false),
   copy: mockCopy,
 }
 

@@ -279,7 +279,7 @@ const joiningRallySections = computed(() => {
   return sections
 })
 
-const isShaking = ref(false)
+const isShaking = shallowRef(false)
 let lastFactIndex = -1
 
 function handleBearClick() {

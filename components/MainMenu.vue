@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { localSettings } = useLocalSettings()
-const drawerVisible = ref(false)
+const drawerVisible = shallowRef(false)
 
 const route = useRoute()
 const router = useRouter()
