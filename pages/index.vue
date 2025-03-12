@@ -23,7 +23,7 @@ const pages = computed(() => router.getRoutes()
         >
           <RouterLink
             :to="page.path"
-            class="inline-block origin-left text-3xl font-bold text-primary-emphasis transition text-shadow hover:scale-105 hover:text-primary-emphasis-alt md:text-4xl"
+            class="inline-block text-3xl font-bold text-primary-emphasis transition text-shadow hover:scale-105 hover:text-primary-emphasis-alt max-sm:origin-left md:text-4xl"
           >
             {{ page.name }}
           </RouterLink>
