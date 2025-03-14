@@ -295,10 +295,7 @@ function handleBearClick() {
   } while (POLAR_BEAR_FACTS.indexOf(randomPolarBearFact) === lastFactIndex)
 
   lastFactIndex = POLAR_BEAR_FACTS.indexOf(randomPolarBearFact)
-  toast.removeAllGroups()
-  setTimeout(() => {
-    toast.add({ detail: randomPolarBearFact, life: 5000, severity: 'info', summary: '🐻‍❄️ Did you know?' })
-  }, 100)
+  toast.add({ detail: randomPolarBearFact, life: 5000, severity: 'info', summary: '🐻‍❄️ Did you know?' })
 
   setTimeout(() => {
     isShaking.value = false

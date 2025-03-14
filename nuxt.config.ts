@@ -1,43 +1,5 @@
-import { definePreset } from '@primeuix/themes'
-import Aura from '@primeuix/themes/aura'
-
+import primevue from './primevue.config'
 import rem from './utils/rem'
-
-const ThemeConfiguration = definePreset(Aura, {
-  semantic: {
-    colorScheme: {
-      dark: {
-        surface: {
-          0: '#ffffff',
-          50: '#f7faff',
-          100: '#d8e9ff',
-          200: '#b9d7ff',
-          300: '#9ac6ff',
-          400: '#7bb4ff',
-          500: '#5ca3ff',
-          600: '#4e8bd9',
-          700: '#4072b3',
-          800: '#335a8c',
-          900: '#254166',
-          950: '#172940',
-        },
-      },
-    },
-    primary: {
-      50: '#f9fbff',
-      100: '#e0edfe',
-      200: '#c8e0fd',
-      300: '#afd2fd',
-      400: '#97c4fc',
-      500: '#7eb6fb',
-      600: '#6b9bd5',
-      700: '#587fb0',
-      800: '#45648a',
-      900: '#324964',
-      950: '#202e3f',
-    },
-  },
-}) as Record<string, unknown>
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -88,6 +50,7 @@ export default defineNuxtConfig({
       storagePrefix: 'wos-tools_',
     },
   },
+  watch: ['primevue.config.ts'],
   compatibilityDate: '2025-02-22',
   nitro: {
     runtimeConfig: {
@@ -148,24 +111,7 @@ export default defineNuxtConfig({
     key: 'wos-tools_%id',
     storage: 'localStorage',
   },
-  primevue: {
-    directives: {
-      prefix: 'p',
-    },
-    options: {
-      ripple: true,
-      theme: {
-        options: {
-          cssLayer: {
-            name: 'primevue',
-            order: 'tailwind-base, primevue, tailwind-utilities',
-          },
-          darkModeSelector: '.dark',
-        },
-        preset: ThemeConfiguration,
-      },
-    },
-  },
+  primevue,
   tailwindcss: {
     exposeConfig: true,
     config: {

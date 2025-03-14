@@ -25,7 +25,7 @@ useSeoMeta({
     lang="en"
     class="dark"
   >
-    <Toast position="top-center" />
+    <Toast />
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
