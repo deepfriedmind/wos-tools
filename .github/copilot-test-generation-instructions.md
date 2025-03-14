@@ -2,6 +2,8 @@ Place test files in the same directory as the file being tested (co-located), ex
 
 Put reusable mocks in `tests/helpers/mocks.ts`.
 
+Put global plugin setup in `tests/helpers/plugins.ts`.
+
 Put PrimeVue component mocks in `tests/helpers/primevue.ts`.
 
 Use Vitest with `@nuxt/test-utils` for testing.

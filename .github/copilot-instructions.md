@@ -4,15 +4,13 @@ Always validate code syntax and nesting before suggesting changes.
 
 Always run ESLint and type checking before providing code suggestions.
 
+Don't use abbreviations or acronyms for variable names. Make them clear and descriptive without being overly verbose.
+
 Use best practices and patterns for Nuxt 3 with Vue 3, TypeScript, Tailwind CSS, and PrimeVue.
 
 Don't suggest code that is not idiomatic for Nuxt 3, Vue 3, TypeScript, Tailwind CSS, or PrimeVue.
 
 Don't add imports for anything that is auto-imported via Nuxt, e.g. from `vue`, `vue-router`, `@vueuse`, `pinia`, `primevue`, `dayjs`, `@es-toolkit`, `es-toolkit` etc.
-
-Use `<script setup lang="ts">` for single-file components.
-
-Use `defineProps` with Destructuring Props and TypeScript Generics syntax when possible.
 
 Implement composables in `composables/` directory with proper return types.
 
@@ -23,6 +21,16 @@ Implement layouts in `layouts/` directory with proper slots.
 Implement pages in `pages/` directory with proper routing.
 
 Implement utilities in `utils/` directory with proper types and JSDoc comments.
+
+Use `<script setup lang="ts">` for single-file components.
+
+Always prefer destructuring whenever possible.
+
+Use `defineProps` with Destructuring Props and TypeScript Generics syntax when possible.
+
+Use `useTemplateRef` for template refs. They do not need to be typed.
+
+Use `shallowRef` instead of `ref` whenever possible.
 
 Handle async data with `useAsyncData` and error handling.
 
@@ -46,7 +54,7 @@ Create reusable PrimeVue component compositions.
 
 Use Day.js via the `useDayjs` composable for everything date- and time-related.
 
-Use VueUse composables for common utilities.
+Use VueUse and es-toolkit for common utilities.
 
 Use `provide`/`inject` for dependency injection.
 
@@ -58,8 +66,6 @@ Use named slots for component composition.
 
 Implement store actions with proper typing.
 
-Use `shallowRef` for large reactive objects.
-
 Create reusable transition components.
 
 Type component methods with `expose`.
@@ -70,4 +76,4 @@ When files have no problems left, run the corresponding tests if applicable.
 
 Run tests with `pnpm vitest run <filename>`.
 
-After making changes, don't add comments like `// Changed from` or `// Updated to` that would not make sense to include in a commit.
+After making changes, don't add comments like `// Changed from` or `// Updated to` that would not make sense to include in a commit or the final code. Focus on code quality and self-documentation rather than explaining changes through comments.
