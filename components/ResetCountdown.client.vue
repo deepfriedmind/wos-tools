@@ -2,8 +2,12 @@
 import { _orange, _red, _yellow } from '#tailwind-config/theme/colors'
 
 const { error, secondsUntilReset, timeRemainingUntilReset } = useResetCountdown()
+const toast = useToast()
 
 const SECONDS_IN_DAY = 86_400
+const ARENA_WARNING_THRESHOLD = 600 // 10 min
+let arenaWarningShown = false
+
 const progress = computed(() => {
   if (error.value)
     return 0
@@ -23,6 +27,21 @@ const progressColor = computed(() => {
 })
 
 const isLoaded = computed(() => !error.value && secondsUntilReset.value > 0)
+
+watch(() => secondsUntilReset.value, (seconds) => {
+  if (!arenaWarningShown && seconds <= ARENA_WARNING_THRESHOLD) {
+    toast.add({
+      ...ARENA_TOAST,
+      life: seconds * 1000,
+      severity: 'warn',
+    })
+    arenaWarningShown = true
+  }
+
+  if (seconds === 0) {
+    arenaWarningShown = false
+  }
+})
 </script>
 
 <template>

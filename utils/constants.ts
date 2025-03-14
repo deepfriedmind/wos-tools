@@ -145,3 +145,11 @@ export const POLAR_BEAR_FACTS = [
   'Polar bears show strong swimming abilities from youth',
   'Please don\'t kill me',
 ] as const
+
+/**
+ * Toast notification for arena alert before reset
+ */
+export const ARENA_TOAST = {
+  detail: 'GO KILL!',
+  summary: '⚔️ ARENA!',
+} as const
