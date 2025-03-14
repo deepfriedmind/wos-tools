@@ -100,7 +100,7 @@ export default <Partial<Config>>{
     },
     extend: {
       animation: {
-        gradient: 'gradient 8s linear infinite alternate',
+        gradient: 'gradient 10s cubic-bezier(0.65, 0.05, 0.36, 1) infinite alternate', // In/Out Cubic
         shake: 'shake 0.82s cubic-bezier(.36,.07,.19,.97) both',
       },
       fontFamily: {
