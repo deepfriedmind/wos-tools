@@ -24,7 +24,9 @@ const { isScrolled, shouldHideHeader } = useScrollHeader()
             class="text-3xl/none transition-transform hover:scale-105 sm:text-4xl/none md:text-6xl/none"
           />
         </RouterLink>
-        <ResetCountdown />
+        <ClientOnly>
+          <LazyResetCountdown hydrate-on-idle />
+        </ClientOnly>
       </div>
     </nav>
   </header>

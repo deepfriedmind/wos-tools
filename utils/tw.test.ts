@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import tw from './tw'
+import tw from '~/utils/tw'
 
 describe('tw', () => {
   it('removes extraneous whitespace from template literal', () => {

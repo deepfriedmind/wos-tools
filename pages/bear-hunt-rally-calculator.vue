@@ -313,7 +313,8 @@ function handleBearClick() {
         leave-to-class="translate-y-[-56%] opacity-100"
       >
         <div class="group absolute left-1/2 -translate-x-1/2 translate-y-[-56%] transition duration-300 ease-out-back leading-0 hover:translate-y-[-78%]">
-          <PolarBear
+          <LazyPolarBear
+            hydrate-on-idle
             class="origin-bottom cursor-pointer transition-transform duration-300 ease-out-back will-change-transform group-hover:scale-110"
             :class="{ 'animate-shake': isShaking }"
             @click="handleBearClick"
