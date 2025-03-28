@@ -15,8 +15,6 @@ const props = withDefaults(defineProps<Props>(), {
 const toast = useToast()
 const { copied, copy } = useClipboard({ legacy: true })
 
-const clipboardSuccess = computed(() => copied.value)
-
 async function clipboardWrite() {
   try {
     if (props.copyString === '') {
@@ -40,8 +38,8 @@ async function clipboardWrite() {
 
 <template>
   <Button
-    :class="{ [props.successClass]: clipboardSuccess }"
-    :data-copy-success="clipboardSuccess"
+    :class="{ [props.successClass]: copied }"
+    :data-copy-success="copied"
     @click="clipboardWrite"
   >
     <slot />
