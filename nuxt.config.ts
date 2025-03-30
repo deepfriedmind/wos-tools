@@ -75,7 +75,7 @@ export default defineNuxtConfig({
     },
   },
   dayjs: {
-    plugins: ['utc', 'duration', 'localizedFormat'],
+    plugins: ['utc', 'duration'],
   },
   eslint: {
     config: {
