@@ -103,7 +103,7 @@ watch(() => route.fullPath, () => {
               >
                 <RouterLink
                   :to="page.path"
-                  class="text-primary-emphasis underline-offset-4 transition-colors hover:text-primary-emphasis-alt link-active:pointer-events-none link-active:font-medium link-active:underline"
+                  class="text-primary-emphasis underline-offset-4 transition-colors hover:text-primary-emphasis-alt link-active:pointer-events-none link-active:font-medium link-active:text-primary-emphasis/70 link-active:underline link-active:decoration-wavy"
                 >
                   {{ page.name }}
                 </RouterLink>
