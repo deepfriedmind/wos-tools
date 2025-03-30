@@ -12,7 +12,9 @@ const { isScrolled, shouldHideHeader } = useScrollHeader()
     }"
   >
     <nav class="justify-between gap-2 px-4 pt-4 2xl:container max-md:flex sm:px-8 sm:pt-8 md:space-y-5 xl:px-16">
-      <MainMenu />
+      <ClientOnly>
+        <LazyMainMenu hydrate-on-idle />
+      </ClientOnly>
       <div class="flex flex-1 items-start justify-between max-md:mt-1 md:items-end">
         <RouterLink
           to="/"

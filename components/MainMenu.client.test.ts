@@ -3,7 +3,7 @@ import type { VueWrapper } from '@vue/test-utils'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 
-import MainMenu from '~/components/MainMenu.vue'
+import MainMenu from '~/components/MainMenu.client.vue'
 import { useLocalSettings } from '~/stores/local-settings'
 import { DrawerStub, RouterLinkStub, ToggleSwitchStub } from '~/tests/helpers/mocks'
 import { setupGlobalPlugins } from '~/tests/helpers/plugins'
