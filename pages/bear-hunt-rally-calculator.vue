@@ -616,12 +616,13 @@ function handleBearClick() {
         </div>
 
         <div class="text-center">
-          <a
-            href="https://outof.games/realms/whiteoutsurvival/guides/397-everything-you-need-to-know-about-bear-hunt-in-whiteout-survival/"
+          <NuxtLink
+            to="https://outof.games/realms/whiteoutsurvival/guides/397-everything-you-need-to-know-about-bear-hunt-in-whiteout-survival/"
             target="_blank"
-            rel="external noopener noreferrer"
             class="text-sm text-primary transition-colors hover:text-primary-300 hover:underline"
-          >Good Bear Hunt guide</a>
+          >
+            Good Bear Hunt guide
+          </NuxtLink>
         </div>
       </div>
     </MainContentCard>
