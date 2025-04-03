@@ -16,6 +16,7 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     'dayjs-nuxt',
     'floating-vue/nuxt',
+    'nuxt-og-image',
     'pinia-plugin-persistedstate/nuxt',
   ],
   imports: {
@@ -45,6 +46,10 @@ export default defineNuxtConfig({
   css: [
     'primeicons/primeicons.css',
   ],
+  site: {
+    url: 'https://wostools.netlify.app',
+    name: 'WoS Tools❄️',
+  },
   runtimeConfig: {
     public: {
       storagePrefix: 'wos-tools_',
@@ -105,6 +110,12 @@ export default defineNuxtConfig({
         'fluent-emoji:snowflake',
       ],
       scan: true,
+    },
+  },
+  ogImage: {
+    fonts: ['Space+Grotesk:400', 'Space+Grotesk:700'],
+    defaults: {
+      emojis: 'fluent-emoji',
     },
   },
   piniaPluginPersistedstate: {

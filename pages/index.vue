@@ -1,4 +1,13 @@
 <script lang="ts" setup>
+const { name } = useSiteConfig()
+defineOgImage(false)
+defineOgImage({
+  alt: `${name} logo`,
+  height: 600,
+  url: '/og-image.jpg',
+  width: 1200,
+})
+
 const router = useRouter()
 
 const pages = computed(() => router.getRoutes()

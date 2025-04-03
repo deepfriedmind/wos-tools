@@ -21,11 +21,20 @@ const description = computed(() =>
     : 'A collection of tools for the game Whiteout Survival.',
 )
 
+const { name } = useSiteConfig()
+
 useSeoMeta({
   description,
+  ogDescription: description,
+  ogTitle: title,
+  ogType: 'website',
   title,
-  titleTemplate: title => title ? `${title} | WoS Tools❄️` : 'WoS Tools❄️',
+  titleTemplate: title => title ? `${title} | ${name}` : name,
+  twitterCard: 'summary_large_image',
+  twitterDescription: description,
+  twitterTitle: title,
 })
+defineOgImageComponent('NuxtSeo', { colorMode: 'dark', theme: '#4072b3' })
 </script>
 
 <template>
