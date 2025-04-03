@@ -11,7 +11,12 @@ const dayjs = useDayjs()
     <div class="container [text-shadow:1px_1px_0px_rgb(36_65_102_/_50%)]">
       <p class="space-y-2 font-medium">
         <span class="max-lg:block">&copy;{{ dayjs(buildTime).year() }}
-          <Logo class="text-xl" />
+          <RouterLink
+            to="/"
+            aria-label="Home"
+          >
+            <Logo class="text-xl" />
+          </RouterLink>
         </span>
         <span class="max-lg:hidden">– </span><span class="max-lg:block">
           Made with <img
