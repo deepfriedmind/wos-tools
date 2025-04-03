@@ -6,6 +6,8 @@ Put global plugin setup in `tests/helpers/plugins.ts`.
 
 Put PrimeVue component mocks in `tests/helpers/primevue.ts`.
 
+Use `~/` syntax for imports.
+
 Use Vitest with `@nuxt/test-utils` for testing.
 
 Use `setup()` from `@nuxt/test-utils` in test files.
