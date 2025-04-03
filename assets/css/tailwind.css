@@ -11,6 +11,6 @@
 
 @layer base {
   body {
-    @apply bg-[url('/img/bg-mobile.avif'),linear-gradient(to_top,white,#244166)] md:bg-[url('/img/bg-desktop.avif'),linear-gradient(to_top,white,#244166)] bg-no-repeat bg-bottom bg-contain min-h-screen;
+    @apply bg-gradient-to-t from-[#c1cae4] to-[#244166] min-h-screen;
   }
 }
