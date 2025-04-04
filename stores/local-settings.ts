@@ -1,4 +1,5 @@
 interface LocalSettings {
+  serverStartDate?: string
   timezone: string
   timezoneShort: string
   use24HourFormat: boolean
@@ -32,6 +33,7 @@ function getTimezoneInfo(): { timezone: string, timezoneShort: string } {
 export const useLocalSettings = defineStore('local-settings', () => {
   const localSettings = ref<LocalSettings>({
     ...getTimezoneInfo(),
+    serverStartDate: undefined,
     use24HourFormat: true,
     useUtcTime: false,
   })

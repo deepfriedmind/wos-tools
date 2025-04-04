@@ -80,7 +80,7 @@ export default defineNuxtConfig({
     },
   },
   dayjs: {
-    plugins: ['utc', 'duration'],
+    plugins: ['duration', 'isSameOrAfter', 'relativeTime', 'utc'],
   },
   eslint: {
     config: {

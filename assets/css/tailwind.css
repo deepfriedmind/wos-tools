@@ -14,3 +14,9 @@
     @apply bg-gradient-to-t from-[#c1cae4] to-[#244166] min-h-screen;
   }
 }
+
+@layer utilities {
+  .link-primary {
+    @apply text-primary transition-colors hover:text-primary-300 hover:underline;
+  }
+}

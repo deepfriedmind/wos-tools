@@ -1,3 +1,4 @@
+import typographyPlugin from '@tailwindcss/typography'
 import type { Config } from 'tailwindcss'
 import defaultTheme from 'tailwindcss/defaultTheme'
 import plugin from 'tailwindcss/plugin'
@@ -11,6 +12,7 @@ export default <Partial<Config>>{
   darkMode: 'selector',
   plugins: [
     PrimeUI,
+    typographyPlugin,
     // eslint-disable-next-line ts/unbound-method
     plugin(({ addUtilities, addVariant, theme }) => {
       addUtilities({
@@ -130,6 +132,24 @@ export default <Partial<Config>>{
       },
       transitionTimingFunction: {
         'out-back': 'cubic-bezier(.34,1.56,.64,1)',
+      },
+      typography: {
+        DEFAULT: {
+          css: {
+            '--tw-prose-body': 'white',
+            '--tw-prose-bold': 'white',
+            '--tw-prose-bullets': '#c0c0c0',
+            '--tw-prose-captions': '#c0c0c0',
+            '--tw-prose-code': 'white',
+            '--tw-prose-counters': '#c0c0c0',
+            '--tw-prose-headings': 'white',
+            '--tw-prose-hr': '#c0c0c0',
+            '--tw-prose-lead': 'white',
+            '--tw-prose-quotes': 'white',
+            '--tw-prose-td-borders': '#c0c0c0',
+            '--tw-prose-th-borders': '#c0c0c0',
+          },
+        },
       },
     },
     fontWeight: {

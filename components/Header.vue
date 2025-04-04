@@ -1,14 +1,16 @@
 <script setup lang="ts">
+const { isStickyHeaderEnabled } = useStickyHeader()
 const { isScrolled, shouldHideHeader } = useScrollHeader()
 </script>
 
 <template>
   <header
-    class="sticky top-0 z-10 transition-all will-change-transform"
+    class="top-0 z-10 transition-all will-change-transform"
     :class="{
-      'bg-surface-950/95 pb-2 backdrop-blur-md sm:pb-4 md:pb-8': isScrolled,
-      '-translate-y-full': shouldHideHeader,
-      'shadow-md': isScrolled && !shouldHideHeader,
+      'sticky': isStickyHeaderEnabled,
+      'bg-surface-950/95 pb-2 backdrop-blur-md sm:pb-4 md:pb-8': isStickyHeaderEnabled && isScrolled,
+      '-translate-y-full': isStickyHeaderEnabled && shouldHideHeader,
+      'shadow-md': isStickyHeaderEnabled && isScrolled && !shouldHideHeader,
     }"
   >
     <nav class="justify-between gap-2 px-4 pt-4 2xl:container max-md:flex sm:px-8 sm:pt-8 md:space-y-5 xl:px-16">

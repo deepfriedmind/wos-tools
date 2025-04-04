@@ -1,0 +1,366 @@
+<script setup lang="ts">
+import { _lg, _sm, _xl } from '#tailwind-config/theme/screens'
+import milestones from '~/public/data/server-timeline.json'
+
+definePageMeta({
+  description: 'The milestones a server goes through and when they unlock (approximately) in Whiteout Survival.',
+  title: 'Server Timeline 📅',
+})
+
+const WOS_LAUNCH_DATE = '2023-02-09'
+
+const route = useRoute()
+const router = useRouter()
+
+const { localSettings } = useLocalSettings()
+const dayjs = useDayjs()
+const { setIsStickyHeaderEnabled } = useStickyHeader()
+const isMinSmBreakpoint = useMediaQuery(`(min-width: ${_sm})`, { ssrWidth: 640 })
+const isMinLgBreakpoint = useMediaQuery(`(min-width: ${_lg})`, { ssrWidth: 1024 })
+const isMinXlBreakpoint = useMediaQuery(`(min-width: ${_xl})`, { ssrWidth: 1280 })
+
+const activeMilestoneId = ref<string | undefined>(undefined)
+
+const initialDate = computed(() => {
+  if (route.query.date && dayjs(route.query.date as string).isValid())
+    return dayjs(route.query.date as string)
+
+  if (localSettings.serverStartDate)
+    return dayjs(localSettings.serverStartDate)
+
+  return dayjs()
+})
+
+const selectedDayjs = ref(initialDate.value)
+
+const selectedDate = computed({
+  get: () => selectedDayjs.value.toDate(),
+  set: (date: Date) => {
+    const newDayjs = dayjs(date)
+    selectedDayjs.value = newDayjs
+
+    // Only update URL if the date is not today
+    const isDateToday = newDayjs.isSame(dayjs(), 'day')
+
+    if (isDateToday) {
+      // Remove date parameter if it exists
+      if (route.query.date) {
+        const newQuery = { ...route.query }
+        delete newQuery.date
+        router.replace({
+          path: route.path,
+          query: Object.keys(newQuery).length > 0 ? newQuery : undefined,
+        })
+      }
+    }
+    else {
+      // Update URL query parameter when date is not today
+      router.replace({
+        path: route.path,
+        query: {
+          ...route.query,
+          date: newDayjs.format('YYYY-MM-DD'),
+        },
+      })
+    }
+  },
+})
+
+const selectedDateIsValid = computed(() => dayjs(selectedDate.value).isValid())
+
+const isToday = computed(() => selectedDayjs.value.isSame(dayjs(), 'day'))
+const isPanelsExpanded = ref(true)
+const panelsToggledByUser = ref(false)
+
+const serverAgeString = computed(() => {
+  const diff = dayjs().diff(selectedDayjs.value, 'day')
+
+  return `${diff} ${diff === 1 ? 'day' : 'days'} ago`
+})
+
+const timelineEntryReferences = ref<(HTMLElement | null)[]>([])
+
+const processedMilestones = computed(() => {
+  if (!milestones || !localSettings.serverStartDate)
+    return []
+
+  const startDate = dayjs(localSettings.serverStartDate)
+  const currentDate = dayjs()
+
+  return milestones.map((milestone, index) => {
+    const milestoneDate = startDate.add(milestone.day - 1, 'day')
+
+    return {
+      ...milestone,
+      hasMileStonePassed: milestoneDate.isBefore(currentDate, 'day'),
+      index,
+      mileStoneDate: milestoneDate.format('YYYY-MM-DD'),
+    }
+  })
+})
+
+const debouncedUpdateActiveMilestone = useDebounceFn((newActiveId: string) => {
+  if (activeMilestoneId.value !== newActiveId) {
+    activeMilestoneId.value = newActiveId
+
+    const isFirstMilestone = processedMilestones.value.length > 0
+      && newActiveId === useKebabCase(processedMilestones.value[0].title)
+
+    if (isFirstMilestone || (import.meta.client && window.scrollY < 100))
+      return history.replaceState(undefined, '', `${route.path}${Object.keys(route.query).length > 0 ? `?${new URLSearchParams(route.query as Record<string, string>).toString()}` : ''}`)
+
+    if (route.hash !== `#${newActiveId}`) {
+      history.replaceState(undefined, '', `#${newActiveId}`)
+    }
+  }
+}, 150)
+
+watch(selectedDayjs, (newDate) => {
+  localSettings.serverStartDate = newDate.format('YYYY-MM-DD')
+  panelsToggledByUser.value = false
+})
+
+onMounted(() => {
+  setIsStickyHeaderEnabled(false)
+
+  const { path, query } = route
+  const { date } = query
+
+  // Update localSettings.serverStartDate if a valid date is found in URL query parameters
+  if (date && dayjs(String(date)).isValid()) {
+    localSettings.serverStartDate = dayjs(String(date)).format('YYYY-MM-DD')
+  }
+  // Otherwise, set localSettings.serverStartDate to today's date if it doesn't exist
+  else if (!localSettings.serverStartDate) {
+    localSettings.serverStartDate = dayjs().format('YYYY-MM-DD')
+  }
+  // If date is from localStorage and not today's date, update URL query parameter
+  else if (localSettings.serverStartDate && !dayjs(localSettings.serverStartDate).isSame(dayjs(), 'day') && !date) {
+    router.replace({
+      path,
+      query: {
+        ...query,
+        date: localSettings.serverStartDate,
+      },
+    })
+  }
+})
+
+onUnmounted(() => {
+  setIsStickyHeaderEnabled(true)
+})
+
+useIntersectionObserver(
+  timelineEntryReferences,
+  (entries) => {
+    const visibleEntries = entries.filter(entry => entry.isIntersecting)
+
+    if (visibleEntries.length > 0) {
+      // Find the entry that is visually highest on the screen (smallest top value)
+      // among those currently intersecting the rootMargin line.
+      const highestEntry = useMinBy(visibleEntries, entry => entry.boundingClientRect.top)
+
+      if (highestEntry && highestEntry.target.id) {
+        const newActiveId = highestEntry.target.id
+        debouncedUpdateActiveMilestone(newActiveId)
+      }
+    }
+  },
+  {
+    rootMargin: '-150px 0px -100% 0px',
+    threshold: 0,
+  },
+)
+
+const nextUpcomingMilestoneIndex = computed(() => {
+  if (processedMilestones.value.length === 0)
+    return -1
+  const currentDate = dayjs().startOf('day')
+
+  return processedMilestones.value.findIndex(milestone =>
+    dayjs(milestone.mileStoneDate).startOf('day').isSameOrAfter(currentDate),
+  )
+})
+
+function scrollToNextMilestone() {
+  if (nextUpcomingMilestoneIndex.value !== -1) {
+    const element = timelineEntryReferences.value[nextUpcomingMilestoneIndex.value]
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+}
+
+function toggleAllPanels() {
+  panelsToggledByUser.value = true
+  isPanelsExpanded.value = !isPanelsExpanded.value
+}
+
+// Reset card references when milestones change
+watch(processedMilestones, () => {
+  timelineEntryReferences.value = []
+})
+</script>
+
+<template>
+  <MainContentCard
+    heading="Server Timeline"
+    sub-heading="The milestones a server goes through and when they unlock (approximately)."
+  >
+    <CopyButton
+      v-if="selectedDateIsValid && !isToday"
+      v-tooltip="'Copy link for selected server age'"
+      copy-string="currentUrl"
+      variant="text"
+      rounded
+      class="!absolute right-0 top-0 size-12 animate-zoomin animate-once md:right-[rem(18)] md:top-[rem(18)]"
+    >
+      <Icon
+        name="fluent:copy-link-24-regular"
+        size="24"
+        aria-label="Copy link to current settings"
+      />
+    </CopyButton>
+    <ClientOnly>
+      <Card class="sticky -top-20 z-20 mb-12 shadow-xl lg:-top-3">
+        <template #content>
+          <div class="flex flex-wrap justify-between gap-4">
+            <div class="flex items-center gap-2 lg:gap-4">
+              <IftaLabel>
+                <DatePicker
+                  v-model="selectedDate"
+                  :size="isMinSmBreakpoint ? undefined : 'small'"
+                  show-icon
+                  input-id="date"
+                  class="w-full max-w-md"
+                  date-format="yy-mm-dd"
+                  :min-date="$dayjs(WOS_LAUNCH_DATE).toDate()"
+                  :max-date="new Date()"
+                  show-button-bar
+                  :invalid="!selectedDateIsValid"
+                />
+                <label for="date">Your server start date:</label>
+              </IftaLabel>
+              <div
+                v-if="selectedDateIsValid && !isToday"
+                class="text-sm sm:text-lg"
+              >
+                {{ serverAgeString }}
+              </div>
+            </div>
+            <div
+              v-if="selectedDateIsValid"
+              class="flex flex-1 basis-auto items-center justify-between gap-2 lg:justify-end lg:gap-4"
+            >
+              <Button
+                v-if="!isToday"
+                :label="isMinSmBreakpoint ? 'Go to upcoming milestone' : 'Upcoming milestone'"
+                :size="isMinSmBreakpoint ? undefined : 'small'"
+                icon-pos="right"
+                icon="pi pi-arrows-v"
+                rounded
+                variant="outlined"
+                @click="scrollToNextMilestone"
+              />
+              <Button
+                :icon="isPanelsExpanded ? 'pi pi-minus' : 'pi pi-plus'"
+                :label="isPanelsExpanded ? 'Collapse all' : 'Expand all'"
+                :size="isMinSmBreakpoint ? undefined : 'small'"
+                icon-pos="right"
+                rounded
+                variant="outlined"
+                @click="toggleAllPanels"
+              />
+            </div>
+          </div>
+        </template>
+      </Card>
+    </ClientOnly>
+
+    <div class="grid-cols-[auto_1fr] gap-4 xl:grid">
+      <TimelineToc
+        v-if="isMinXlBreakpoint && selectedDateIsValid"
+        :milestones="processedMilestones"
+        :timeline-refs="timelineEntryReferences"
+        :active-milestone-id="activeMilestoneId"
+      />
+
+      <Timeline
+        v-show="selectedDateIsValid"
+        :value="processedMilestones"
+        :align="isMinLgBreakpoint ? 'alternate' : 'left'"
+        class="mb-[80vh]"
+      >
+        <template #marker="{ item: { hasMileStonePassed, index } }">
+          <span
+            class="z-10 flex size-8 items-center justify-center rounded-full bg-slate-900 shadow"
+            :class="{
+              'ring-2 ring-surface-400 drop-shadow-lg': nextUpcomingMilestoneIndex === index,
+            }"
+          >
+            <Icon
+              size="24"
+              :name="hasMileStonePassed ? 'fluent:checkmark-circle-12-regular' : 'fluent-emoji:snowflake'"
+              class="text-surface-900"
+            />
+          </span>
+        </template>
+        <template #content="{ item: { index, title, day, mileStoneDate, content, hasMileStonePassed } }">
+          <Panel
+            :id="useKebabCase(title)"
+            :ref="(el) => {
+              if (el) {
+                timelineEntryReferences[index] = '$el' in el ? el.$el : el;
+              }
+              else {
+                timelineEntryReferences[index] = null;
+              }
+            }"
+            class="mb-8 scroll-mt-24"
+            :class="{
+              'border-2 border-surface-400 bg-surface-800': nextUpcomingMilestoneIndex === index,
+              'border-surface-900 bg-surface-950': hasMileStonePassed,
+            }"
+            toggleable
+            :collapsed="panelsToggledByUser ? !isPanelsExpanded : hasMileStonePassed"
+          >
+            <template #header>
+              <h4><strong>Day {{ day }}:</strong> {{ title }}</h4>
+            </template>
+            <div
+              class="prose prose-sm sm:prose-base"
+              v-html="content"
+            />
+            <template #footer>
+              <div class="flex justify-end whitespace-pre text-sm text-surface-400">
+                Approx. <time :datetime="`${mileStoneDate}T00:00:00Z`">{{ mileStoneDate }}</time> UTC ({{ $dayjs.utc(mileStoneDate).from($dayjs.utc()) }})
+              </div>
+            </template>
+          </Panel>
+        </template>
+      </Timeline>
+    </div>
+    <div class="text-center text-sm">
+      Milestone information attributed to the <NuxtLink
+        target="_blank"
+        to="https://outof.games/realms/whiteoutsurvival/guides/405-server-age-and-timeline-in-whiteout-survival/"
+        class="link-primary"
+      >
+        Server Age and Timeline in Whiteout Survival
+      </NuxtLink> guide by <NuxtLink
+        target="_blank"
+        to="https://outof.games/members/sinti/"
+        class="link-primary"
+      >
+        sinti
+      </NuxtLink>
+    </div>
+  </MainContentCard>
+  <ScrollTop />
+</template>
+
+<style scoped lang="postcss">
+:deep(.p-timeline-event-opposite) {
+  @apply max-lg:hidden;
+}
+</style>

@@ -619,7 +619,7 @@ function handleBearClick() {
           <NuxtLink
             to="https://outof.games/realms/whiteoutsurvival/guides/397-everything-you-need-to-know-about-bear-hunt-in-whiteout-survival/"
             target="_blank"
-            class="text-sm text-primary transition-colors hover:text-primary-300 hover:underline"
+            class="link-primary text-sm"
           >
             Good Bear Hunt guide
           </NuxtLink>
