@@ -8,15 +8,7 @@ defineOgImage({
   width: 1200,
 })
 
-const router = useRouter()
-
-const pages = computed(() => router.getRoutes()
-  .filter(route => route.path !== '/' && !route.path.includes(':'))
-  .map(route => ({
-    name: route.meta?.title ?? useStartCase(route.path),
-    path: route.path,
-  })),
-)
+const { pages } = usePageRoutes()
 </script>
 
 <template>
@@ -32,9 +24,14 @@ const pages = computed(() => router.getRoutes()
         >
           <RouterLink
             :to="page.path"
-            class="inline-block text-3xl font-bold text-primary-emphasis transition text-shadow hover:scale-105 hover:text-primary-emphasis-alt max-sm:origin-left md:text-4xl"
+            class="inline-block text-xl font-bold text-primary-emphasis transition text-shadow hover:scale-105 hover:text-primary-emphasis-alt max-sm:origin-left sm:text-2xl md:text-4xl"
           >
-            {{ page.name }}
+            <Icon
+              v-if="page.icon"
+              :name="String(page.icon)"
+              class="mt-[0.125em] align-text-top text-surface-500 drop-shadow-md"
+            />
+            {{ page.title }}
           </RouterLink>
         </li>
         <li class="translate-y-full text-center text-lg">

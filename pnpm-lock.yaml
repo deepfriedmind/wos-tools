@@ -99,6 +99,9 @@ importers:
       '@iconify-json/fluent-emoji':
         specifier: ^1.2.3
         version: 1.2.3
+      '@iconify-json/mdi':
+        specifier: ^1.2.3
+        version: 1.2.3
       '@nuxt/test-utils':
         specifier: 3.17.1
         version: 3.17.1(@types/node@22.10.5)(@vue/test-utils@2.4.6)(happy-dom@17.3.0)(jiti@2.4.2)(magicast@0.3.5)(playwright-core@1.51.0)(terser@5.37.0)(typescript@5.8.2)(vitest@3.0.8(@types/debug@4.1.12)(@types/node@22.10.5)(happy-dom@17.3.0)(jiti@2.4.2)(terser@5.37.0)(yaml@2.7.0))(yaml@2.7.0)
@@ -791,6 +794,9 @@ packages:
 
   '@iconify-json/fluent@1.2.15':
     resolution: {integrity: sha512-Xxbq0c7y+nGim6zgv+ZRh9MAAEsjXAYqUOvAZnwcTdXTdplGleLVM1d/xAuAje9CKFdbQN6zlfcfqJ26X39MPA==}
+
+  '@iconify-json/mdi@1.2.3':
+    resolution: {integrity: sha512-O3cLwbDOK7NNDf2ihaQOH5F9JglnulNDFV7WprU2dSoZu3h3cWH//h74uQAB87brHmvFVxIOkuBX2sZSzYhScg==}
 
   '@iconify/collections@1.0.504':
     resolution: {integrity: sha512-ve+ERB4VKIDIieZEOFfcR9OP7Q3PybyDPe0XZrCsWr8PExzlj3F599ZD/x+CU/xl76EZImPlNsjfWYo6XbD2Kw==}
@@ -6168,6 +6174,10 @@ snapshots:
       '@iconify/types': 2.0.0
 
   '@iconify-json/fluent@1.2.15':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/mdi@1.2.3':
     dependencies:
       '@iconify/types': 2.0.0
 

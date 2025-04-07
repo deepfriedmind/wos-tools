@@ -2,9 +2,14 @@
 import type { BoostTypeValue, ExpeditionSkillOption, ResourceCalculations, ResourceCard, ResourceNode } from '~/types/gathering'
 import { BOOST_TYPES } from '~/types/gathering'
 
+const PAGE_TITLE = 'Gathering Amount Calculator'
+const PAGE_DESCRIPTION = 'Calculate how much to gather from a lv. 8 resource node to finish just before reset'
+const PAGE_ICON = 'fluent-emoji:axe'
+
 definePageMeta({
-  description: 'Calculate how much to gather from a resource node to finish just before reset in Whiteout Survival.',
-  title: 'Gathering Amount Calculator 🪵',
+  description: `${PAGE_DESCRIPTION} in Whiteout Survival.`,
+  icon: PAGE_ICON,
+  title: `${PAGE_TITLE} for Whiteout Survival`,
 })
 
 const DEFAULT_NODES: Record<string, ResourceNode> = {
@@ -254,8 +259,9 @@ const showGatheringBonusDialog = shallowRef(false)
 
 <template>
   <MainContentCard
-    heading="Gathering Amount Calculator"
-    sub-heading="How much should I gather from a lv. 8 resource node to automatically finish just before reset?"
+    :icon="PAGE_ICON"
+    :heading="PAGE_TITLE"
+    :sub-heading="PAGE_DESCRIPTION"
   >
     <CopyButton
       v-if="route.query.meat_boost"

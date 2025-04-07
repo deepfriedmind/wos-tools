@@ -1,7 +1,12 @@
 <script setup lang="ts">
+const PAGE_TITLE = 'Bear Hunt Rally Calculator'
+const PAGE_ICON = 'fluent-emoji:polar-bear'
+const PAGE_DESCRIPTION = 'Calculate the max. number of troops for joining bear hunt rallies'
+
 definePageMeta({
-  description: 'Calculate the max. number of troops for joining bear hunt rallies in Whiteout Survival.',
-  title: 'Bear Hunt Rally Calculator 🐻‍❄️',
+  description: `${PAGE_DESCRIPTION} in Whiteout Survival.`,
+  icon: PAGE_ICON,
+  title: `${PAGE_TITLE} for Whiteout Survival`,
 })
 
 const MAX_MARCHES = 6
@@ -324,8 +329,9 @@ function handleBearClick() {
     </ClientOnly>
 
     <MainContentCard
-      heading="Bear Hunt Rally Calculator"
-      sub-heading="Calculate the max. number of troops for joining bear hunt rallies."
+      :icon="PAGE_ICON"
+      :heading="PAGE_TITLE"
+      :sub-heading="PAGE_DESCRIPTION"
     >
       <CopyButton
         v-if="route.query.marksmen"

@@ -3,15 +3,7 @@ const { localSettings } = useLocalSettings()
 const drawerVisible = shallowRef(false)
 
 const route = useRoute()
-const router = useRouter()
-
-const pages = computed(() => router.getRoutes()
-  .filter(route => route.path !== '/' && !route.path.includes(':'))
-  .map(route => ({
-    name: route.meta?.title ?? useStartCase(route.path),
-    path: route.path,
-  })),
-)
+const { pages } = usePageRoutes()
 
 watch(() => route.fullPath, () => {
   drawerVisible.value = false
@@ -96,16 +88,21 @@ watch(() => route.fullPath, () => {
         <AccordionPanel value="1">
           <AccordionHeader><span class="inline-flex items-center gap-2 text-xl"><i class="pi pi-wrench" />Tools</span></AccordionHeader>
           <AccordionContent>
-            <ul class="list-inside list-disc space-y-4 py-4">
+            <ul class="space-y-4 py-4">
               <li
                 v-for="page in pages"
                 :key="page.path"
               >
                 <RouterLink
                   :to="page.path"
-                  class="text-primary-emphasis underline-offset-4 transition-colors hover:text-primary-emphasis-alt link-active:pointer-events-none link-active:font-medium link-active:text-primary-emphasis/70 link-active:underline link-active:decoration-wavy"
+                  class="text-lg text-primary-emphasis underline-offset-4 transition-colors hover:text-primary-emphasis-alt link-active:pointer-events-none link-active:font-medium link-active:text-primary-emphasis/70 link-active:underline link-active:decoration-wavy"
                 >
-                  {{ page.name }}
+                  <Icon
+                    v-if="page.icon"
+                    :name="String(page.icon)"
+                    class="mt-[0.125em] align-text-top text-surface-500 drop-shadow-md"
+                  />
+                  {{ page.title }}
                 </RouterLink>
               </li>
             </ul>

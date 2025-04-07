@@ -29,7 +29,7 @@ useSeoMeta({
   ogTitle: title,
   ogType: 'website',
   title,
-  titleTemplate: title => title ? `${title} | ${name}` : name,
+  titleTemplate: title => title ? `${title} | ${name}` : `${name} for Whiteout Survival`,
   twitterCard: 'summary_large_image',
   twitterDescription: description,
   twitterTitle: title,

@@ -2,9 +2,14 @@
 import { _lg, _sm, _xl } from '#tailwind-config/theme/screens'
 import milestones from '~/public/data/server-timeline.json'
 
+const PAGE_TITLE = 'Server Timeline'
+const PAGE_DESCRIPTION = 'Information about the milestones a server/state goes through and when they unlock (approximately)'
+const PAGE_ICON = 'mdi:chart-timeline-variant-shimmer'
+
 definePageMeta({
-  description: 'The milestones a server goes through and when they unlock (approximately) in Whiteout Survival.',
-  title: 'Server Timeline 📅',
+  description: `${PAGE_DESCRIPTION} for Whiteout Survival.`,
+  icon: PAGE_ICON,
+  title: `${PAGE_TITLE} for Whiteout Survival`,
 })
 
 const WOS_LAUNCH_DATE = '2023-02-09'
@@ -206,8 +211,9 @@ const showTimelineImageDialog = ref(false)
 
 <template>
   <MainContentCard
-    heading="Server Timeline"
-    sub-heading="The milestones a server goes through and when they unlock (approximately)."
+    :icon="PAGE_ICON"
+    :heading="PAGE_TITLE"
+    :sub-heading="PAGE_DESCRIPTION"
   >
     <CopyButton
       v-if="selectedDateIsValid && !isToday"
