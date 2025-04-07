@@ -200,6 +200,8 @@ function toggleAllPanels() {
 watch(processedMilestones, () => {
   timelineEntryReferences.value = []
 })
+
+const showTimelineImageDialog = ref(false)
 </script>
 
 <template>
@@ -222,59 +224,57 @@ watch(processedMilestones, () => {
       />
     </CopyButton>
     <ClientOnly>
-      <Card class="sticky -top-20 z-20 mb-12 shadow-xl lg:-top-3">
-        <template #content>
-          <div class="flex flex-wrap justify-between gap-4">
-            <div class="flex items-center gap-2 lg:gap-4">
-              <IftaLabel>
-                <DatePicker
-                  v-model="selectedDate"
-                  :size="isMinSmBreakpoint ? undefined : 'small'"
-                  show-icon
-                  input-id="date"
-                  class="w-full max-w-md"
-                  date-format="yy-mm-dd"
-                  :min-date="$dayjs(WOS_LAUNCH_DATE).toDate()"
-                  :max-date="new Date()"
-                  show-button-bar
-                  :invalid="!selectedDateIsValid"
-                />
-                <label for="date">Your server start date:</label>
-              </IftaLabel>
-              <div
-                v-if="selectedDateIsValid && !isToday"
-                class="text-sm sm:text-lg"
-              >
-                {{ serverAgeString }}
-              </div>
-            </div>
+      <div class="sticky -top-20 z-20 mb-12 rounded-xl bg-surface-900 p-4 shadow-xl lg:-top-3">
+        <div class="flex flex-wrap justify-between gap-4">
+          <div class="flex items-center gap-4">
+            <IftaLabel>
+              <DatePicker
+                v-model="selectedDate"
+                :size="isMinSmBreakpoint ? undefined : 'small'"
+                show-icon
+                input-id="date"
+                class="w-full max-w-md"
+                date-format="yy-mm-dd"
+                :min-date="$dayjs(WOS_LAUNCH_DATE).toDate()"
+                :max-date="new Date()"
+                show-button-bar
+                :invalid="!selectedDateIsValid"
+              />
+              <label for="date">Your server start date:</label>
+            </IftaLabel>
             <div
-              v-if="selectedDateIsValid"
-              class="flex flex-1 basis-auto items-center justify-between gap-2 lg:justify-end lg:gap-4"
+              v-if="selectedDateIsValid && !isToday"
+              class="shrink-0 text-sm sm:text-lg"
             >
-              <Button
-                v-if="!isToday"
-                :label="isMinSmBreakpoint ? 'Go to upcoming milestone' : 'Upcoming milestone'"
-                :size="isMinSmBreakpoint ? undefined : 'small'"
-                icon-pos="right"
-                icon="pi pi-arrows-v"
-                rounded
-                variant="outlined"
-                @click="scrollToNextMilestone"
-              />
-              <Button
-                :icon="isPanelsExpanded ? 'pi pi-minus' : 'pi pi-plus'"
-                :label="isPanelsExpanded ? 'Collapse all' : 'Expand all'"
-                :size="isMinSmBreakpoint ? undefined : 'small'"
-                icon-pos="right"
-                rounded
-                variant="outlined"
-                @click="toggleAllPanels"
-              />
+              {{ serverAgeString }}
             </div>
           </div>
-        </template>
-      </Card>
+          <div
+            v-if="selectedDateIsValid"
+            class="flex flex-1 basis-auto items-center justify-between gap-2 lg:justify-end lg:gap-4"
+          >
+            <Button
+              v-if="!isToday"
+              :label="isMinSmBreakpoint ? 'Go to upcoming milestone' : 'Upcoming milestone'"
+              :size="isMinSmBreakpoint ? undefined : 'small'"
+              icon-pos="right"
+              icon="pi pi-arrows-v"
+              rounded
+              variant="outlined"
+              @click="scrollToNextMilestone"
+            />
+            <Button
+              :icon="isPanelsExpanded ? 'pi pi-minus' : 'pi pi-plus'"
+              :label="isPanelsExpanded ? 'Collapse all' : 'Expand all'"
+              :size="isMinSmBreakpoint ? undefined : 'small'"
+              icon-pos="right"
+              rounded
+              variant="outlined"
+              @click="toggleAllPanels"
+            />
+          </div>
+        </div>
+      </div>
     </ClientOnly>
 
     <div class="grid-cols-[auto_1fr] gap-4 xl:grid">
@@ -289,7 +289,7 @@ watch(processedMilestones, () => {
         v-show="selectedDateIsValid"
         :value="processedMilestones"
         :align="isMinLgBreakpoint ? 'alternate' : 'left'"
-        class="mb-[80vh]"
+        class="mb-4"
       >
         <template #marker="{ item: { hasMileStonePassed, index } }">
           <span
@@ -340,7 +340,10 @@ watch(processedMilestones, () => {
         </template>
       </Timeline>
     </div>
-    <div class="text-center text-sm">
+    <div
+      v-show="selectedDateIsValid"
+      class="mb-8 text-sm text-primary-emphasis-alt md:text-right"
+    >
       Milestone information attributed to the <NuxtLink
         target="_blank"
         to="https://outof.games/realms/whiteoutsurvival/guides/405-server-age-and-timeline-in-whiteout-survival/"
@@ -355,12 +358,64 @@ watch(processedMilestones, () => {
         sinti
       </NuxtLink>
     </div>
+    <Divider />
+    <figure class="mt-8 space-y-4">
+      <div class="overflow-hidden rounded-3xl border-2 border-surface">
+        <NuxtLink
+          to="/img/server-timeline@2x.webp"
+          target="_blank"
+        >
+          <img
+            fetchpriority="low"
+            loading="lazy"
+            src="/img/server-timeline@2x.webp"
+            width="2317"
+            height="6884"
+            alt="Server timeline illustration from the Whiteout Survival Discord server"
+            class="cursor-zoom-in lg:hidden"
+          >
+        </NuxtLink>
+        <img
+          fetchpriority="low"
+          loading="lazy"
+          src="/img/server-timeline@2x.webp"
+          width="2317"
+          height="6884"
+          alt="Server timeline illustration from the Whiteout Survival Discord server"
+          class="cursor-zoom-in max-lg:hidden"
+          @click="showTimelineImageDialog = true"
+        >
+      </div>
+      <figcaption class="text-sm text-primary-emphasis-alt md:text-right ">
+        Server timeline illustration from the Whiteout Survival Discord server
+      </figcaption>
+    </figure>
+    <Dialog
+      v-model:visible="showTimelineImageDialog"
+      header="Server timeline illustration from the Whiteout Survival Discord server"
+      dismissable-mask
+      modal
+      class="p-dialog-maximized"
+    >
+      <Image
+        src="/img/server-timeline@2x.webp"
+        alt="Server timeline illustration from the Whiteout Survival Discord server"
+        width="2317"
+        height="6884"
+        class="block overflow-hidden rounded-xl border border-surface"
+      />
+    </Dialog>
   </MainContentCard>
-  <ScrollTop />
 </template>
 
 <style scoped lang="postcss">
-:deep(.p-timeline-event-opposite) {
-  @apply max-lg:hidden;
+:deep(.p-timeline) {
+  .p-timeline-event-opposite {
+    @apply max-lg:hidden;
+  }
+
+  &.p-timeline-vertical.p-timeline-alternate .p-timeline-event:nth-child(even) .p-timeline-event-content {
+    text-align: unset;
+  }
 }
 </style>

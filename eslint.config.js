@@ -119,7 +119,7 @@ export default withNuxt(
         {
           callees: ['tw', 'twMerge', 'twJoin'],
           tags: ['tw', 'twMerge', 'twJoin'],
-          whitelist: ['dark', 'pi', 'pi-[a-z-]+'],
+          whitelist: ['dark', 'pi', 'pi?-[a-z-]+'],
         },
       ],
       'vue/camelcase': 'error',

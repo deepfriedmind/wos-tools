@@ -1,6 +1,6 @@
 <template>
   <div class="relative grid min-h-screen grid-rows-[auto_1fr_auto] gap-8">
-    <div class="absolute inset-0 -z-50">
+    <div class="pointer-events-none absolute inset-0 -z-50 select-none">
       <picture>
         <source
           type="image/avif"
@@ -42,5 +42,6 @@
       <slot />
     </main>
     <Footer />
+    <ScrollTop />
   </div>
 </template>

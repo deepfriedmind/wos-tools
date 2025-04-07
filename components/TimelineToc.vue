@@ -17,7 +17,7 @@ function scrollToMilestone(event: Event, title: string) {
 
 <template>
   <aside>
-    <ScrollPanel class="sticky top-28 h-[calc(100vh-7rem)] w-72 pb-8">
+    <ScrollPanel class="sticky top-28 h-[calc(100vh-7rem)] w-72 pb-8 pl-2">
       <ol class="space-y-2">
         <li
           v-for="{ title } in milestones"
