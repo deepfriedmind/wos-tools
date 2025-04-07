@@ -1,4 +1,7 @@
 {
+  "common-intellisense.ui": [
+    "primevue4"
+  ],
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
     "source.organizeImports": "never",
@@ -125,6 +128,7 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "vue.complete.casing.props": "kebab",
   "vue.complete.casing.tags": "pascal",
+  "vue.updateImportsOnFileMove.enabled": false,
   "workbench.colorCustomizations": {
     "commandCenter.border": "#e7e7e799",
     "sash.hoverBorder": "#33598b",
