@@ -1,3 +1,6 @@
+/** Whiteout Survival official launch date */
+export const WOS_LAUNCH_DATE = '2023-02-09'
+
 /**
  * Time format constants used across the application
  */

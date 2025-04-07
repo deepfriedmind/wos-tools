@@ -23,14 +23,19 @@ export function usePageRoutes() {
   const router = useRouter()
 
   // All available pages in the application, excluding the homepage and dynamic routes
-  const pages = computed<PageRoute[]>(() => router.getRoutes()
-    .filter(route => route.path !== '/' && !route.path.includes(':'))
-    .map(route => ({
-      icon: route.meta?.icon as string | undefined,
-      path: route.path,
-      title: typeof route.meta?.title === 'string' ? route.meta.title.replace('for Whiteout Survival', '').trim() : useStartCase(route.path),
-    })),
-  )
+  const pages = computed<PageRoute[]>(() => {
+    const routes = router.getRoutes()
+      .filter(route => route.path !== '/' && !route.path.includes(':'))
+      .map(route => ({
+        icon: route.meta?.icon as string | undefined,
+        path: route.path,
+        title: useIsString(route.meta?.title) ?
+            route.meta.title.replace('for Whiteout Survival', '').trim()
+          : useStartCase(route.path),
+      }))
+
+    return useSortBy(routes, ['title'])
+  })
 
   return {
     pages,

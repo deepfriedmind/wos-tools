@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { _lg, _sm, _xl } from '#tailwind-config/theme/screens'
 import milestones from '~/public/data/server-timeline.json'
+import { WOS_LAUNCH_DATE } from '~/utils/constants'
 
 const PAGE_TITLE = 'Server Timeline'
 const PAGE_DESCRIPTION = 'Information about the milestones a server/state goes through and when they unlock (approximately)'
@@ -12,13 +13,10 @@ definePageMeta({
   title: `${PAGE_TITLE} for Whiteout Survival`,
 })
 
-const WOS_LAUNCH_DATE = '2023-02-09'
-
 const route = useRoute()
-const router = useRouter()
+const dayjs = useDayjs()
 
 const { localSettings } = useLocalSettings()
-const dayjs = useDayjs()
 const { setIsStickyHeaderEnabled } = useStickyHeader()
 const isMinSmBreakpoint = useMediaQuery(`(min-width: ${_sm})`, { ssrWidth: 640 })
 const isMinLgBreakpoint = useMediaQuery(`(min-width: ${_lg})`, { ssrWidth: 1024 })
@@ -26,54 +24,12 @@ const isMinXlBreakpoint = useMediaQuery(`(min-width: ${_xl})`, { ssrWidth: 1280 
 
 const activeMilestoneId = ref<string | undefined>(undefined)
 
-const initialDate = computed(() => {
-  if (route.query.date && dayjs(route.query.date as string).isValid())
-    return dayjs(route.query.date as string)
-
-  if (localSettings.serverStartDate)
-    return dayjs(localSettings.serverStartDate)
-
-  return dayjs()
-})
-
-const selectedDayjs = ref(initialDate.value)
-
-const selectedDate = computed({
-  get: () => selectedDayjs.value.toDate(),
-  set: (date: Date) => {
-    const newDayjs = dayjs(date)
-    selectedDayjs.value = newDayjs
-
-    // Only update URL if the date is not today
-    const isDateToday = newDayjs.isSame(dayjs(), 'day')
-
-    if (isDateToday) {
-      // Remove date parameter if it exists
-      if (route.query.date) {
-        const newQuery = { ...route.query }
-        delete newQuery.date
-        router.replace({
-          path: route.path,
-          query: Object.keys(newQuery).length > 0 ? newQuery : undefined,
-        })
-      }
-    }
-    else {
-      // Update URL query parameter when date is not today
-      router.replace({
-        path: route.path,
-        query: {
-          ...route.query,
-          date: newDayjs.format('YYYY-MM-DD'),
-        },
-      })
-    }
-  },
-})
-
-const selectedDateIsValid = computed(() => dayjs(selectedDate.value).isValid())
-
-const isToday = computed(() => selectedDayjs.value.isSame(dayjs(), 'day'))
+const {
+  isToday,
+  selectedDate,
+  selectedDateIsValid,
+  selectedDayjs,
+} = useDateQueryParameter()
 const isPanelsExpanded = ref(true)
 const panelsToggledByUser = ref(false)
 
@@ -104,6 +60,8 @@ const processedMilestones = computed(() => {
   })
 })
 
+// Debounced function to update the active milestone ID based on scroll position
+// and sync it with the URL hash without causing a page reload or scroll jump.
 const debouncedUpdateActiveMilestone = useDebounceFn((newActiveId: string) => {
   if (activeMilestoneId.value !== newActiveId) {
     activeMilestoneId.value = newActiveId
@@ -111,8 +69,11 @@ const debouncedUpdateActiveMilestone = useDebounceFn((newActiveId: string) => {
     const isFirstMilestone = processedMilestones.value.length > 0
       && newActiveId === useKebabCase(processedMilestones.value[0].title)
 
-    if (isFirstMilestone || (import.meta.client && window.scrollY < 100))
+    // Avoid updating hash if it's the first milestone or user is near the top,
+    // prevents unnecessary hash changes on initial load or minor scrolls at the top.
+    if (isFirstMilestone || (import.meta.client && window.scrollY < 100)) {
       return history.replaceState(undefined, '', `${route.path}${Object.keys(route.query).length > 0 ? `?${new URLSearchParams(route.query as Record<string, string>).toString()}` : ''}`)
+    }
 
     if (route.hash !== `#${newActiveId}`) {
       history.replaceState(undefined, '', `#${newActiveId}`)
@@ -120,41 +81,19 @@ const debouncedUpdateActiveMilestone = useDebounceFn((newActiveId: string) => {
   }
 }, 150)
 
-watch(selectedDayjs, (newDate) => {
-  localSettings.serverStartDate = newDate.format('YYYY-MM-DD')
+watch(selectedDayjs, () => {
   panelsToggledByUser.value = false
 })
 
 onMounted(() => {
   setIsStickyHeaderEnabled(false)
-
-  const { path, query } = route
-  const { date } = query
-
-  // Update localSettings.serverStartDate if a valid date is found in URL query parameters
-  if (date && dayjs(String(date)).isValid()) {
-    localSettings.serverStartDate = dayjs(String(date)).format('YYYY-MM-DD')
-  }
-  // Otherwise, set localSettings.serverStartDate to today's date if it doesn't exist
-  else if (!localSettings.serverStartDate) {
-    localSettings.serverStartDate = dayjs().format('YYYY-MM-DD')
-  }
-  // If date is from localStorage and not today's date, update URL query parameter
-  else if (localSettings.serverStartDate && !dayjs(localSettings.serverStartDate).isSame(dayjs(), 'day') && !date) {
-    router.replace({
-      path,
-      query: {
-        ...query,
-        date: localSettings.serverStartDate,
-      },
-    })
-  }
 })
 
 onUnmounted(() => {
   setIsStickyHeaderEnabled(true)
 })
 
+// Observe timeline entries to update the active milestone for the TOC
 useIntersectionObserver(
   timelineEntryReferences,
   (entries) => {
@@ -162,18 +101,24 @@ useIntersectionObserver(
 
     if (visibleEntries.length > 0) {
       // Find the entry that is visually highest on the screen (smallest top value)
-      // among those currently intersecting the rootMargin line.
+      // among those currently intersecting the rootMargin line. This ensures the
+      // "active" item in the TOC corresponds to the item nearest the top edge
+      // of the intersection viewport.
       const highestEntry = useMinBy(visibleEntries, entry => entry.boundingClientRect.top)
 
-      if (highestEntry && highestEntry.target.id) {
+      if (highestEntry?.target.id) {
         const newActiveId = highestEntry.target.id
         debouncedUpdateActiveMilestone(newActiveId)
       }
     }
   },
   {
+    // rootMargin defines the intersection viewport:
+    // - Top: -150px (starts 150px below the actual viewport top)
+    // - Bottom: -100% (ends at the viewport top, effectively only tracking items crossing the top boundary)
+    // This setup focuses on detecting which item is currently at or near the top edge defined by rootMargin.
     rootMargin: '-150px 0px -100% 0px',
-    threshold: 0,
+    threshold: 0, // Trigger as soon as any part intersects
   },
 )
 
@@ -337,6 +282,7 @@ const showTimelineImageDialog = ref(false)
               class="prose prose-sm sm:prose-base"
               v-html="content"
             />
+            <!-- Make sure content from server-timeline.json is trusted/sanitized -->
             <template #footer>
               <div class="flex justify-end whitespace-pre text-sm text-surface-400">
                 Approx. <time :datetime="`${mileStoneDate}T00:00:00Z`">{{ mileStoneDate }}</time> UTC ({{ $dayjs.utc(mileStoneDate).from($dayjs.utc()) }})
