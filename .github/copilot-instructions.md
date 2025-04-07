@@ -70,10 +70,12 @@ Create reusable transition components.
 
 Type component methods with `expose`.
 
-After editing files, always check for problems and fix them until there are none left.
+Don't use `<style>` blocks unless necessary, always prefer Tailwind CSS classes.
+
+After editing files, always check for problems (linting, type errors, etc.) and fix them. **Crucially, continue checking and fixing recursively until NO problems remain.** A task is not complete if any problems are reported after a change.
 
 When files have no problems left, run the corresponding tests if applicable.
 
 Run tests with `pnpm vitest run <filename>`.
 
-After making changes, don't add comments like `// Changed from` or `// Updated to` that would not make sense to include in a commit or the final code. Focus on code quality and self-documentation rather than explaining changes through comments.
+**Strictly forbid comments explaining refactoring steps or code movement.** Comments like `// Changed from`, `// Updated to`, `// Logic moved to X`, or `// Y is now handled by Z` are unnecessary noise and must not be included in the final code. Focus on code quality and self-documentation. Comments should only explain _why_ a complex or non-obvious piece of code exists, not _how_ it got there.
