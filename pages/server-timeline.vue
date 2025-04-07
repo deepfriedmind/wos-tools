@@ -236,6 +236,7 @@ const showTimelineImageDialog = ref(false)
         :active-milestone-id="activeMilestoneId"
       />
 
+      <ClientOnly>
       <Timeline
         v-show="selectedDateIsValid"
         :value="processedMilestones"
@@ -282,7 +283,6 @@ const showTimelineImageDialog = ref(false)
               class="prose prose-sm sm:prose-base"
               v-html="content"
             />
-            <!-- Make sure content from server-timeline.json is trusted/sanitized -->
             <template #footer>
               <div class="flex justify-end whitespace-pre text-sm text-surface-400">
                 Approx. <time :datetime="`${mileStoneDate}T00:00:00Z`">{{ mileStoneDate }}</time> UTC ({{ $dayjs.utc(mileStoneDate).from($dayjs.utc()) }})
@@ -291,6 +291,7 @@ const showTimelineImageDialog = ref(false)
           </Panel>
         </template>
       </Timeline>
+      </ClientOnly>
     </div>
     <div
       v-show="selectedDateIsValid"
@@ -313,8 +314,9 @@ const showTimelineImageDialog = ref(false)
     <Divider />
     <figure class="mt-8 space-y-4">
       <div class="overflow-hidden rounded-3xl border-2 border-surface">
-        <NuxtLink
-          to="/img/server-timeline@2x.webp"
+        <a
+          href="/img/server-timeline@2x.webp"
+          aria-label="Server timeline illustration from the Whiteout Survival Discord server"
           target="_blank"
         >
           <img
@@ -326,7 +328,7 @@ const showTimelineImageDialog = ref(false)
             alt="Server timeline illustration from the Whiteout Survival Discord server"
             class="cursor-zoom-in lg:hidden"
           >
-        </NuxtLink>
+        </a>
         <img
           fetchpriority="low"
           loading="lazy"

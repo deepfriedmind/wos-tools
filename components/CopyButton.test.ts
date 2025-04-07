@@ -3,7 +3,7 @@ import PrimeVue from 'primevue/config'
 import ToastService from 'primevue/toastservice'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import CopyButton from '~/components/CopyButton.vue'
+import CopyButton from '~/components/CopyButton.client.vue'
 import { setupGlobalPlugins } from '~/tests/helpers/plugins'
 import { mockPrimeVueToast, mockToast } from '~/tests/helpers/primevue'
 

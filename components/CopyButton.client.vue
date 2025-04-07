@@ -40,6 +40,7 @@ async function clipboardWrite() {
   <Button
     :class="{ [props.successClass]: copied }"
     :data-copy-success="copied"
+    aria-label="Copy to clipboard"
     @click="clipboardWrite"
   >
     <slot />
