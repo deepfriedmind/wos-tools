@@ -34,3 +34,7 @@ Locally preview production build:
 ```bash
 pnpm preview
 ```
+
+## Commit hooks
+
+Run `npx simple-git-hooks` after cloning to install the git hooks.

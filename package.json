@@ -15,6 +15,9 @@
     "test": "vitest",
     "type-check": "nuxi typecheck"
   },
+  "simple-git-hooks": {
+    "prepare-commit-msg": "npx devmoji --edit"
+  },
   "dependencies": {
     "@formkit/auto-animate": "^0.8.2",
     "@nuxt/eslint": "1.1.0",
@@ -55,12 +58,14 @@
     "@types/eslint-plugin-tailwindcss": "^3.17.0",
     "@vitest/coverage-v8": "3.0.8",
     "@vue/test-utils": "^2.4.6",
+    "devmoji": "^2.3.0",
     "eslint": "^9.19.0",
     "eslint-plugin-format": "^1.0.1",
     "eslint-plugin-tailwindcss": "^3.18.0",
     "happy-dom": "^17.3.0",
     "playwright-core": "^1.51.0",
     "postcss-functions": "^4.0.2",
+    "simple-git-hooks": "^2.12.1",
     "tailwindcss": "3",
     "typescript": "^5.8.2",
     "vitest": "^3.0.8",

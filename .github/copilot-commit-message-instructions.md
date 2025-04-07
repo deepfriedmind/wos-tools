@@ -1,4 +1,84 @@
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119.
+# Conventional Commits Guide for LLMs
+
+## Format
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+## Core Rules
+
+1. First line must follow the format: `<type>[(scope)](!): <description>`
+2. Type must be one of the commit types listed below
+3. Scope is optional and should describe a section of the codebase: `feat(user-auth):`
+4. Adding `!` before the colon indicates a breaking change: `feat(api)!:`
+5. Description should be concise and in imperative mood ("add" not "added")
+6. Body provides additional context and should be separated by a blank line
+7. Footers should be separated by a blank line and follow the format `token: value` or `token #value`
+8. Breaking changes can be marked with a footer: `BREAKING CHANGE: description of the change`
+9. The first line MUST NOT exceed 72 characters
+10. Use backticks for code or file names
+
+## Commit Types
+
+| Type          | Description                                                                                             |
+| ------------- | ------------------------------------------------------------------------------------------------------- |
+| `feat`        | A new feature                                                                                           |
+| `fix`         | A bug fix                                                                                               |
+| `docs`        | Documentation changes                                                                                   |
+| `style`       | Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc.) |
+| `refactor`    | A code change that neither fixes a bug nor adds a feature                                               |
+| `perf`        | A code change that improves performance                                                                 |
+| `test`        | Adding missing tests or correcting existing tests                                                       |
+| `build`       | Changes that affect the build system or external dependencies                                           |
+| `ci`          | Changes to CI configuration files and scripts                                                           |
+| `chore`       | Other changes that don't modify src or test files                                                       |
+| `chore(deps)` | Upgrading or downgrading dependencies                                                                   |
+| `revert`      | Reverts a previous commit                                                                               |
+
+## Examples
+
+```
+feat(user-auth): add password strength indicator
+```
+
+```
+fix(api): prevent race condition in request handler
+```
+
+```
+docs: update README with new API endpoints
+```
+
+```
+feat(api)!: change how authentication tokens are processed
+
+This changes the token format and invalidates all existing tokens.
+```
+
+```
+feat(authentication): implement OAuth2 authentication
+
+BREAKING CHANGE: all auth endpoints now require OAuth2 tokens
+```
+
+```
+fix(parser): resolve issue with nested object parsing
+
+The parser was incorrectly handling nested objects when the depth
+exceeded 3 levels. This patch fixes the recursive logic to properly
+handle any depth of nesting.
+
+Closes #42
+```
+
+## Full specification
+
+The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL” in this document are to be interpreted as described in [RFC 2119](https://www.ietf.org/rfc/rfc2119.txt).
 
 1. Commits MUST be prefixed with a type, which consists of a noun, `feat`, `fix`, etc., followed
    by the OPTIONAL scope, OPTIONAL `!`, and REQUIRED terminal colon and space.
@@ -6,15 +86,13 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 1. The type `fix` MUST be used when a commit represents a bug fix for your application.
 1. A scope MAY be provided after a type. A scope MUST consist of a noun describing a
    section of the codebase surrounded by parenthesis, e.g., `fix(parser):`
-1. An emoji (Devmoji) representing the type of change MUST immediately follow the colon and space after the type/scope prefix.
-1. A space and a description MUST immediately follow the emoji.
+1. A description MUST immediately follow the colon and space after the type/scope prefix.
    The description is a short summary of the code changes, e.g., _fix: array parsing issue when multiple spaces were contained in string_.
-1. The subject line MUST NOT exceed 72 characters.
 1. A longer commit body MAY be provided after the short description, providing additional contextual information about the code changes. The body MUST begin one blank line after the description.
 1. A commit body is free-form and MAY consist of any number of newline separated paragraphs.
 1. One or more footers MAY be provided one blank line after the body. Each footer MUST consist of
    a word token, followed by either a `:<space>` or `<space>#` separator, followed by a string value (this is inspired by the
-   git trailer convention).
+   [git trailer convention](https://git-scm.com/docs/git-interpret-trailers)).
 1. A footer's token MUST use `-` in place of whitespace characters, e.g., `Acked-by` (this helps differentiate
    the footer section from a multi-paragraph body). An exception is made for `BREAKING CHANGE`, which MAY also be used as a token.
 1. A footer's value MAY contain spaces and newlines, and parsing MUST terminate when the next valid footer
@@ -29,28 +107,3 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 1. Types other than `feat` and `fix` MAY be used in your commit messages, e.g., _docs: update ref docs._
 1. The units of information that make up Conventional Commits MUST NOT be treated as case sensitive by implementors, with the exception of BREAKING CHANGE which MUST be uppercase.
 1. BREAKING-CHANGE MUST be synonymous with BREAKING CHANGE, when used as a token in a footer.
-1. Use backticks for code or file names.
-1. Use these emojis for the different scopes: feat: ✨, fix: 🐛, docs: 📚, refactor: ♻️, perf: ⚡, test: 🚨, chore: 🔧, chore-release: 🚀, chore-deps: 🔗, build: 📦, ci: 👷, security: 🔒, i18n: 🌐, breaking: 💥, config: ⚙️, add: ➕, remove: ➖.
-
-### Default Devmoji Reference
-
-| Emoji                       | Devmoji Code      | Description                                                                                               |
-| --------------------------- | ----------------- | --------------------------------------------------------------------------------------------------------- |
-| ✨ `:sparkles:`             | `:feat:`          | **feat:** a new feature                                                                                   |
-| 🐛 `:bug:`                  | `:fix:`           | **fix:** a bug fix                                                                                        |
-| 📚 `:books:`                | `:docs:`          | **docs:** documentation only changes                                                                      |
-| ♻️ `:recycle:`              | `:refactor:`      | **refactor:** a code change that neither fixes a bug nor adds a feature                                   |
-| ⚡ `:zap:`                  | `:perf:`          | **perf:** a code change that improves performance                                                         |
-| 🚨 `:rotating_light:`       | `:test:`          | **test:** adding missing or correcting existing tests                                                     |
-| 🔧 `:wrench:`               | `:chore:`         | **chore:** changes to the build process or auxiliary tools and libraries such as documentation generation |
-| 🚀 `:rocket:`               | `:chore-release:` | **chore(release):** code deployment or publishing to external repositories                                |
-| 🔗 `:link:`                 | `:chore-deps:`    | **chore(deps):** add or delete dependencies                                                               |
-| 📦 `:package:`              | `:build:`         | **build:** changes related to build processes                                                             |
-| 👷 `:construction_worker:`  | `:ci:`            | **ci:** updates to the continuous integration system                                                      |
-| 🚀 `:rocket:`               | `:release:`       | code deployment or publishing to external repositories                                                    |
-| 🔒 `:lock:`                 | `:security:`      | Fixing security issues                                                                                    |
-| 🌐 `:globe_with_meridians:` | `:i18n:`          | Internationalization and localization                                                                     |
-| 💥 `:boom:`                 | `:breaking:`      | Introducing breaking changes                                                                              |
-| ⚙️ `:gear:`                 | `:config:`        | Changing configuration files                                                                              |
-| ➕ `:heavy_plus_sign:`      | `:add:`           | add something                                                                                             |
-| ➖ `:heavy_minus_sign:`     | `:remove:`        | remove something                                                                                          |
