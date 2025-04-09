@@ -163,6 +163,8 @@ function getMilestoneIcon(type: string | undefined) {
     return 'fluent-emoji:snowflake'
   }
 }
+
+const SERVER_TIMELINE_IMAGE_LABEL = 'Server timeline illustration from the Whiteout Survival Discord server'
 </script>
 
 <template>
@@ -340,7 +342,7 @@ function getMilestoneIcon(type: string | undefined) {
       <div class="overflow-hidden rounded-3xl border-2 border-surface">
         <a
           href="/img/server-timeline@2x.webp"
-          aria-label="Server timeline illustration from the Whiteout Survival Discord server"
+          :aria-label="SERVER_TIMELINE_IMAGE_LABEL"
           target="_blank"
         >
           <img
@@ -349,7 +351,7 @@ function getMilestoneIcon(type: string | undefined) {
             src="/img/server-timeline@2x.webp"
             width="2317"
             height="6884"
-            alt="Server timeline illustration from the Whiteout Survival Discord server"
+            :alt="SERVER_TIMELINE_IMAGE_LABEL"
             class="cursor-zoom-in lg:hidden"
           >
         </a>
@@ -359,25 +361,25 @@ function getMilestoneIcon(type: string | undefined) {
           src="/img/server-timeline@2x.webp"
           width="2317"
           height="6884"
-          alt="Server timeline illustration from the Whiteout Survival Discord server"
+          :alt="SERVER_TIMELINE_IMAGE_LABEL"
           class="cursor-zoom-in max-lg:hidden"
           @click="showTimelineImageDialog = true"
         >
       </div>
       <figcaption class="text-sm text-primary-emphasis-alt md:text-right ">
-        Server timeline illustration from the Whiteout Survival Discord server
+        {{ SERVER_TIMELINE_IMAGE_LABEL }}
       </figcaption>
     </figure>
     <Dialog
       v-model:visible="showTimelineImageDialog"
-      header="Server timeline illustration from the Whiteout Survival Discord server"
+      :header="SERVER_TIMELINE_IMAGE_LABEL"
       dismissable-mask
       modal
       class="p-dialog-maximized"
     >
       <Image
         src="/img/server-timeline@2x.webp"
-        alt="Server timeline illustration from the Whiteout Survival Discord server"
+        :alt="SERVER_TIMELINE_IMAGE_LABEL"
         width="2317"
         height="6884"
         class="block overflow-hidden rounded-xl border border-surface"
