@@ -152,6 +152,17 @@ watch(processedMilestones, () => {
 })
 
 const showTimelineImageDialog = ref(false)
+function getMilestoneIcon(type: string | undefined) {
+  if (type === 'heroes') {
+    return 'fluent-emoji:crossed-swords'
+  }
+  else if (type === 'pets') {
+    return 'fluent-emoji:wolf'
+  }
+  else {
+    return 'fluent-emoji:snowflake'
+  }
+}
 </script>
 
 <template>
@@ -243,17 +254,27 @@ const showTimelineImageDialog = ref(false)
         :align="isMinLgBreakpoint ? 'alternate' : 'left'"
         class="mb-4"
       >
-        <template #marker="{ item: { hasMileStonePassed, index } }">
+          <template #marker="{ item: { hasMileStonePassed, index, type } }">
           <span
-            class="z-10 flex size-8 items-center justify-center rounded-full bg-slate-900 shadow"
+              class="z-10 flex size-8 items-center justify-center rounded-full bg-surface-100 sm:size-12"
             :class="{
-              'ring-2 ring-surface-400 drop-shadow-lg': nextUpcomingMilestoneIndex === index,
+                'opacity-50 saturate-50': hasMileStonePassed,
+                'ring ring-surface-400 drop-shadow-lg': !isToday && nextUpcomingMilestoneIndex === index,
+                'ring-2 ring-surface-700': !isToday && nextUpcomingMilestoneIndex !== index,
             }"
+            >
+              <img
+                v-if="type === 'fc'"
+                width="28"
+                height="28"
+                src="/img/fc.webp"
+                alt="Fire Crystal"
+                class="w-6 drop-shadow sm:w-[rem(30)]"
           >
             <Icon
-              size="24"
-              :name="hasMileStonePassed ? 'fluent:checkmark-circle-12-regular' : 'fluent-emoji:snowflake'"
-              class="text-surface-900"
+                v-else
+                :name="getMilestoneIcon(type)"
+                class="text-2xl text-surface-900 drop-shadow sm:text-3xl"
             />
           </span>
         </template>
@@ -270,22 +291,25 @@ const showTimelineImageDialog = ref(false)
             }"
             class="mb-8 scroll-mt-24"
             :class="{
-              'border-2 border-surface-400 bg-surface-800': nextUpcomingMilestoneIndex === index,
+                'border-surface-400 bg-sky-950 sm:ring-2 sm:ring-surface-400': !isToday && nextUpcomingMilestoneIndex === index,
               'border-surface-900 bg-surface-950': hasMileStonePassed,
             }"
             toggleable
             :collapsed="panelsToggledByUser ? !isPanelsExpanded : hasMileStonePassed"
           >
             <template #header>
-              <h4><strong>Day {{ day }}:</strong> {{ title }}</h4>
+                <h4 class="max-sm:text-sm">
+                  <strong>Day {{ day }}:</strong> {{ title }}
+                </h4>
             </template>
             <div
-              class="prose prose-sm sm:prose-base"
+                class="prose prose-sm hyphens-auto sm:prose-base"
               v-html="content"
             />
             <template #footer>
-              <div class="flex justify-end whitespace-pre text-sm text-surface-400">
-                Approx. <time :datetime="`${mileStoneDate}T00:00:00Z`">{{ mileStoneDate }}</time> UTC ({{ $dayjs.utc(mileStoneDate).from($dayjs.utc()) }})
+                <div class="text-right text-sm text-surface-400">
+                  Approx. <time :datetime="`${mileStoneDate}T00:00:00Z`">{{ mileStoneDate }}</time> UTC ({{
+                    $dayjs.utc(mileStoneDate).from($dayjs.utc()) }})
               </div>
             </template>
           </Panel>
@@ -366,6 +390,10 @@ const showTimelineImageDialog = ref(false)
 :deep(.p-timeline) {
   .p-timeline-event-opposite {
     @apply max-lg:hidden;
+  }
+
+  .p-timeline-event-content {
+    @apply max-lg:pr-px;
   }
 
   &.p-timeline-vertical.p-timeline-alternate .p-timeline-event:nth-child(even) .p-timeline-event-content {

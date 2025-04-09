@@ -7,6 +7,7 @@
   {
     "day": 40,
     "title": "Heroes Generation 2",
+    "type": "heroes",
     "content": "<p>At day 40, the following aspects of the game unlock/update:</p><p><strong>Heroes of Generation 2</strong></p><ul><li>[Infantry] Flint - Lucky Wheel Hero</li><li>[Lancer] Philly</li><li>[Marksman] Alonso</li></ul><p><strong>Legendary Hero Gear</strong></p><p>New tier of Hero Gear, one above Mythic.</p>"
   },
   {
@@ -17,11 +18,13 @@
   {
     "day": 54,
     "title": "Pets Generation 1",
+    "type": "pets",
     "content": "<p>At day 54, the following aspects of the game unlock/update:</p><p><strong>Pets of Generation 1</strong></p><ul><li>Cave Hyena</li><li>Arctic Wolf</li><li>Musk Ox</li></ul>"
   },
   {
     "day": 60,
     "title": "Fire Crystal Age Begins!",
+    "type": "fc",
     "content": "<p>At day 60, the following aspects of the game unlock/update:</p><p><strong>Fire Crystal Age</strong></p><p>When 'Road to Discovery' Monument mission ends, Fire Crystal Age will be unlocked in your state and players at Furnace Lv. 30 can upgrade buildings further.</p>"
   },
   {
@@ -32,21 +35,25 @@
   {
     "day": 90,
     "title": "Pets Generation 2",
+    "type": "pets",
     "content": "<p>At day 90, the following aspects of the game unlock/update:</p><p><strong>Pets of Generation 2<br /></strong></p><ul><li>Titan Roc</li><li>Giant Tapir</li></ul>"
   },
   {
     "day": 120,
     "title": "Heroes Generation 3",
+    "type": "heroes",
     "content": "<p>At day 120, the following aspects of the game unlock/update:</p><p><strong>Heroes of Generation 3<br /></strong></p><ul><li>[Infantry] Logan</li><li>[Lancer] Mia - Lucky Wheel Hero</li><li>[Marksman] Greg</li></ul><p><strong>VIP Prestige Shop</strong></p><p>I actually could not find almost any info online about this shop, but from my understanding, it is a special shop for players who have reached VIP level 12 and it offers various special cosmetic items.</p><p><strong>Fortress Battle Rewards Update</strong></p><p>Fire Crystals and pet advancement items added to the reward pool.</p><p><strong>Vision of Dawn Event Update</strong></p><p>Added usage of Golden and Platinum Keys to daily tasks.</p>"
   },
   {
     "day": 140,
     "title": "Pets Generation 3",
+    "type": "pets",
     "content": "<p>At day 140, the following aspects of the game unlock/update:</p><p><strong>Pets of Generation 3<br /></strong></p><ul><li>Snow Leopard</li><li>Giant Elk</li></ul>"
   },
   {
     "day": 150,
     "title": "Fire Crystal 5, Crystal Laboratory",
+    "type": "fc",
     "content": "<p>At day 150, the following aspects of the game unlock/update:</p><p><strong>Fire Crystal Age Update</strong></p><ul><li>Fire Crystal Furnace Lv. 4 and 5 and all the corresponding buildings along with it.</li><li>New building - Crystal Laboratory! Allows to refine small amount of resources 5 times a day for random number of Fire Crystals (1-5).</li></ul><p><strong>Daily Intel Missions Update</strong></p><ul><li>Increase from an average of 10 Fire Crystals to 20 Fire Crystals a day.</li></ul>"
   },
   {
@@ -57,66 +64,79 @@
   {
     "day": 195,
     "title": "Heroes Generation 4, Hero Shard Updates",
+    "type": "heroes",
     "content": "<p>At day 195, the following aspects of the game unlock/update:</p><p><strong>Heroes of Generation 4<br /></strong></p><ul><li>[Infantry] Ahmose</li><li>[Lancer] Reina</li><li>[Marksman] Lynn - Lucky Wheel Hero</li></ul><p><strong>Fortress Battle Rewards Update</strong></p><p>Molly and Zinman shards replaced by Philly and Flint shards.</p><p><strong>Daily Intel Missions Update</strong></p><p>Intel missions award mythic shards of heroes from generation 2 lower than the current generation. For example, at Hero Generation 4, the mythic shard rewards from Intel missions will be for heroes from Generation 2.</p><p><strong>Hero Hall Recruitment Update</strong></p><p>Molly shards from chests are replaced by shards for mythic heroes from generation 2 lower than the current generation. For example, at Hero Generation 4, Molly shards are replaced by shards for heroes from Generation 2. </p><p><strong>Event 'Gina's Revenge' Replaced by 'Hero's Mission'</strong></p><p>Similar event, but instead getting Gina shards, you get shards for a mythic hero from the generation 2 lower than the current generation.</p><ul><li>You can now exchange Horn of Cryptid for Hunter Pouch (was only possible before if you had Gina maxed out). </li><li>You can now exchange Horn of Cryptid for 2 Gina Shards.</li><li>You can now exchange Scattered parts for 2 Gina Shards.</li><li>You can now exchange Scattered parts for Loot (same rewards as Hunter Pouch).</li></ul>"
   },
   {
     "day": 200,
     "title": "Pets Generation 4",
+    "type": "pets",
     "content": "<p>At day 200, the following aspects of the game unlock/update:</p><p><strong>Pets of Generation 4</strong></p><ul><li>Cave Lion</li><li>Snow Ape</li></ul><p><strong>Alliance Shop</strong></p><ul><li>The weekly offer of 1K Pet Food increases from 5 available items to 10.</li><li>The weekly offer of Pet Advancement Materials Custom Chest increases from 4 available to 7. </li></ul>"
   },
   {
     "day": 220,
     "title": "War Academy, Crystal Laboratory Lv. 5",
+    "type": "fc",
     "content": "<p>At day 220, the following aspects of the game unlock/update:</p><p><strong>Fire Crystal Age Updates</strong></p><ul><li>New Building - War Academy!</li><li>Crystal Laboratory Lv. 5 - Up to 6 Fire Crystal refinements per day (from 5).</li></ul>"
   },
   {
     "day": 270,
     "title": "Heroes Generation 5",
+    "type": "heroes",
     "content": "<p>At day 270, the following aspects of the game unlock/update:</p><p><strong>Heroes of Generation 5<br /></strong></p><ul><li>[Infantry] Hector - Lucky Wheel Hero</li><li>[Lancer] Norah</li><li>[Marksman] Gwen</li></ul>"
   },
   {
     "day": 280,
     "title": "Pets Generation 5",
+    "type": "pets",
     "content": "<p>At day 280, the following aspects of the game unlock/update:</p><p><strong>Pets of Generation 5:</strong></p><ul><li>Iron Rhino</li><li>Saber-tooth Tiger</li></ul>"
   },
   {
     "day": 330,
     "title": "Fire Crystal 8, Crystal Laboratory Lv. 6",
+    "type": "fc",
     "content": "<p>At day 330, the following aspects of the game unlock/update:</p><p><strong>Fire Crystal Age Updates</strong></p><ul><li>Introduction of Refined Fire Crystals needed for Fire Crystal upgrades of levels 6 and higher.</li><li>Fire Crystal Furnace Lv. 6, 7 and 8 and all the corresponding buildings along with it.</li><li>Crystal Laboratory Lv. 6 - Up to 7 Fire Crystal refinements per day (from 6).</li></ul>"
   },
   {
     "day": 360,
     "title": "Heroes Generation 6",
+    "type": "heroes",
     "content": "<p>At day 360, the following aspects of the game unlock/update:</p><p><strong>Heroes of Generation 6<br /></strong></p><ul><li>[Infantry] Wu Ming</li><li>[Lancer] Renee - Lucky Wheel hero</li><li>[Marksman] Wayne</li></ul>"
   },
   {
     "day": 440,
     "title": "Heroes Generation 7",
+    "type": "heroes",
     "content": "<p>At day 440, the following aspects of the game unlock/update:</p><p><strong>Heroes of Generation 7<br /></strong></p><ul><li>[Infantry] Edith</li><li>[Lancer] Gordon</li><li>[Marksman] Bradley - Lucky Wheel hero</li></ul>"
   },
   {
     "day": 500,
     "title": "Fire Crystal 10",
+    "type": "fc",
     "content": "<p>At day 500, the following aspects of the game unlock/update:</p><p><strong>Fire Crystal Age Updates</strong></p><ul><li>Fire Crystal Furnace Lv. 9 and 10 and all the corresponding buildings along with it.</li></ul>"
   },
   {
     "day": 520,
     "title": "Heroes Generation 8",
+    "type": "heroes",
     "content": "<p>At day 520, the following aspects of the game unlock/update:</p><p><strong>Heroes of Generation 8<br /></strong></p><ul><li>[Infantry] Gatot - Lucky Wheel hero</li><li>[Lancer] Sonya</li><li>[Marksman] Hendrik</li></ul>"
   },
   {
     "day": 600,
     "title": "Heroes Generation 9",
+    "type": "heroes",
     "content": "<p>At day 600, the following aspects of the game unlock/update:</p><p><strong>Heroes of Generation 9<br /></strong></p><ul><li>[Infantry] Magnus</li><li>[Lancer] Xura</li><li>[Marksman] Fred</li></ul>"
   },
   {
     "day": 700,
     "title": "Heroes Generation 10",
+    "type": "heroes",
     "content": "<p>At day 700, the following aspects of the game unlock/update:</p><p><strong>Heroes of Generation 10<br /></strong></p><ul><li>[Infantry] Gregory</li><li>[Lancer] Freya</li><li>[Marksman] Blanchette</li></ul>"
   },
   {
     "day": 800,
     "title": "Heroes Generation 11",
+    "type": "heroes",
     "content": "<p>At day 800, the following aspects of the game unlock/update:</p><p><strong>Heroes of Generation 11<br /></strong></p><ul><li>[Infantry] Eleonora</li><li>[Lancer] Lloyd</li><li>[Marksman] Rufus</li></ul>"
   }
 ]
