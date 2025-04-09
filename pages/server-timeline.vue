@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { _lg, _sm, _xl } from '#tailwind-config/theme/screens'
 import milestones from '~/public/data/server-timeline.json'
-import { WOS_LAUNCH_DATE } from '~/utils/constants'
 
 const PAGE_TITLE = 'Server Timeline'
 const PAGE_DESCRIPTION = 'Information about the milestones a server/state goes through and when they unlock (approximately)'
@@ -151,7 +150,25 @@ watch(processedMilestones, () => {
   timelineEntryReferences.value = []
 })
 
-const showTimelineImageDialog = ref(false)
+const showServerAgeHelpDialog = shallowRef(false)
+const showTimelineImageDialog = shallowRef(false)
+const sfcPresidentDate = shallowRef<Date | undefined>()
+const loginDays = shallowRef(0)
+
+const startDateFromSfcPresidentDate = computed(() => {
+  if (!sfcPresidentDate.value)
+    return
+
+  return dayjs(sfcPresidentDate.value).utc().startOf('day').subtract(55, 'days').toDate()
+})
+
+const startDateFromLoginDays = computed(() => {
+  if (loginDays.value === undefined || loginDays.value < 1)
+    return
+
+  return dayjs().utc().startOf('day').subtract(loginDays.value, 'days').toDate()
+})
+
 function getMilestoneIcon(type: string | undefined) {
   if (type === 'heroes') {
     return 'fluent-emoji:crossed-swords'
@@ -212,6 +229,164 @@ const SERVER_TIMELINE_IMAGE_LABEL = 'Server timeline illustration from the White
             >
               {{ serverAgeString }}
             </div>
+            <div v-else>
+              <Button
+                v-tooltip="'How do I find my server start date?'"
+                aria-label="How do I find my server start date?'"
+                icon="pi pi-question-circle"
+                rounded
+                variant="text"
+                size="large"
+                @click="showServerAgeHelpDialog = true"
+              />
+              <Dialog
+                v-model:visible="showServerAgeHelpDialog"
+                header="How to find your server start date"
+                dismissable-mask
+                modal
+              >
+                <div class="prose">
+                  <p>There are a few ways to do this:</p>
+                  <ol>
+                    <li>
+                      <h3>Check VIP login days</h3>
+                      <p>
+                        If you joined the server on the day it was created or shortly thereafter, have never transferred, and have logged in daily to claim your VIP points, you can use your VIP login days as a fairly accurate estimate.
+                      </p>
+                      <Panel
+                        toggleable
+                        collapsed
+                        class="not-prose text-sm"
+                      >
+                        <template #header>
+                          <div class="flex items-center gap-2">
+                            <Icon
+                              name="bxs:calculator"
+                              size="20"
+                              class="shrink-0 text-primary"
+                            />
+                            <h4 class="font-semibold">
+                              Calculate from login days
+                            </h4>
+                          </div>
+                        </template>
+                        <div
+                          v-auto-animate
+                          class="flex flex-wrap gap-x-2 gap-y-4 md:gap-x-4"
+                        >
+                          <InputNumber
+                            v-model="loginDays"
+                            :allow-empty="false"
+                            :min="0"
+                            :max="$dayjs().diff($dayjs(WOS_LAUNCH_DATE), 'day')"
+                            :use-grouping="false"
+                            highlight-on-focus
+                            input-class="tabular-nums"
+                            show-buttons
+                            size="small"
+                            suffix=" days"
+                            class="w-28"
+                            fluid
+                          />
+                          <div
+                            v-if="startDateFromLoginDays "
+                            class="flex flex-wrap items-center gap-2 md:gap-4"
+                          >
+                            <time
+                              class="font-bold tabular-nums text-green-500"
+                              :datetime="$dayjs(startDateFromLoginDays).utc().format()"
+                            >{{ $dayjs(startDateFromLoginDays).format('YYYY-MM-DD') }}</time>
+                            <Button
+                              label="Use for timeline"
+                              variant="outlined"
+                              size="small"
+                              @click="selectedDate = startDateFromLoginDays; showServerAgeHelpDialog = false"
+                            />
+                          </div>
+                        </div>
+                      </Panel>
+                    </li>
+                    <li>
+                      <h3>Check Monument tasks</h3>
+                      <ul>
+                        <li>
+                          <h4>"Kindling Embers"</h4>
+                          <p>
+                            This event typically occurs on the first day of a new server, but it may take up to three
+                            days to complete.
+                          </p>
+                        </li>
+                        <li>
+                          <h4>"Beast Hunting"</h4>
+                          <p>
+                            The date shown, minus ~6 days, should provide a good estimate of when your server was
+                            created.
+                          </p>
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <h3>Check Sunfire Castle</h3>
+                      <p>
+                        If your server has had at least one Sunfire Castle battle, you
+                        can use the following method: Go to the "Battle History" and "Hall of Fame" sections to check the date of
+                        the first presidency. Subtract 55 days from this date to get a rough estimate of your state's
+                        age.
+                      </p>
+                      <Panel
+                        toggleable
+                        collapsed
+                        class="not-prose text-sm"
+                      >
+                        <template #header>
+                          <div class="flex items-center gap-2">
+                            <Icon
+                              name="bxs:calculator"
+                              size="20"
+                              class="shrink-0 text-primary"
+                            />
+                            <h4 class="font-semibold">
+                              Calculate from Sunfire presidency
+                            </h4>
+                          </div>
+                        </template>
+                        <div
+                          v-auto-animate
+                          class="flex flex-wrap gap-x-2 gap-y-4 md:gap-x-4"
+                        >
+                          <DatePicker
+                            v-model="sfcPresidentDate"
+                            :max-date="new Date()"
+                            :min-date="$dayjs(WOS_LAUNCH_DATE).add(56, 'day').toDate()"
+                            date-format="yy-mm-dd"
+                            placeholder="First president date"
+                            show-icon
+                            size="small"
+                          />
+                          <div
+                            v-if="startDateFromSfcPresidentDate"
+                            class="flex flex-wrap items-center gap-2 md:gap-4"
+                          >
+                            <div>
+                              - 55 days = <time
+                                class="font-bold tabular-nums text-green-500"
+                                :datetime="$dayjs(startDateFromSfcPresidentDate).utc().format()"
+                              >{{ $dayjs(startDateFromSfcPresidentDate).format('YYYY-MM-DD') }}</time>
+                            </div>
+                            <Button
+                              label="Use for timeline"
+                              variant="outlined"
+                              size="small"
+                              @click="selectedDate = startDateFromSfcPresidentDate; showServerAgeHelpDialog = false"
+                            />
+                          </div>
+                        </div>
+                      </Panel>
+                    </li>
+                  </ol>
+                </div>
+              </Dialog>
+            </div>
           </div>
           <div
             v-if="selectedDateIsValid"
@@ -250,20 +425,20 @@ const SERVER_TIMELINE_IMAGE_LABEL = 'Server timeline illustration from the White
       />
 
       <ClientOnly>
-      <Timeline
-        v-show="selectedDateIsValid"
-        :value="processedMilestones"
-        :align="isMinLgBreakpoint ? 'alternate' : 'left'"
-        class="mb-4"
-      >
+        <Timeline
+          v-show="selectedDateIsValid"
+          :value="processedMilestones"
+          :align="isMinLgBreakpoint ? 'alternate' : 'left'"
+          class="mb-4"
+        >
           <template #marker="{ item: { hasMileStonePassed, index, type } }">
-          <span
+            <span
               class="z-10 flex size-8 items-center justify-center rounded-full bg-surface-100 sm:size-12"
-            :class="{
+              :class="{
                 'opacity-50 saturate-50': hasMileStonePassed,
                 'ring ring-surface-400 drop-shadow-lg': !isToday && nextUpcomingMilestoneIndex === index,
                 'ring-2 ring-surface-700': !isToday && nextUpcomingMilestoneIndex !== index,
-            }"
+              }"
             >
               <img
                 v-if="type === 'fc'"
@@ -272,51 +447,51 @@ const SERVER_TIMELINE_IMAGE_LABEL = 'Server timeline illustration from the White
                 src="/img/fc.webp"
                 alt="Fire Crystal"
                 class="w-6 drop-shadow sm:w-[rem(30)]"
-          >
-            <Icon
+              >
+              <Icon
                 v-else
                 :name="getMilestoneIcon(type)"
                 class="text-2xl text-surface-900 drop-shadow sm:text-3xl"
-            />
-          </span>
-        </template>
-        <template #content="{ item: { index, title, day, mileStoneDate, content, hasMileStonePassed } }">
-          <Panel
-            :id="useKebabCase(title)"
-            :ref="(el) => {
-              if (el) {
-                timelineEntryReferences[index] = '$el' in el ? el.$el : el;
-              }
-              else {
-                timelineEntryReferences[index] = null;
-              }
-            }"
-            class="mb-8 scroll-mt-24"
-            :class="{
+              />
+            </span>
+          </template>
+          <template #content="{ item: { index, title, day, mileStoneDate, content, hasMileStonePassed } }">
+            <Panel
+              :id="useKebabCase(title)"
+              :ref="(el) => {
+                if (el) {
+                  timelineEntryReferences[index] = '$el' in el ? el.$el : el;
+                }
+                else {
+                  timelineEntryReferences[index] = null;
+                }
+              }"
+              class="mb-8 scroll-mt-24"
+              :class="{
                 'border-surface-400 bg-sky-950 sm:ring-2 sm:ring-surface-400': !isToday && nextUpcomingMilestoneIndex === index,
-              'border-surface-900 bg-surface-950': hasMileStonePassed,
-            }"
-            toggleable
-            :collapsed="panelsToggledByUser ? !isPanelsExpanded : hasMileStonePassed"
-          >
-            <template #header>
+                'border-surface-900 bg-surface-950': hasMileStonePassed,
+              }"
+              toggleable
+              :collapsed="panelsToggledByUser ? !isPanelsExpanded : hasMileStonePassed"
+            >
+              <template #header>
                 <h4 class="max-sm:text-sm">
                   <strong>Day {{ day }}:</strong> {{ title }}
                 </h4>
-            </template>
-            <div
+              </template>
+              <div
                 class="prose prose-sm hyphens-auto sm:prose-base"
-              v-html="content"
-            />
-            <template #footer>
+                v-html="content"
+              />
+              <template #footer>
                 <div class="text-right text-sm text-surface-400">
                   Approx. <time :datetime="`${mileStoneDate}T00:00:00Z`">{{ mileStoneDate }}</time> UTC ({{
                     $dayjs.utc(mileStoneDate).from($dayjs.utc()) }})
-              </div>
-            </template>
-          </Panel>
-        </template>
-      </Timeline>
+                </div>
+              </template>
+            </Panel>
+          </template>
+        </Timeline>
       </ClientOnly>
     </div>
     <div
