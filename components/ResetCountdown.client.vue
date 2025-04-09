@@ -69,6 +69,7 @@ watch(() => secondsUntilReset.value, (seconds) => {
         :value="progress"
         :show-value="false"
         class="h-1.5 w-full max-md:hidden"
+        aria-label="Progress bar counting down to reset"
         :pt="{
           value: {
             style: progressColor ? { backgroundColor: progressColor, transition: 'background-color 1s ease-out' } : undefined,
