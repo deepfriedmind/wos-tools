@@ -5,6 +5,7 @@ import milestones from '~/public/data/server-timeline.json'
 const PAGE_TITLE = 'Server Timeline'
 const PAGE_DESCRIPTION = 'Information about the milestones a server/state goes through and when they unlock (approximately)'
 const PAGE_ICON = 'mdi:chart-timeline-variant-shimmer'
+const SERVER_TIMELINE_IMAGE_LABEL = 'Server timeline illustration from the Whiteout Survival Discord server'
 
 definePageMeta({
   description: `${PAGE_DESCRIPTION} for Whiteout Survival.`,
@@ -21,16 +22,23 @@ const isMinSmBreakpoint = useMediaQuery(`(min-width: ${_sm})`, { ssrWidth: 640 }
 const isMinLgBreakpoint = useMediaQuery(`(min-width: ${_lg})`, { ssrWidth: 1024 })
 const isMinXlBreakpoint = useMediaQuery(`(min-width: ${_xl})`, { ssrWidth: 1280 })
 
-const activeMilestoneId = ref<string | undefined>(undefined)
-
 const {
   isToday,
   selectedDate,
   selectedDateIsValid,
   selectedDayjs,
 } = useDateQueryParameter()
-const isPanelsExpanded = ref(true)
-const panelsToggledByUser = ref(false)
+
+const isPanelsExpanded = shallowRef(true)
+const panelsToggledByUser = shallowRef(false)
+watch(selectedDayjs, () => {
+  panelsToggledByUser.value = false
+})
+
+function toggleAllPanels() {
+  panelsToggledByUser.value = true
+  isPanelsExpanded.value = !isPanelsExpanded.value
+}
 
 const serverAgeString = computed(() => {
   const diff = dayjs().diff(selectedDayjs.value, 'day')
@@ -59,65 +67,56 @@ const processedMilestones = computed(() => {
   })
 })
 
-// Debounced function to update the active milestone ID based on scroll position
-// and sync it with the URL hash without causing a page reload or scroll jump.
-const debouncedUpdateActiveMilestone = useDebounceFn((newActiveId: string) => {
-  if (activeMilestoneId.value !== newActiveId) {
+watch(processedMilestones, () => {
+  timelineEntryReferences.value = []
+})
+
+const activeMilestoneId = shallowRef<string | undefined>()
+const setActiveMilestone = useDebounceFn((newActiveId: string) => {
+  const hasScrolledToTop = import.meta.client && window.scrollY < 100
+
+  if (hasScrolledToTop)
+    return activeMilestoneId.value = useKebabCase(processedMilestones.value[0].title)
+
+  if (activeMilestoneId.value !== newActiveId)
     activeMilestoneId.value = newActiveId
+}, 100)
 
-    const isFirstMilestone = processedMilestones.value.length > 0
-      && newActiveId === useKebabCase(processedMilestones.value[0].title)
+const setUrlHash = useDebounceFn((newActiveId: string) => {
+  const isFirstMilestone = processedMilestones.value.length > 0
+    && newActiveId === useKebabCase(processedMilestones.value[0].title)
+  const hasScrolledToTop = import.meta.client && window.scrollY < 100
 
-    // Avoid updating hash if it's the first milestone or user is near the top,
-    // prevents unnecessary hash changes on initial load or minor scrolls at the top.
-    if (isFirstMilestone || (import.meta.client && window.scrollY < 100)) {
-      return history.replaceState(undefined, '', `${route.path}${Object.keys(route.query).length > 0 ? `?${new URLSearchParams(route.query as Record<string, string>).toString()}` : ''}`)
-    }
+  if ((isFirstMilestone || hasScrolledToTop) && location.hash)
+    return history.replaceState(undefined, '', `${route.path}${Object.keys(route.query).length > 0 ? `?${new URLSearchParams(route.query as Record<string, string>).toString()}` : ''}`)
 
-    if (route.hash !== `#${newActiveId}`) {
-      history.replaceState(undefined, '', `#${newActiveId}`)
-    }
-  }
-}, 150)
+  if (location.hash !== `#${newActiveId}`)
+    history.replaceState(undefined, '', `#${newActiveId}`)
+}, 500)
 
-watch(selectedDayjs, () => {
-  panelsToggledByUser.value = false
-})
-
-onMounted(() => {
-  setIsStickyHeaderEnabled(false)
-})
-
-onUnmounted(() => {
-  setIsStickyHeaderEnabled(true)
-})
-
-// Observe timeline entries to update the active milestone for the TOC
+// Observe timeline entries to update the active milestone for the TOC and set URL hash
 useIntersectionObserver(
   timelineEntryReferences,
   (entries) => {
-    const visibleEntries = entries.filter(entry => entry.isIntersecting)
+    const intersectingEntries = entries.filter(entry => entry.isIntersecting)
 
-    if (visibleEntries.length > 0) {
-      // Find the entry that is visually highest on the screen (smallest top value)
-      // among those currently intersecting the rootMargin line. This ensures the
-      // "active" item in the TOC corresponds to the item nearest the top edge
-      // of the intersection viewport.
-      const highestEntry = useMinBy(visibleEntries, entry => entry.boundingClientRect.top)
+    if (intersectingEntries.length > 0) {
+      // Target offset from the top of the viewport
+      const TARGET_OFFSET_TOP = 100
 
-      if (highestEntry?.target.id) {
-        const newActiveId = highestEntry.target.id
-        debouncedUpdateActiveMilestone(newActiveId)
+      // Find the entry whose top edge is closest to the TARGET_OFFSET_TOP
+      const closestEntry = useMinBy(intersectingEntries, entry => Math.abs(entry.boundingClientRect.top - TARGET_OFFSET_TOP))
+
+      if (closestEntry?.target.id) {
+        const newActiveId = closestEntry.target.id
+        setActiveMilestone(newActiveId)
+        setUrlHash(newActiveId)
       }
     }
   },
   {
-    // rootMargin defines the intersection viewport:
-    // - Top: -150px (starts 150px below the actual viewport top)
-    // - Bottom: -100% (ends at the viewport top, effectively only tracking items crossing the top boundary)
-    // This setup focuses on detecting which item is currently at or near the top edge defined by rootMargin.
     rootMargin: '-150px 0px -100% 0px',
-    threshold: 0, // Trigger as soon as any part intersects
+    threshold: 0,
   },
 )
 
@@ -134,21 +133,12 @@ const nextUpcomingMilestoneIndex = computed(() => {
 function scrollToNextMilestone() {
   if (nextUpcomingMilestoneIndex.value !== -1) {
     const element = timelineEntryReferences.value[nextUpcomingMilestoneIndex.value]
+
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }
 }
-
-function toggleAllPanels() {
-  panelsToggledByUser.value = true
-  isPanelsExpanded.value = !isPanelsExpanded.value
-}
-
-// Reset card references when milestones change
-watch(processedMilestones, () => {
-  timelineEntryReferences.value = []
-})
 
 const showServerAgeHelpDialog = shallowRef(false)
 const showTimelineImageDialog = shallowRef(false)
@@ -181,7 +171,13 @@ function getMilestoneIcon(type: string | undefined) {
   }
 }
 
-const SERVER_TIMELINE_IMAGE_LABEL = 'Server timeline illustration from the Whiteout Survival Discord server'
+onMounted(() => {
+  setIsStickyHeaderEnabled(false)
+})
+
+onUnmounted(() => {
+  setIsStickyHeaderEnabled(true)
+})
 </script>
 
 <template>
