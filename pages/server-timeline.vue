@@ -49,7 +49,7 @@ const processedMilestones = computed(() => {
   const currentDate = dayjs()
 
   return milestones.map((milestone, index) => {
-    const milestoneDate = startDate.add(milestone.day - 1, 'day')
+    const milestoneDate = startDate.add(milestone.day, 'day')
 
     return {
       ...milestone,
