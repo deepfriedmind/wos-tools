@@ -92,12 +92,22 @@ const emit = defineEmits<{
 }>()
 
 // Use shallowRef instead of ref when possible
-const selectedItem = shallowRef<string | null>(null)
+const selectedItem = shallowRef<string | undefined>(undefined)
 
 // Use computed for derived state
 const filteredItems = computed(() => 
   props.items.filter(item => item.name.includes(searchTerm.value))
 )
+
+// use computed with previous value when applicable
+const count = ref(2)
+const alwaysSmall = computed((previous) => {
+  if (count.value <= 3) {
+    return count.value
+  }
+
+  return previous
+})
 
 // Use template refs with useTemplateRef
 const tableRef = useTemplateRef()
@@ -158,9 +168,13 @@ export const useUserStore = defineStore('user', () => {
 - Run ESLint and type checking before providing code suggestions
 - Use descriptive variable names without abbreviations or acronyms
 - Always prefer destructuring whenever possible
-- Don't add imports for anything that is auto-imported via Nuxt or compatible packages, e.g. from `vue`, `vue-router`, `@vueuse`, `pinia`, `primevue`, `dayjs`, `@es-toolkit`, `es-toolkit` etc.
+- Always prefer `undefined` over `null` for uninitialized values
+- Do NOT use the `any` type. Always use specific types
+- Do NOT add imports for anything that is auto-imported via Nuxt or compatible packages, e.g. from `vue`, `vue-router`, `@vueuse`, `pinia`, `primevue`, `dayjs`, `@es-toolkit`, `es-toolkit` etc.
 - After editing, check for problems (linting, type errors, etc.) and fix them. **Crucially, continue checking and fixing recursively until NO problems remain.** A task is not complete if any problems are reported after a change.
 - **Strictly forbid comments explaining refactoring steps or code movement.** Comments like `// Changed from`, `// Updated to`, `// Logic moved to X`, or `// Y is now handled by Z` are unnecessary noise and must not be included in the final code. Focus on code quality and self-documentation. Comments should only explain *why* a complex or non-obvious piece of code exists, not *how* it got there.
+- Do not add verbose comments or explanations in the code. The code should be self-explanatory and easy to understand without excessive comments.
+- Use JSDoc comments for complex functions and public APIs
 
 ### File Organization
 
@@ -178,12 +192,14 @@ export const useUserStore = defineStore('user', () => {
 - Use `defineProps` with TypeScript Generics syntax
 - Use `useTemplateRef` for template refs (no explicit typing needed)
 - Use `shallowRef` instead of `ref` whenever possible
+- Do NOT use `shallowRef` for template refs.
 - Use computed for derived state
+- Use computed with the `previous` value returned by the computed property accessing the first argument of the getter (when applicable)
 - Use provide/inject for dependency injection
 - Use watch with immediate option when needed
 - Use named slots for component composition
 - Type component methods with expose
-- Don't use `<style>` blocks unless necessary, always prefer Tailwind CSS classes.
+- Do NOT use `<style>` blocks unless necessary, always prefer Tailwind CSS classes.
 
 ### API Development
 

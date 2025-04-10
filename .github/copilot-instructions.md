@@ -4,13 +4,11 @@ Always validate code syntax and nesting before suggesting changes.
 
 Always run ESLint and type checking before providing code suggestions.
 
-Don't use abbreviations or acronyms for variable names. Make them clear and descriptive without being overly verbose.
+Do NOT use abbreviations or acronyms for variable names. Make them clear and descriptive without being overly verbose.
 
-Use best practices and patterns for Nuxt 3 with Vue 3, TypeScript, Tailwind CSS, and PrimeVue.
+Use best practices and patterns for Nuxt 3 with Vue 3, TypeScript, Tailwind CSS 3, and PrimeVue 4.
 
-Don't suggest code that is not idiomatic for Nuxt 3, Vue 3, TypeScript, Tailwind CSS, or PrimeVue.
-
-Don't add imports for anything that is auto-imported via Nuxt, e.g. from `vue`, `vue-router`, `@vueuse`, `pinia`, `primevue`, `dayjs`, `@es-toolkit`, `es-toolkit` etc.
+Do NOT add imports for anything that is auto-imported via Nuxt, e.g. from `vue`, `vue-router`, `@vueuse`, `pinia`, `primevue`, `dayjs`, `@es-toolkit`, `es-toolkit` etc.
 
 Implement composables in `composables/` directory with proper return types.
 
@@ -32,6 +30,12 @@ Use `useTemplateRef` for template refs. They do not need to be typed.
 
 Use `shallowRef` instead of `ref` whenever possible.
 
+Do NOT use `shallowRef` for template refs.
+
+Always prefer `undefined` over `null` for uninitialized values.
+
+Do NOT use the `any` type. Always use specific types.
+
 Handle async data with `useAsyncData` and error handling.
 
 Implement API routes with `defineEventHandler` and zod validation.
@@ -41,6 +45,8 @@ Type API responses with `ResT` generic in `useFetch`.
 Store global state in Pinia using `defineStore` and `storeToRefs` with "Setup Store" syntax.
 
 Use `computed` for derived state in components and stores.
+
+Use computed with the `previous` value returned by the computed property accessing the first argument of the getter (when applicable)
 
 Implement middleware with `defineNuxtRouteMiddleware`.
 
@@ -70,7 +76,7 @@ Create reusable transition components.
 
 Type component methods with `expose`.
 
-Don't use `<style>` blocks unless necessary, always prefer Tailwind CSS classes.
+Do NOT use `<style>` blocks unless necessary, always prefer Tailwind CSS classes.
 
 After editing files, always check for problems (linting, type errors, etc.) and fix them. **Crucially, continue checking and fixing recursively until NO problems remain.** A task is not complete if any problems are reported after a change.
 
@@ -79,3 +85,7 @@ When files have no problems left, run the corresponding tests if applicable.
 Run tests with `pnpm vitest run <filename>`.
 
 **Strictly forbid comments explaining refactoring steps or code movement.** Comments like `// Changed from`, `// Updated to`, `// Logic moved to X`, or `// Y is now handled by Z` are unnecessary noise and must not be included in the final code. Focus on code quality and self-documentation. Comments should only explain _why_ a complex or non-obvious piece of code exists, not _how_ it got there.
+
+Do NOT add verbose comments or explanations in the code. The code should be self-explanatory and easy to understand without excessive comments.
+
+Use JSDoc comments for complex functions and public APIs.
