@@ -42,6 +42,7 @@ export default function tw(strings: TemplateStringsArray, ...values: unknown[]):
   }
 
   const result = parts.join('')
+
   if (!result.trim())
     return ''
 

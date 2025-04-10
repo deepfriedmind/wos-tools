@@ -15,6 +15,7 @@ export default withNuxt(
     stylistic: true,
     typescript: {
       overrides: {
+        'ts/no-explicit-any': 'error',
         'ts/prefer-destructuring': [
           'error',
           {
@@ -65,6 +66,7 @@ export default withNuxt(
         { blankLine: 'always', next: 'function', prev: 'block-like' },
         { blankLine: 'always', next: 'function', prev: 'const' },
         { blankLine: 'always', next: 'if', prev: 'block-like' },
+        { blankLine: 'always', next: 'if', prev: 'const' },
         { blankLine: 'always', next: 'if', prev: 'multiline-const' },
         { blankLine: 'always', next: 'let', prev: 'block-like' },
         { blankLine: 'always', next: 'multiline-const', prev: 'expression' },

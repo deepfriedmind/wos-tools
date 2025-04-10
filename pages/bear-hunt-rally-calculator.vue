@@ -66,6 +66,7 @@ const formatNumber = (number: number) => new Intl.NumberFormat().format(number)
 // Load from URL params if present
 if (route.query.marksmen) {
   const amount = Number(route.query.marksmen)
+
   if (!Number.isNaN(amount)) {
     settings.value.totalMarksmen = amount
   }
@@ -73,6 +74,7 @@ if (route.query.marksmen) {
 
 if (route.query.deployment) {
   const amount = Number(route.query.deployment)
+
   if (!Number.isNaN(amount)) {
     settings.value.deployment = amount
   }
@@ -80,6 +82,7 @@ if (route.query.deployment) {
 
 if (route.query.rallies) {
   const amount = Number(route.query.rallies)
+
   if (!Number.isNaN(amount)) {
     const clampedValue = useClamp(amount, 1, MAX_MARCHES)
     settings.value.rallyCount = clampedValue
@@ -101,6 +104,7 @@ if (route.query.marksmenPercent && route.query.lancersPercent && route.query.inf
   const marksmenPercentValue = Number(route.query.marksmenPercent)
   const lancersPercentValue = Number(route.query.lancersPercent)
   const infantryPercentValue = Number(route.query.infantryPercent)
+
   if (!Number.isNaN(marksmenPercentValue) && !Number.isNaN(lancersPercentValue) && !Number.isNaN(infantryPercentValue)) {
     settings.value.marksmenPercent = marksmenPercentValue
     settings.value.lancersPercent = lancersPercentValue
@@ -136,6 +140,7 @@ if (route.query.snowApe === '0') {
 
 if (route.query.snowApeLevel) {
   const level = Number(route.query.snowApeLevel)
+
   if (!Number.isNaN(level) && level >= 1 && level <= 10) {
     settings.value.snowApe.level = level
   }

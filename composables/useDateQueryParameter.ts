@@ -37,10 +37,12 @@ export function useDateQueryParameter() {
   // Determine the initial date based on URL query or local settings
   const getInitialDate = (): Dayjs => {
     const dateFromQuery = parseDate(route.query.date)
+
     if (dateFromQuery)
       return dateFromQuery
 
     const dateFromSettings = parseDate(localSettings.serverStartDate)
+
     if (dateFromSettings)
       return dateFromSettings
 
@@ -55,6 +57,7 @@ export function useDateQueryParameter() {
     set: (newDate: Date | number | string) => {
       // Ensure we always work with a Dayjs object
       const newDayjs = dayjs(newDate)
+
       if (newDayjs.isValid() && !newDayjs.isSame(selectedDayjs.value, 'day'))
         selectedDayjs.value = newDayjs
     },

@@ -9,6 +9,7 @@ function scrollToMilestone(event: Event, title: string) {
   event.preventDefault()
   const elementId = useKebabCase(title)
   const element = document.querySelector(`#${elementId}`)
+
   if (element) {
     element.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }

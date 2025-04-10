@@ -108,12 +108,14 @@ for (const [key, node] of Object.entries(resourceNodes.value)) {
 
   if (route.query[boostKey]) {
     const boost = Number(route.query[boostKey])
+
     if (!Number.isNaN(boost))
       node.boostPercent = boost
   }
 
   if (route.query[skillLevelKey]) {
     const level = Number(route.query[skillLevelKey])
+
     if (level >= 1 && level <= 5)
       node.expeditionSkillLevel = level as ResourceNode['expeditionSkillLevel']
   }
@@ -132,6 +134,7 @@ function calculateGatherTime(node: ResourceNode, useExpeditionBoost = false, use
   let totalBoostPercent = node.boostPercent
   if (useExpeditionBoost) {
     const skillOption = EXPEDITION_SKILL_OPTIONS.find(opt => opt.level === node.expeditionSkillLevel)
+
     if (skillOption)
       totalBoostPercent += skillOption.percentage
   }
@@ -144,6 +147,7 @@ function calculateGatherTime(node: ResourceNode, useExpeditionBoost = false, use
 
 function calculateMaxResources(node: ResourceNode, useExpeditionBoost = false, useCityBonus = false) {
   const gatherTime = calculateGatherTime(node, useExpeditionBoost, useCityBonus)
+
   if (availableGatheringSeconds.value >= gatherTime)
     return node.maxAmount
 

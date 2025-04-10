@@ -8,7 +8,7 @@ import { vi } from 'vitest'
 import type { VNode } from 'vue'
 
 interface InputNumberInstance {
-  $emit: (event: string, ...arguments_: any[]) => void
+  $emit: (event: string, ...arguments_: unknown[]) => void
   inputClass?: string
   max?: number
   maxFractionDigits?: number
@@ -54,6 +54,7 @@ export function mockPrimeVueComponents() {
           name: this.name,
           onFocus: (event: FocusEvent) => {
             const input = event.target as HTMLInputElement
+
             if (typeof input.select === 'function') {
               input.select()
             }
@@ -91,7 +92,7 @@ export function mockPrimeVueToast(): void {
   }))
 }
 
-export function setupPrimeVue(config: Partial<MountingOptions<any>> = {}): Partial<MountingOptions<any>> {
+export function setupPrimeVue(config: Partial<MountingOptions<unknown>> = {}): Partial<MountingOptions<unknown>> {
   return {
     global: {
       components: {

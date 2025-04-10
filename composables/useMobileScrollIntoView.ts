@@ -23,6 +23,7 @@ export default function useMobileScrollIntoView() {
         return
 
       const isTouchDevice = globalThis.matchMedia('(pointer: coarse)').matches
+
       if (!isTouchDevice)
         return
 
@@ -32,6 +33,7 @@ export default function useMobileScrollIntoView() {
         navigator.virtualKeyboard!.overlaysContent = true
         navigator.virtualKeyboard!.addEventListener('geometrychange', (event: VirtualKeyboardGeometryChangeEvent) => {
           const { height } = event.boundingRect
+
           if (height > 0)
             target.scrollIntoView({ block: 'nearest' })
         }, { once: true })

@@ -46,6 +46,7 @@ export function useScrollHeader(options: ScrollHeaderOptions = {}) {
 
   const updateScrollDirection = useThrottleFn(() => {
     const currentScrollY = y.value
+
     if (Math.abs(currentScrollY - lastScrollY.value) > minScrollDelta) {
       direction.value = currentScrollY > lastScrollY.value ?
         ScrollDirection.DOWN
