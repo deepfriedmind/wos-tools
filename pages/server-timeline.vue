@@ -85,7 +85,7 @@ const processedMilestones = computed(() => {
 
     return {
       ...milestone,
-      hasMileStonePassed: milestoneDate.isBefore(currentDate, 'day'),
+      hasMileStonePassed: milestoneDate.isBefore(currentDate.subtract(7, 'day'), 'day'),
       index,
       mileStoneDate: milestoneDate.format('YYYY-MM-DD'),
     }
