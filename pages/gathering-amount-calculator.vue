@@ -289,10 +289,10 @@ const showGatheringBonusDialog = shallowRef(false)
             <div class="text-lg lg:w-64">
               Base gathering bonus:<Button
                 v-tooltip="'Where do I find this?'"
-                variant="text"
-                rounded
-                icon="pi pi-question-circle"
                 aria-label="Where do I find this?"
+                icon="pi pi-question-circle"
+                rounded
+                variant="text"
                 @click="showGatheringBonusDialog = true"
               />
             </div>

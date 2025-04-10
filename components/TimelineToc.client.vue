@@ -23,6 +23,8 @@ function scrollToMilestone(event: Event, title: string) {
         <li
           v-for="{ title } in milestones"
           :key="useKebabCase(title)"
+          :data-active="activeMilestoneId === useKebabCase(title) ? '' : undefined"
+          class="relative"
         >
           <a
             :href="`#${useKebabCase(title)}`"
@@ -39,3 +41,19 @@ function scrollToMilestone(event: Event, title: string) {
     </ScrollPanel>
   </aside>
 </template>
+
+<style scoped lang="postcss">
+[data-active]:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: rem(2);
+  background-color: var(--p-surface-800);
+}
+
+[data-active]:hover:before {
+  display: none;
+}
+</style>
