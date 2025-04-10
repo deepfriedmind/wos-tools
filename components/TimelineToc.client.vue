@@ -1,8 +1,8 @@
 <script setup lang="ts">
 defineProps<{
   activeMilestoneId: string | undefined
-  milestones: Array<{ title: string }>
-  timelineRefs: Array<HTMLElement | null>
+  milestones: { title: string }[]
+  timelineRefs: ReturnType<typeof unrefElement>[]
 }>()
 
 function scrollToMilestone(event: Event, title: string) {

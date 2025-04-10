@@ -103,6 +103,8 @@ export default withNuxt(
         Props: true,
         ref: true,
         Ref: true,
+        refs: true,
+        Refs: true,
       }, checkFilenames: false }],
     },
   },

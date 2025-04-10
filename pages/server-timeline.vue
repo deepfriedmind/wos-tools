@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { ComponentPublicInstance } from 'vue'
+
 import { _lg, _sm, _xl } from '#tailwind-config/theme/screens'
 import milestones from '~/public/data/server-timeline.json'
 
@@ -29,6 +31,31 @@ const {
   selectedDayjs,
 } = useDateQueryParameter()
 
+const timelineEntryRefs = ref<ReturnType<typeof unrefElement>[]>([])
+const firstTimelineEntryRef = ref<ReturnType<typeof unrefElement>>()
+const { bottom: firstMilestoneBottom } = useElementBounding(firstTimelineEntryRef)
+
+function setTimelineEntryRef(index: number, element: ComponentPublicInstance) {
+  if (
+    !element
+    || typeof element !== 'object'
+    || isEmpty(element as unknown as Record<string, unknown>)
+  ) {
+    return
+  }
+
+  const resolvedElement = unrefElement(element)
+
+  if (!resolvedElement)
+    return
+
+  timelineEntryRefs.value[index] = resolvedElement
+
+  if (index === 0) {
+    firstTimelineEntryRef.value = resolvedElement
+  }
+}
+
 const isPanelsExpanded = shallowRef(true)
 const panelsToggledByUser = shallowRef(false)
 watch(selectedDayjs, () => {
@@ -45,8 +72,6 @@ const serverAgeString = computed(() => {
 
   return `${diff} ${diff === 1 ? 'day' : 'days'} ago`
 })
-
-const timelineEntryReferences = ref<(HTMLElement | null)[]>([])
 
 const processedMilestones = computed(() => {
   if (!milestones || !localSettings.serverStartDate)
@@ -68,12 +93,12 @@ const processedMilestones = computed(() => {
 })
 
 watch(processedMilestones, () => {
-  timelineEntryReferences.value = []
+  timelineEntryRefs.value = []
 })
 
 const activeMilestoneId = shallowRef<string | undefined>()
 const setActiveMilestone = useDebounceFn((newActiveId: string) => {
-  const hasScrolledToTop = import.meta.client && window.scrollY < 100
+  const hasScrolledToTop = import.meta.client && firstMilestoneBottom.value > 100
 
   if (hasScrolledToTop)
     return activeMilestoneId.value = useKebabCase(processedMilestones.value[0].title)
@@ -83,12 +108,11 @@ const setActiveMilestone = useDebounceFn((newActiveId: string) => {
 }, 100)
 
 const setUrlHash = useDebounceFn((newActiveId: string) => {
-  const isFirstMilestone = processedMilestones.value.length > 0
-    && newActiveId === useKebabCase(processedMilestones.value[0].title)
-  const hasScrolledToTop = import.meta.client && window.scrollY < 100
+  const isFirstMilestone = processedMilestones.value.length > 0 && newActiveId === useKebabCase(processedMilestones.value[0].title)
+  const hasScrolledToTop = import.meta.client && firstMilestoneBottom.value > 100
 
-  if ((isFirstMilestone || hasScrolledToTop) && location.hash)
-    return history.replaceState(undefined, '', `${route.path}${Object.keys(route.query).length > 0 ? `?${new URLSearchParams(route.query as Record<string, string>).toString()}` : ''}`)
+  if ((isFirstMilestone || hasScrolledToTop))
+    return history.replaceState(undefined, '', `${route.path}${isEmpty(route.query) ? '' : `?${new URLSearchParams(route.query as Record<string, string>).toString()}`}`)
 
   if (location.hash !== `#${newActiveId}`)
     history.replaceState(undefined, '', `#${newActiveId}`)
@@ -96,7 +120,7 @@ const setUrlHash = useDebounceFn((newActiveId: string) => {
 
 // Observe timeline entries to update the active milestone for the TOC and set URL hash
 useIntersectionObserver(
-  timelineEntryReferences,
+  timelineEntryRefs,
   (entries) => {
     const intersectingEntries = entries.filter(entry => entry.isIntersecting)
 
@@ -132,7 +156,7 @@ const nextUpcomingMilestoneIndex = computed(() => {
 
 function scrollToNextMilestone() {
   if (nextUpcomingMilestoneIndex.value !== -1) {
-    const element = timelineEntryReferences.value[nextUpcomingMilestoneIndex.value]
+    const element = timelineEntryRefs.value[nextUpcomingMilestoneIndex.value]
 
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -416,7 +440,7 @@ onUnmounted(() => {
       <TimelineToc
         v-if="isMinXlBreakpoint && selectedDateIsValid"
         :milestones="processedMilestones"
-        :timeline-refs="timelineEntryReferences"
+        :timeline-refs="timelineEntryRefs"
         :active-milestone-id="activeMilestoneId"
       />
 
@@ -454,14 +478,7 @@ onUnmounted(() => {
           <template #content="{ item: { index, title, day, mileStoneDate, content, hasMileStonePassed } }">
             <Panel
               :id="useKebabCase(title)"
-              :ref="(el) => {
-                if (el) {
-                  timelineEntryReferences[index] = '$el' in el ? el.$el : el;
-                }
-                else {
-                  timelineEntryReferences[index] = null;
-                }
-              }"
+              :ref="(el) => setTimelineEntryRef(index, el as ComponentPublicInstance)"
               class="mb-8 scroll-mt-24"
               :class="{
                 'border-surface-400 bg-sky-950 sm:ring-2 sm:ring-surface-400': !isToday && nextUpcomingMilestoneIndex === index,
