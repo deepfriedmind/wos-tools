@@ -1,5 +1,6 @@
 // @ts-check
 import antfu from '@antfu/eslint-config'
+import { globalIgnores } from 'eslint/config'
 import perfectionist from 'eslint-plugin-perfectionist'
 import tailwind from 'eslint-plugin-tailwindcss'
 
@@ -186,4 +187,5 @@ export default withNuxt(
     name: 'project/packagejson',
     rules: { 'jsonc/sort-keys': 'off' },
   },
+  globalIgnores(['.github/docs']),
 )

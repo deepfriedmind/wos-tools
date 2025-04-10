@@ -98,6 +98,9 @@
   "nuxtr.vueFiles.style.defaultLanguage": "postcss",
   "peacock.color": "#254166",
   "prettier.enable": false,
+  "search.exclude": {
+    ".github/docs": true
+  },
   "tailwindCSS.classAttributes": [
     "appear-active-class",
     "appear-from-class",
