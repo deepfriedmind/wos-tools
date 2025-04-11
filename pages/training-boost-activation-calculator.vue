@@ -15,11 +15,19 @@ const { mobileScrollIntoView } = useMobileScrollIntoView()
 const dayjs = useDayjs()
 const { localSettings } = useLocalSettings()
 
-const trainingDurationInput = ref<Date | undefined>(new Date(0, 0, 0, 12, 0, 0)) // 12:00:00
+const trainingDurationInput = ref<string>('12:00:00')
 const finishDateInput = ref<Date | undefined>(dayjs().utc().add(3, 'day').startOf('day').toDate())
 
-const isTrainingDurationValid = computed(() => trainingDurationInput.value !== undefined && dayjs(trainingDurationInput.value).isValid())
-const isFinishDateValid = computed(() => finishDateInput.value !== undefined && dayjs(finishDateInput.value).isValid())
+const isTrainingDurationValid = computed(() => {
+  if (!trainingDurationInput.value)
+    return false
+
+  // Validate duration format HH:MM:SS - hours can be any positive integer
+  const durationRegex = /^\d+:[0-5]\d:[0-5]\d$/
+
+  return durationRegex.test(trainingDurationInput.value)
+})
+const isFinishDateValid = computed(() => finishDateInput.value && dayjs(finishDateInput.value).isValid())
 
 /** Calculates the tripled training duration in seconds. */
 const tripledDurationSeconds = computed<number | undefined>(() => {
@@ -27,12 +35,14 @@ const tripledDurationSeconds = computed<number | undefined>(() => {
     return
 
   try {
-    const durationDate = trainingDurationInput.value!
-    // Extract H/M/S using local time methods, then create a duration object
+    // Parse the HH:MM:SS string
+    const [hours, minutes, seconds] = trainingDurationInput.value.split(':').map(Number)
+
+    // Create a duration object from the parsed values
     const duration = dayjs.duration({
-      hours: durationDate.getHours(),
-      minutes: durationDate.getMinutes(),
-      seconds: durationDate.getSeconds(),
+      hours,
+      minutes,
+      seconds,
     })
     const totalDurationSeconds = duration.asSeconds()
 
@@ -138,38 +148,35 @@ const formattedStartTime = computed<string | undefined>(() => {
     <div class="space-y-12">
       <div class="space-y-8">
         <!-- Training Duration Input -->
-        <div class="flex flex-wrap items-center gap-4 md:flex-nowrap">
+        <div class="flex flex-wrap items-center gap-4">
           <label
             for="training-duration"
-            class="text-lg md:w-64"
+            class="text-lg md:w-48"
           >Training Duration:</label>
-          <DatePicker
+          <InputMask
+            id="training-duration"
             v-model="trainingDurationInput"
-            input-id="training-duration"
-            time-only
-            show-seconds
-            hour-format="24"
-            :placeholder="TIME_FORMATS.LONG_TIME"
+            mask="99:99:99"
+            slot-char="HH:mm:ss"
             highlight-on-focus
-            :invalid="trainingDurationInput !== undefined ? !isTrainingDurationValid : false"
-            class="md:w-48"
+            :invalid="!trainingDurationInput || !isTrainingDurationValid"
             @focus="mobileScrollIntoView"
           />
+          <ClientOnly>
+            <div
+              v-if="tripledDurationFormatted"
+              class="text-surface-500"
+            >
+              <span>with Training Capacity Enhance City Bonus (3x) =</span> <span class="font-bold tabular-nums">{{ tripledDurationFormatted }}</span>
+            </div>
+          </ClientOnly>
         </div>
-        <ClientOnly>
-          <div
-            v-if="tripledDurationFormatted"
-            class="mt-2 pl-4 text-sm text-surface-500 md:pl-0 md:pt-2"
-          >
-            <span class="font-semibold">with Training Capacity Enhance City Bonus =</span> <span class="tabular-nums">{{ tripledDurationFormatted }}</span>
-          </div>
-        </ClientOnly>
 
         <!-- Finish Date Input -->
         <div class="flex flex-wrap items-center gap-4 md:flex-nowrap">
           <label
             for="finish-date"
-            class="text-lg md:w-64"
+            class="text-lg md:w-48"
           >Desired Finish Date:</label>
           <DatePicker
             v-model="finishDateInput"
@@ -177,8 +184,7 @@ const formattedStartTime = computed<string | undefined>(() => {
             placeholder="YYYY-MM-DD"
             highlight-on-focus
             date-format="yy-mm-dd"
-            :invalid="finishDateInput !== undefined ? !isFinishDateValid : false"
-            class="md:w-48"
+            :invalid="!finishDateInput || !isFinishDateValid"
             @focus="mobileScrollIntoView"
           />
         </div>
