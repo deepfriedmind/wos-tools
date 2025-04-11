@@ -85,7 +85,7 @@ const requiredStartTimeUTC = computed<Dayjs | undefined>(() => {
 
     // Construct the target finish time explicitly as the start of that day in UTC
     // by formatting the selected date and passing it to dayjs.utc()
-    const finishDateString = selectedDate.format('YYYY-MM-DD')
+    const finishDateString = selectedDate.format(DATE_FORMAT)
     const finishDateTimeUTC = dayjs.utc(finishDateString) // This creates 00:00:00 UTC for the given date
 
     // Use the pre-calculated tripled duration
@@ -116,12 +116,10 @@ const formattedStartTime = computed<string | undefined>(() => {
   const startTime = requiredStartTimeUTC.value
 
   if (localSettings.useUtcTime) {
-    return `${startTime.utc().format('YYYY-MM-DD HH:mm:ss')}`
+    return `${startTime.utc().format(DATE_TIME_FORMAT)}`
   }
   else {
-    // Format date part + local time part
-    const datePart = startTime.format('YYYY-MM-DD')
-    // Corrected: Access localSettings directly
+    const datePart = startTime.format(DATE_FORMAT)
     const timePart = startTime.toDate().toLocaleTimeString(undefined, localSettings.use24HourFormat ?
       TIME_DISPLAY_OPTIONS.HOUR_24
       : TIME_DISPLAY_OPTIONS.HOUR_12)

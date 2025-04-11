@@ -1,6 +1,12 @@
 /** Whiteout Survival official launch date */
 export const WOS_LAUNCH_DATE = '2023-02-09'
 
+/** Format for displaying date in YYYY-MM-DD format */
+export const DATE_FORMAT = 'YYYY-MM-DD'
+
+/** Format for displaying date and time in YYYY-MM-DD HH:mm:ss format */
+export const DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm:ss'
+
 /**
  * Time format constants used across the application
  */
