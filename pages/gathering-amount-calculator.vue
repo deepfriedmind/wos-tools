@@ -507,20 +507,10 @@ const showGatheringBonusDialog = shallowRef(false)
           </ul>
         </ClientOnly>
         <template #footer>
-          <div>
-            <p class="mb-2 text-sm italic">
-              Based on the type of node you gather fastest.<br>
-              <ClientOnly>
-                <ToggleSwitch
-                  v-model="localSettings.useUtcTime"
-                  v-tooltip="`Switch to ${localSettings.useUtcTime ? 'local time' : 'UTC'}`"
-                  input-id="use-utc-time"
-                  class="-mr-1 origin-left translate-y-1.5 scale-75"
-                  aria-label="Toggle between UTC and local time display"
-                /><label for="use-utc-time">Times are in {{ calculations.timezoneShort }} <span v-if="!localSettings.useUtcTime">({{ calculations.timezone }})</span></label>
-              </ClientOnly>
-            </p>
-          </div>
+          <TimezoneToggle />
+          <p class="mt-4 text-sm italic">
+            Based on the type of node you gather fastest.
+          </p>
         </template>
       </Panel>
     </div>
