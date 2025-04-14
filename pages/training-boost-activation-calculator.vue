@@ -2,7 +2,7 @@
 import type { Dayjs } from 'dayjs'
 
 const PAGE_TITLE = 'Training Boost Activation Calculator'
-const PAGE_DESCRIPTION = 'Calculate the exact start time needed to finish training at a specific date when using the Training Capacity Enhance City Bonus'
+const PAGE_DESCRIPTION = 'Calculate the exact start time required to complete training at reset on a specific date when using the Training Capacity Enhance City Bonus.'
 const PAGE_ICON = 'fluent-emoji:military-helmet'
 
 definePageMeta({
@@ -71,25 +71,14 @@ const durationWithBoostFormatted = computed(() => {
  * The finish time is considered the start of the selected day (00:00:00 UTC).
  */
 const requiredStartTime = computed<Dayjs | undefined>(() => {
-  if (!isFinishDateValid.value || durationSecondsWithBoost.value < 1) {
-    // eslint-disable-next-line unicorn/no-useless-undefined
-    return undefined
-  }
+  if (!isFinishDateValid.value || durationSecondsWithBoost.value < 1)
+    return
 
-  try {
-    const selectedDate = dayjs(finishDateInput.value)
-    const finishDateString = selectedDate.format(DATE_FORMAT)
-    const finishDateTime = dayjs.utc(finishDateString) // This creates 00:00:00 UTC for the given date
+  const selectedDate = dayjs(finishDateInput.value)
+  const finishDateString = selectedDate.format(DATE_FORMAT)
+  const finishDateTime = dayjs.utc(finishDateString)
 
-    // Use the pre-calculated tripled duration
-    return finishDateTime.subtract(durationSecondsWithBoost.value, 'second')
-  }
-  catch (error) {
-    console.error('Error calculating start time:', error)
-
-    // eslint-disable-next-line unicorn/no-useless-undefined
-    return undefined
-  }
+  return finishDateTime.subtract(durationSecondsWithBoost.value, 'seconds')
 })
 
 const hasStartTimePassed = computed(() => {
@@ -133,7 +122,7 @@ const formattedStartTime = computed(() => {
             :slot-char="TIME_FORMATS.LONG_TIME"
             highlight-on-focus
             :invalid="!isTrainingDurationValid"
-            class="tabular-nums"
+            class="w-32 tabular-nums"
             @focus="mobileScrollIntoView"
           />
           <ClientOnly>
@@ -143,13 +132,14 @@ const formattedStartTime = computed(() => {
           </ClientOnly>
         </div>
 
-        <div class="flex flex-wrap items-center gap-4 md:flex-nowrap">
+        <div class="flex flex-wrap items-center gap-4">
           <label
             for="finish-date"
             class="text-lg sm:w-48"
           >Desired finish date:</label>
           <DatePicker
             v-model="finishDateInput"
+            class="w-32"
             input-id="finish-date"
             :placeholder="DATE_FORMAT"
             :min-date="$dayjs().add(1, 'day').toDate()"
@@ -166,18 +156,19 @@ const formattedStartTime = computed(() => {
       <ClientOnly>
         <div
           v-if="requiredStartTime"
-          class="mt-8 flex flex-wrap items-center gap-4"
+          class="flex flex-wrap items-center gap-4"
         >
           <div class="flex items-center gap-2">
             <div class="text-lg font-bold sm:w-48">
               Start training at:
             </div>
           </div>
-          <div
-            class="flex items-center gap-2 text-xl font-medium tabular-nums"
-            :class="hasStartTimePassed ? 'text-red-500' : 'text-primary'"
-          >
-            <time :datetime="requiredStartTime.toISOString()">{{ formattedStartTime }}</time>
+          <div class="flex items-center gap-2">
+            <time
+              class="text-xl font-medium tabular-nums"
+              :class="hasStartTimePassed ? 'text-red-500' : 'text-primary'"
+              :datetime="requiredStartTime.toISOString()"
+            >{{ formattedStartTime }}</time>
             <Tag
               :severity="hasStartTimePassed ? 'danger' : 'info'"
               :value="requiredStartTime.fromNow()"
