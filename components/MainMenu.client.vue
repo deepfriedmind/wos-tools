@@ -49,17 +49,7 @@ watch(() => route.fullPath, () => {
             >
               <div class="space-y-2">
                 <div>Show times in:</div>
-                <div
-                  data-test="timezone-toggle"
-                  class="flex gap-2"
-                >
-                  <span>{{ localSettings.timezoneShort }}</span>
-                  <ToggleSwitchArrow
-                    v-model="localSettings.useUtcTime"
-                    aria-label="Toggle UTC time display"
-                  />
-                  <span>UTC</span>
-                </div>
+                <TimezoneToggle />
               </div>
               <Divider
                 v-if="!localSettings.useUtcTime"
