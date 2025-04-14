@@ -11,131 +11,99 @@ definePageMeta({
   title: `${PAGE_TITLE} for Whiteout Survival`,
 })
 
-const { mobileScrollIntoView } = useMobileScrollIntoView()
+const TRAINING_BOOST_DURATION_MULTIPLIER = 3
+
 const dayjs = useDayjs()
 const { localSettings } = useLocalSettings()
+const { mobileScrollIntoView } = useMobileScrollIntoView()
 
-const trainingDurationInput = ref<string>('12:00:00')
-const finishDateInput = ref<Date | undefined>(dayjs().utc().add(3, 'day').startOf('day').toDate())
+const trainingDurationInput = shallowRef('12:00:00')
+const finishDateInput = shallowRef(dayjs().utc().add(3, 'days').startOf('day').toDate())
+
+const trainingDurationSeconds = computed(() => {
+  const [hours, minutes, seconds] = trainingDurationInput.value.split(':').map(Number)
+  const duration = dayjs.duration({
+    hours,
+    minutes,
+    seconds,
+  })
+
+  return duration.asSeconds()
+})
 
 const isTrainingDurationValid = computed(() => {
-  if (!trainingDurationInput.value)
+  if (!trainingDurationInput.value || !trainingDurationSeconds.value || trainingDurationSeconds.value < 1)
     return false
 
-  // Validate duration format HH:MM:SS - hours can be any positive integer
+  // Validate duration format HH:mm:ss - hours can be any positive integer
   const durationRegex = /^\d+:[0-5]\d:[0-5]\d$/
 
   return durationRegex.test(trainingDurationInput.value)
 })
-const isFinishDateValid = computed(() => finishDateInput.value && dayjs(finishDateInput.value).isValid())
+const isFinishDateValid = computed(() => dayjs(finishDateInput.value).isValid())
 
-/** Calculates the tripled training duration in seconds. */
-const tripledDurationSeconds = computed<number | undefined>(() => {
-  if (!isTrainingDurationValid.value)
-    return
+const durationSecondsWithBoost = computed(() => isTrainingDurationValid.value ? trainingDurationSeconds.value * TRAINING_BOOST_DURATION_MULTIPLIER : 0)
 
-  try {
-    // Parse the HH:MM:SS string
-    const [hours, minutes, seconds] = trainingDurationInput.value.split(':').map(Number)
+const durationWithBoostFormatted = computed(() => {
+  const totalSeconds = durationSecondsWithBoost.value
 
-    // Create a duration object from the parsed values
-    const duration = dayjs.duration({
-      hours,
-      minutes,
-      seconds,
-    })
-    const totalDurationSeconds = duration.asSeconds()
+  if (totalSeconds === 0)
+    return '0s'
 
-    return totalDurationSeconds * 3
-  }
-  catch (error) {
-    console.error('Error calculating tripled duration:', error)
+  const duration = dayjs.duration(totalSeconds, 'seconds')
 
-    // eslint-disable-next-line unicorn/no-useless-undefined
-    return undefined
-  }
-})
+  const formatted = [
+    { suffix: 'd', value: duration.days() },
+    { suffix: 'h', value: duration.hours() },
+    { suffix: 'm', value: duration.minutes() },
+    { suffix: 's', value: duration.seconds() },
+  ]
+    .filter(({ value }) => value > 0)
+    .map(({ suffix, value }) => `${value}${suffix}`)
+    .join(' ')
 
-/** Formats the tripled duration into HH:mm:ss. */
-const tripledDurationFormatted = computed<string | undefined>(() => {
-  if (tripledDurationSeconds.value === undefined) {
-    // eslint-disable-next-line unicorn/no-useless-undefined
-    return undefined
-  }
-
-  // Manually format duration to handle > 24 hours
-  const duration = dayjs.duration(tripledDurationSeconds.value, 'seconds')
-  const totalHours = Math.floor(duration.asHours())
-  const minutes = duration.minutes()
-  const seconds = duration.seconds()
-
-  // Pad with leading zeros
-  const formattedHours = String(totalHours).padStart(2, '0')
-  const formattedMinutes = String(minutes).padStart(2, '0')
-  const formattedSeconds = String(seconds).padStart(2, '0')
-
-  return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`
+  return formatted
 })
 
 /**
- * Calculates the required start time in UTC based on the selected duration and finish date.
+ * Calculates the required start time based on the selected duration and finish date.
  * The duration is tripled according to the game's boost mechanic.
  * The finish time is considered the start of the selected day (00:00:00 UTC).
  */
-const requiredStartTimeUTC = computed<Dayjs | undefined>(() => {
-  // Depends on finish date and the calculated tripled duration
-  if (!isFinishDateValid.value || !tripledDurationSeconds.value) {
+const requiredStartTime = computed<Dayjs | undefined>(() => {
+  if (!isFinishDateValid.value || durationSecondsWithBoost.value < 1) {
     // eslint-disable-next-line unicorn/no-useless-undefined
-    return undefined // Explicit return for type safety &amp; ESLint rule
+    return undefined
   }
 
   try {
-    // Ensure non-null with checks above
-    const selectedDate = dayjs(finishDateInput.value!) // Keep local date info
-
-    // Construct the target finish time explicitly as the start of that day in UTC
-    // by formatting the selected date and passing it to dayjs.utc()
+    const selectedDate = dayjs(finishDateInput.value)
     const finishDateString = selectedDate.format(DATE_FORMAT)
-    const finishDateTimeUTC = dayjs.utc(finishDateString) // This creates 00:00:00 UTC for the given date
+    const finishDateTime = dayjs.utc(finishDateString) // This creates 00:00:00 UTC for the given date
 
     // Use the pre-calculated tripled duration
-    return finishDateTimeUTC.subtract(tripledDurationSeconds.value, 'second')
+    return finishDateTime.subtract(durationSecondsWithBoost.value, 'second')
   }
   catch (error) {
     console.error('Error calculating start time:', error)
 
-    // Explicitly return undefined on error
     // eslint-disable-next-line unicorn/no-useless-undefined
-    return undefined // Explicit return for type safety &amp; ESLint rule
+    return undefined
   }
 })
 
-/** Checks if the required start time has already passed. */
-const hasStartTimePassed = computed<boolean>(() => {
-  if (!requiredStartTimeUTC.value)
+const hasStartTimePassed = computed(() => {
+  if (!requiredStartTime.value)
     return false
 
-  return requiredStartTimeUTC.value.isBefore(dayjs())
+  return requiredStartTime.value.isBefore(dayjs())
 })
 
-/** Formats the start time based on local settings. */
-const formattedStartTime = computed<string | undefined>(() => {
-  if (!requiredStartTimeUTC.value)
+const formattedStartTime = computed(() => {
+  if (!requiredStartTime.value)
     return
 
-  const startTime = requiredStartTimeUTC.value
-
-  if (localSettings.useUtcTime) {
-    return `${startTime.utc().format(DATE_TIME_FORMAT)}`
-  }
-  else {
-    const datePart = startTime.format(DATE_FORMAT)
-    const timePart = startTime.toDate().toLocaleTimeString(undefined, localSettings.use24HourFormat ?
-      TIME_DISPLAY_OPTIONS.HOUR_24
-      : TIME_DISPLAY_OPTIONS.HOUR_12)
-
-    return `${datePart} ${timePart}`
-  }
+  return localSettings.useUtcTime ? requiredStartTime.value.format(DATE_TIME_FORMAT) : requiredStartTime.value.local().format(DATE_TIME_FORMAT)
 })
 </script>
 
@@ -147,73 +115,71 @@ const formattedStartTime = computed<string | undefined>(() => {
   >
     <div class="space-y-12">
       <div class="space-y-8">
-        <!-- Training Duration Input -->
         <div class="flex flex-wrap items-center gap-4">
           <label
             for="training-duration"
-            class="text-lg md:w-48"
-          >Training Duration:</label>
+            class="text-lg sm:w-48"
+          >Training duration:</label>
           <InputMask
             id="training-duration"
             v-model="trainingDurationInput"
             mask="99:99:99"
-            slot-char="HH:mm:ss"
+            :slot-char="TIME_FORMATS.LONG_TIME"
             highlight-on-focus
-            :invalid="!trainingDurationInput || !isTrainingDurationValid"
+            :invalid="!isTrainingDurationValid"
+            class="tabular-nums"
             @focus="mobileScrollIntoView"
           />
           <ClientOnly>
-            <div
-              v-if="tripledDurationFormatted"
-              class="text-surface-500"
-            >
-              <span>with Training Capacity Enhance City Bonus (3x) =</span> <span class="font-bold tabular-nums">{{ tripledDurationFormatted }}</span>
-            </div>
+            <Message v-if="isTrainingDurationValid">
+              + <strong>Training Capacity Enhance</strong> City Bonus <span class="text-sm">(3&times;&nbsp;duration)</span> =&nbsp;<strong class="tabular-nums">{{ durationWithBoostFormatted }}</strong>
+            </Message>
           </ClientOnly>
         </div>
 
-        <!-- Finish Date Input -->
         <div class="flex flex-wrap items-center gap-4 md:flex-nowrap">
           <label
             for="finish-date"
-            class="text-lg md:w-48"
-          >Desired Finish Date:</label>
+            class="text-lg sm:w-48"
+          >Desired finish date:</label>
           <DatePicker
             v-model="finishDateInput"
             input-id="finish-date"
-            placeholder="YYYY-MM-DD"
+            :placeholder="DATE_FORMAT"
+            :min-date="$dayjs().add(1, 'day').toDate()"
             highlight-on-focus
             date-format="yy-mm-dd"
-            :invalid="!finishDateInput || !isFinishDateValid"
+            :invalid="!isFinishDateValid"
+            input-class="tabular-nums"
             @focus="mobileScrollIntoView"
           />
+          <div>@ 00:00 UTC</div>
         </div>
       </div>
 
       <ClientOnly>
         <div
-          v-if="requiredStartTimeUTC"
-          class="mt-8 space-y-2"
+          v-if="requiredStartTime"
+          class="mt-8 flex flex-wrap items-center gap-4"
         >
           <div class="flex items-center gap-2">
-            <div class="text-lg font-semibold">
-              Required Start Time:
+            <div class="text-lg font-bold sm:w-48">
+              Start training at:
             </div>
-            <ToggleSwitch
-              v-model="localSettings.useUtcTime"
-              v-tooltip="`Switch to ${localSettings.useUtcTime ? 'local time' : 'UTC'}`"
-              input-id="use-utc-time-toggle"
-              class="-mr-1 origin-left translate-y-0.5 scale-75"
-              aria-label="Toggle between UTC and local time display"
-            />
           </div>
           <div
-            class="text-xl font-medium tabular-nums"
+            class="flex items-center gap-2 text-xl font-medium tabular-nums"
             :class="hasStartTimePassed ? 'text-red-500' : 'text-primary'"
           >
-            {{ formattedStartTime }} {{ localSettings.useUtcTime ? 'UTC' : localSettings.timezoneShort }}
-            <span class="text-sm text-surface-500">({{ requiredStartTimeUTC.fromNow() }})</span>
+            <time :datetime="requiredStartTime.toISOString()">{{ formattedStartTime }}</time>
+            <Tag
+              :severity="hasStartTimePassed ? 'danger' : 'info'"
+              :value="requiredStartTime.fromNow()"
+              icon="pi pi-clock"
+              rounded
+            />
           </div>
+          <TimezoneToggle />
         </div>
       </ClientOnly>
     </div>
