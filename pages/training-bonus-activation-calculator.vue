@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Dayjs } from 'dayjs'
 
-const PAGE_TITLE = 'Training Boost Activation Calculator'
+const PAGE_TITLE = 'Training Bonus Activation Calculator'
 const PAGE_DESCRIPTION = 'Calculate the exact start time required to complete training at reset on a specific date when using the Training Capacity Enhance City Bonus.'
 const PAGE_ICON = 'fluent-emoji:military-helmet'
 
@@ -11,7 +11,7 @@ definePageMeta({
   title: `${PAGE_TITLE} for Whiteout Survival`,
 })
 
-const TRAINING_BOOST_DURATION_MULTIPLIER = 3
+const TRAINING_BONUS_DURATION_MULTIPLIER = 3
 
 const dayjs = useDayjs()
 const { localSettings } = useLocalSettings()
@@ -42,10 +42,10 @@ const isTrainingDurationValid = computed(() => {
 })
 const isFinishDateValid = computed(() => dayjs(finishDateInput.value).isValid())
 
-const durationSecondsWithBoost = computed(() => isTrainingDurationValid.value ? trainingDurationSeconds.value * TRAINING_BOOST_DURATION_MULTIPLIER : 0)
+const durationSecondsWithBonus = computed(() => isTrainingDurationValid.value ? trainingDurationSeconds.value * TRAINING_BONUS_DURATION_MULTIPLIER : 0)
 
-const durationWithBoostFormatted = computed(() => {
-  const totalSeconds = durationSecondsWithBoost.value
+const durationWithBonusFormatted = computed(() => {
+  const totalSeconds = durationSecondsWithBonus.value
 
   if (totalSeconds === 0)
     return '0s'
@@ -67,18 +67,18 @@ const durationWithBoostFormatted = computed(() => {
 
 /**
  * Calculates the required start time based on the selected duration and finish date.
- * The duration is tripled according to the game's boost mechanic.
+ * The duration is tripled according to the game's training bonus mechanic.
  * The finish time is considered the start of the selected day (00:00:00 UTC).
  */
 const requiredStartTime = computed<Dayjs | undefined>(() => {
-  if (!isFinishDateValid.value || durationSecondsWithBoost.value < 1)
+  if (!isFinishDateValid.value || durationSecondsWithBonus.value < 1)
     return
 
   const selectedDate = dayjs(finishDateInput.value)
   const finishDateString = selectedDate.format(DATE_FORMAT)
   const finishDateTime = dayjs.utc(finishDateString)
 
-  return finishDateTime.subtract(durationSecondsWithBoost.value, 'seconds')
+  return finishDateTime.subtract(durationSecondsWithBonus.value, 'seconds')
 })
 
 const hasStartTimePassed = computed(() => {
@@ -127,7 +127,7 @@ const formattedStartTime = computed(() => {
           />
           <ClientOnly>
             <Message v-if="isTrainingDurationValid">
-              + <strong>Training Capacity Enhance</strong> City Bonus <span class="text-sm">(3&times;&nbsp;duration)</span> =&nbsp;<strong class="tabular-nums">{{ durationWithBoostFormatted }}</strong>
+              + <strong>Training Capacity Enhance</strong> City Bonus <span class="text-sm">(3&times;&nbsp;duration)</span> =&nbsp;<strong class="tabular-nums">{{ durationWithBonusFormatted }}</strong>
             </Message>
           </ClientOnly>
         </div>
