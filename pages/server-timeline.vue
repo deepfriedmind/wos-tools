@@ -243,12 +243,12 @@ onUnmounted(() => {
               />
               <label for="date">Your server start date:</label>
             </IftaLabel>
-            <div
+            <Message
               v-if="selectedDateIsValid && !isToday"
               class="shrink-0 text-sm sm:text-lg"
             >
               {{ serverAgeString }}
-            </div>
+            </Message>
             <div v-else>
               <Button
                 v-tooltip="'How do I find my server start date?'"
@@ -498,8 +498,12 @@ onUnmounted(() => {
               />
               <template #footer>
                 <div class="text-right text-sm text-surface-400">
-                  Approx. <time :datetime="`${mileStoneDate}T00:00:00Z`">{{ mileStoneDate }}</time> UTC ({{
-                    $dayjs.utc(mileStoneDate).from($dayjs.utc()) }})
+                  ~<time :datetime="`${mileStoneDate}T00:00:00Z`">{{ mileStoneDate }}</time> UTC
+                  <Tag
+                    :value="$dayjs.utc(mileStoneDate).from($dayjs.utc())"
+                    icon="pi pi-clock"
+                    rounded
+                  />
                 </div>
               </template>
             </Panel>
