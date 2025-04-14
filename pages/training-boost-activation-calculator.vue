@@ -113,9 +113,15 @@ const formattedStartTime = computed(() => {
     :heading="PAGE_TITLE"
     :sub-heading="PAGE_DESCRIPTION"
   >
-    <div class="space-y-12">
+    <div
+      v-auto-animate
+      class="space-y-12"
+    >
       <div class="space-y-8">
-        <div class="flex flex-wrap items-center gap-4">
+        <div
+          v-auto-animate
+          class="flex flex-wrap items-center gap-4"
+        >
           <label
             for="training-duration"
             class="text-lg sm:w-48"
