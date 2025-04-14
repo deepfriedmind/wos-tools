@@ -2,6 +2,7 @@ interface LocalSettings {
   serverStartDate?: string
   timezone: string
   timezoneShort: string
+  trainingDuration: string
   use24HourFormat: boolean
   useUtcTime: boolean
 }
@@ -34,6 +35,7 @@ export const useLocalSettings = defineStore('local-settings', () => {
   const localSettings = ref<LocalSettings>({
     ...getTimezoneInfo(),
     serverStartDate: undefined,
+    trainingDuration: '12:00:00',
     use24HourFormat: true,
     useUtcTime: false,
   })

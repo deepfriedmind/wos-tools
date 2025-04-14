@@ -17,11 +17,10 @@ const dayjs = useDayjs()
 const { localSettings } = useLocalSettings()
 const { mobileScrollIntoView } = useMobileScrollIntoView()
 
-const trainingDurationInput = shallowRef('12:00:00')
 const finishDateInput = shallowRef(dayjs().utc().add(3, 'days').startOf('day').toDate())
 
 const trainingDurationSeconds = computed(() => {
-  const [hours, minutes, seconds] = trainingDurationInput.value.split(':').map(Number)
+  const [hours, minutes, seconds] = localSettings.trainingDuration.split(':').map(Number)
   const duration = dayjs.duration({
     hours,
     minutes,
@@ -32,13 +31,13 @@ const trainingDurationSeconds = computed(() => {
 })
 
 const isTrainingDurationValid = computed(() => {
-  if (!trainingDurationInput.value || !trainingDurationSeconds.value || trainingDurationSeconds.value < 1)
+  if (!localSettings.trainingDuration || !trainingDurationSeconds.value || trainingDurationSeconds.value < 1)
     return false
 
   // Validate duration format HH:mm:ss - hours can be any positive integer
   const durationRegex = /^\d+:[0-5]\d:[0-5]\d$/
 
-  return durationRegex.test(trainingDurationInput.value)
+  return durationRegex.test(localSettings.trainingDuration)
 })
 const isFinishDateValid = computed(() => dayjs(finishDateInput.value).isValid())
 
@@ -117,7 +116,7 @@ const formattedStartTime = computed(() => {
           >Training duration:</label>
           <InputMask
             id="training-duration"
-            v-model="trainingDurationInput"
+            v-model="localSettings.trainingDuration"
             mask="99:99:99"
             :slot-char="TIME_FORMATS.LONG_TIME"
             highlight-on-focus
