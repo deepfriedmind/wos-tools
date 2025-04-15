@@ -87,7 +87,7 @@ const processedMilestones = computed(() => {
       ...milestone,
       hasMileStonePassed: milestoneDate.isBefore(currentDate.subtract(7, 'day'), 'day'),
       index,
-      mileStoneDate: milestoneDate.format('YYYY-MM-DD'),
+      milestoneDate: milestoneDate.format('YYYY-MM-DD'),
     }
   })
 })
@@ -150,7 +150,7 @@ const nextUpcomingMilestoneIndex = computed(() => {
   const currentDate = dayjs().startOf('day')
 
   return processedMilestones.value.findIndex(milestone =>
-    dayjs(milestone.mileStoneDate).startOf('day').isSameOrAfter(currentDate),
+    dayjs(milestone.milestoneDate).startOf('day').isSameOrAfter(currentDate),
   )
 })
 
@@ -475,7 +475,7 @@ onUnmounted(() => {
               />
             </span>
           </template>
-          <template #content="{ item: { index, title, day, mileStoneDate, content, hasMileStonePassed } }">
+          <template #content="{ item: { index, title, day, milestoneDate, content, hasMileStonePassed } }">
             <Panel
               :id="useKebabCase(title)"
               :ref="(el) => setTimelineEntryRef(index, el as ComponentPublicInstance)"
@@ -498,9 +498,9 @@ onUnmounted(() => {
               />
               <template #footer>
                 <div class="text-right text-sm text-surface-400">
-                  ~<time :datetime="`${mileStoneDate}T00:00:00Z`">{{ mileStoneDate }}</time> UTC
+                  ~<time :datetime="`${milestoneDate}T00:00:00Z`">{{ milestoneDate }}</time> UTC
                   <Tag
-                    :value="$dayjs.utc(mileStoneDate).from($dayjs.utc())"
+                    :value="$dayjs.utc(milestoneDate).from($dayjs.utc())"
                     icon="pi pi-clock"
                     rounded
                   />
