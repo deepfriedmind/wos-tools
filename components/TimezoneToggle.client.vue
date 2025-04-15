@@ -7,11 +7,21 @@ const { localSettings } = useLocalSettings()
     data-test="timezone-toggle"
     class="flex gap-2"
   >
-    <span>{{ localSettings.timezoneShort }}</span>
+    <span
+      class="transition-opacity"
+      :class="{
+        'opacity-75': localSettings.useUtcTime,
+      }"
+    >{{ localSettings.timezoneShort }}</span>
     <ToggleSwitchArrow
       v-model="localSettings.useUtcTime"
       aria-label="Toggle UTC time display"
     />
-    <span>UTC</span>
+    <span
+      class="transition-opacity"
+      :class="{
+        'opacity-75': !localSettings.useUtcTime,
+      }"
+    >UTC</span>
   </div>
 </template>

@@ -64,12 +64,22 @@ watch(() => route.fullPath, () => {
                   data-test="time-format-toggle"
                   class="flex gap-2"
                 >
-                  <span>12h</span>
+                  <span
+                    class="transition-opacity"
+                    :class="{
+                      'opacity-75': localSettings.use24HourFormat,
+                    }"
+                  >12h</span>
                   <ToggleSwitchArrow
                     v-model="localSettings.use24HourFormat"
                     aria-label="Toggle 24-hour time format"
                   />
-                  <span>24h</span>
+                  <span
+                    class="transition-opacity"
+                    :class="{
+                      'opacity-75': !localSettings.use24HourFormat,
+                    }"
+                  >24h</span>
                 </div>
               </div>
             </div>
