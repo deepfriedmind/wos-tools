@@ -118,6 +118,7 @@ const formattedStartTime = computed(() => {
             id="training-duration"
             v-model="localSettings.trainingDuration"
             mask="99:99:99"
+            :placeholder="TIME_FORMATS.LONG_TIME"
             :slot-char="TIME_FORMATS.LONG_TIME"
             highlight-on-focus
             :invalid="!isTrainingDurationValid"
@@ -127,6 +128,12 @@ const formattedStartTime = computed(() => {
           <ClientOnly>
             <Message v-if="isTrainingDurationValid">
               + <strong>Training Capacity Enhance</strong> City Bonus <span class="text-sm">(3&times;&nbsp;duration)</span> =&nbsp;<strong class="tabular-nums">{{ durationWithBonusFormatted }}</strong>
+            </Message>
+            <Message
+              v-else
+              severity="error"
+            >
+              Invalid duration
             </Message>
           </ClientOnly>
         </div>
