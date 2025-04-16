@@ -5,6 +5,12 @@ pnpm = "latest"
 [env]
 _.path = [ './node_modules/.bin' ]
 
+[tasks.git-hooks]
+description = 'Installs git hooks'
+run = 'npx simple-git-hooks'
+sources = [ 'package.json', ]
+outputs = [ '.git/hooks/prepare-commit-msg' ]
+
 [tasks.pnpm-install]
 description = 'Installs dependencies with pnpm'
 run = 'pnpm install'
@@ -14,6 +20,7 @@ sources = [
   'mise.toml'
 ]
 outputs = [ 'node_modules/.pnpm/lock.yaml' ]
+depends = [ 'git-hooks' ]
 
 [tasks.dev]
 description = 'Calls your dev script in `package.json`'
