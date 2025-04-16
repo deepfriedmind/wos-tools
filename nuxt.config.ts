@@ -1,3 +1,5 @@
+import process from 'node:process'
+
 import primevue from './primevue.config'
 import rem from './utils/rem'
 
@@ -16,6 +18,7 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     'dayjs-nuxt',
     'floating-vue/nuxt',
+    'nuxt-gtag',
     'nuxt-og-image',
     'pinia-plugin-persistedstate/nuxt',
   ],
@@ -64,9 +67,6 @@ export default defineNuxtConfig({
       },
     },
   },
-  typescript: {
-    typeCheck: true,
-  },
   postcss: {
     plugins: {
       'postcss-functions': {
@@ -100,6 +100,10 @@ export default defineNuxtConfig({
     defaults: {
       weights: [300, 400, 500, 600, 700],
     },
+  },
+  gtag: {
+    enabled: process.env.NODE_ENV === 'production',
+    id: 'G-MBD8S1FPF1',
   },
   icon: {
     serverBundle: {

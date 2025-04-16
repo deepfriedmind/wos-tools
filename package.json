@@ -36,6 +36,7 @@
     "dayjs-nuxt": "^2.1.11",
     "floating-vue": "^5.2.2",
     "nuxt": "^3.16.2",
+    "nuxt-gtag": "3.0.2",
     "nuxt-og-image": "5.1.1",
     "pinia": "^3.0.1",
     "pinia-plugin-persistedstate": "^4.2.0",
