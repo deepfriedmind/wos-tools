@@ -27,7 +27,7 @@ watch(() => route.fullPath, () => {
       id="mainMenu"
       v-model:visible="drawerVisible"
       position="right"
-      class="w-full sm:w-[rem(380)]"
+      class="w-full sm:w-[rem(414)]"
     >
       <template #header>
         <Logo
