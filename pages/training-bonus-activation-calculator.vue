@@ -110,10 +110,14 @@ const formattedStartTime = computed(() => {
           v-auto-animate
           class="flex flex-wrap items-center gap-4"
         >
-          <label
-            for="training-duration"
-            class="text-lg sm:w-48"
-          >Training duration:</label>
+          <div class=" sm:w-56">
+            <label
+              for="training-duration"
+              class="mr-1 text-lg"
+            >Base training duration:
+            </label>
+            <ToolTip>Without <strong>Training Capacity Enhance</strong> City Bonus enabled</ToolTip>
+          </div>
           <InputMask
             id="training-duration"
             v-model="localSettings.trainingDuration"
@@ -141,7 +145,7 @@ const formattedStartTime = computed(() => {
         <div class="flex flex-wrap items-center gap-4">
           <label
             for="finish-date"
-            class="text-lg sm:w-48"
+            class="text-lg sm:w-56"
           >Desired finish date:</label>
           <DatePicker
             v-model="finishDateInput"
