@@ -103,7 +103,7 @@ export default defineNuxtConfig({
   },
   gtag: {
     enabled: process.env.NODE_ENV === 'production',
-    id: 'G-MBD8S1FPF1',
+    id: 'G-RD52R1SFDV',
   },
   icon: {
     serverBundle: {
