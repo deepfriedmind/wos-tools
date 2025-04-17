@@ -1,2 +1,2 @@
-[context.production.environment]
+[build.environment]
 NODE_ENV = "production"
