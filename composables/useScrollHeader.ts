@@ -32,7 +32,7 @@ interface ScrollHeaderOptions {
  *  - scrollY: Current vertical scroll position
  *  - shouldHideHeader: Whether the header should be hidden (true when scrolling down past hideThreshold)
  */
-export function useScrollHeader(options: ScrollHeaderOptions = {}) {
+export default function useScrollHeader(options: ScrollHeaderOptions = {}) {
   const {
     backgroundThreshold = 63,
     hideThreshold = 250,

@@ -20,7 +20,7 @@ interface PageRoute {
  * console.log(pages.value)
  * ```
  */
-export function usePageRoutes() {
+export default function usePageRoutes() {
   const router = useRouter()
 
   // All available pages in the application, excluding the homepage and dynamic routes
