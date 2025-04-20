@@ -155,36 +155,49 @@ const {
           <template #content>
             <div
               v-auto-animate
-              class="space-y-4"
+              class="mt-2 space-y-4"
             >
               <div class="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2">
-                <IftaLabel
+                <div
                   v-for="mat in MATERIALS"
                   :key="`inv-${mat.key}`"
+                  class="flex items-center gap-2"
                 >
-                  <InputNumber
-                    v-model="state.inventory[mat.key]"
-                    :allow-empty="false"
-                    :min="0"
-                    fluid
-                    highlight-on-focus
-                    input-class="tabular-nums scroll-m-1"
-                    show-buttons
-                    @focus="mobileScrollIntoView"
+                  <Icon
+                    :name="mat.icon"
+                    size="40"
+                    class="text-primary"
                   />
-                  <label class="font-bold">{{ mat.label }}</label>
-                </IftaLabel>
+                  <FloatLabel variant="on">
+                    <InputNumber
+                      v-model="state.inventory[mat.key]"
+                      :allow-empty="false"
+                      :min="0"
+                      fluid
+                      highlight-on-focus
+                      input-class="tabular-nums scroll-m-1"
+                      show-buttons
+                      @focus="mobileScrollIntoView"
+                    />
+                    <label class="font-bold tracking-wide">{{ mat.label }}</label>
+                  </FloatLabel>
+                </div>
               </div>
 
               <div
                 v-if="remainingCost.hasInventory && (grandTotalCost.hardenedAlloy > 0 || grandTotalCost.polishingSolution > 0 || grandTotalCost.designPlans > 0 || grandTotalCost.lunarAmber > 0)"
-                class="inline-grid grid-cols-[auto,auto] gap-3"
+                class="inline-grid grid-cols-[auto,auto,auto] items-center gap-x-3 gap-y-1.5"
               >
                 <template
                   v-for="mat in MATERIALS"
                   :key="`rem-${mat.key}`"
                 >
                   <template v-if="grandTotalCost[mat.key] > 0 || state.inventory[mat.key] > 0">
+                    <Icon
+                      :name="mat.icon"
+                      size="20"
+                      class="text-primary"
+                    />
                     <span class="font-medium">{{ mat.label }}:</span>
                     <span
                       class="text-right font-bold tabular-nums"
@@ -218,15 +231,23 @@ const {
             </h3>
           </template>
           <template #content>
-            <div v-auto-animate>
+            <div
+              v-auto-animate
+              class="mt-2"
+            >
               <div
                 v-if="filteredGrandTotalMaterials.length > 0"
-                class="inline-grid grid-cols-[auto,auto] gap-3"
+                class="inline-grid grid-cols-[auto,auto,auto] items-center gap-x-3 gap-y-1.5 text-lg"
               >
                 <template
                   v-for="material in filteredGrandTotalMaterials"
                   :key="material.key"
                 >
+                  <Icon
+                    :name="material.icon"
+                    size="22"
+                    class="text-primary"
+                  />
                   <span class="font-medium">{{ material.label }}:</span>
                   <span class="text-right font-bold tabular-nums">{{ formatNumber(grandTotalCost[material.key]) }}</span>
                 </template>

@@ -9,11 +9,11 @@ export const GEAR_PIECES: GearPiece[] = [
   { icon: 'game-icons:wood-club', id: 'cudgel', name: 'Cudgel', stats: 'marksman attack/defense' },
 ] as const
 
-export const MATERIALS: { key: Material, label: string }[] = [
-  { key: 'hardenedAlloy', label: 'Hardened Alloy' },
-  { key: 'polishingSolution', label: 'Polishing Solution' },
-  { key: 'designPlans', label: 'Design Plans' },
-  { key: 'lunarAmber', label: 'Lunar Amber' },
+export const MATERIALS: { icon: string, key: Material, label: string }[] = [
+  { icon: 'game-icons:metal-bar', key: 'hardenedAlloy', label: 'Hardened Alloy' },
+  { icon: 'game-icons:brandy-bottle', key: 'polishingSolution', label: 'Polishing Solution' },
+  { icon: 'game-icons:tied-scroll', key: 'designPlans', label: 'Design Plans' },
+  { icon: 'game-icons:amber-mosquito', key: 'lunarAmber', label: 'Lunar Amber' },
 ]
 
 // Cost represents the cost to upgrade *to* this level from the previous one
