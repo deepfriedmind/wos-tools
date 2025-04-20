@@ -19,6 +19,7 @@ declare module 'vue' {
     Divider: typeof import('primevue/divider')['default']
     Drawer: typeof import('primevue/drawer')['default']
     Fieldset: typeof import('primevue/fieldset')['default']
+    FloatLabel: typeof import('primevue/floatlabel')['default']
     IftaLabel: typeof import('primevue/iftalabel')['default']
     Image: typeof import('primevue/image')['default']
     InputMask: typeof import('primevue/inputmask')['default']

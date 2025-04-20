@@ -233,7 +233,7 @@ function isMaxAmount(node: ResourceNode, amount: string) {
 }
 
 function normalizeNumber(number: number) {
-  return number <= 0 ? '0' : number.toLocaleString()
+  return number <= 0 ? '0' : formatNumber(number)
 }
 
 const resourceCards = computed<ResourceCard[]>(() => {

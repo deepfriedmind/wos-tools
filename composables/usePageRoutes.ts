@@ -1,5 +1,6 @@
 interface PageRoute {
   icon?: string
+  iconColorClass?: string
   path: string
   title: string
 }
@@ -28,6 +29,7 @@ export function usePageRoutes() {
       .filter(route => route.path !== '/' && !route.path.includes(':'))
       .map(route => ({
         icon: route.meta?.icon as string | undefined,
+        iconColorClass: route.meta?.iconColorClass as string | undefined,
         path: route.path,
         title: useIsString(route.meta?.title) ?
             route.meta.title.replace('for Whiteout Survival', '').trim()

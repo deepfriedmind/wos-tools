@@ -61,8 +61,6 @@ const MARKSMEN_PERCENT = computed(() => settings.value.marksmenPercent / 100)
 const LANCERS_PERCENT = computed(() => settings.value.lancersPercent / 100)
 const INFANTRY_PERCENT = computed(() => settings.value.infantryPercent / 100)
 
-const formatNumber = (number: number) => new Intl.NumberFormat().format(number)
-
 // Load from URL params if present
 if (route.query.marksmen) {
   const amount = Number(route.query.marksmen)

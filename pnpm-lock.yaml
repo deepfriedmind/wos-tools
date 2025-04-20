@@ -105,6 +105,9 @@ importers:
       '@iconify-json/fluent-emoji':
         specifier: ^1.2.3
         version: 1.2.3
+      '@iconify-json/game-icons':
+        specifier: ^1.2.1
+        version: 1.2.1
       '@iconify-json/mdi':
         specifier: ^1.2.3
         version: 1.2.3
@@ -852,6 +855,9 @@ packages:
 
   '@iconify-json/fluent@1.2.18':
     resolution: {integrity: sha512-CPSTjs9MI2+U8QXBNw6zyE+jJ7JzTbyWmmgtysjUIGzHln4jdTxSvNttOt73/Bc1BgNQuUiLjj2mh/K0nCfyIg==}
+
+  '@iconify-json/game-icons@1.2.1':
+    resolution: {integrity: sha512-JrKwJT+xmee87QRGIoUdR59fxMzqykS9NUnG7P0XVeznKwr3WkAw5IVWSQVQDLcN6+X3mdMFme3Hbhh6f0qTDw==}
 
   '@iconify-json/mdi@1.2.3':
     resolution: {integrity: sha512-O3cLwbDOK7NNDf2ihaQOH5F9JglnulNDFV7WprU2dSoZu3h3cWH//h74uQAB87brHmvFVxIOkuBX2sZSzYhScg==}
@@ -6538,6 +6544,10 @@ snapshots:
       '@iconify/types': 2.0.0
 
   '@iconify-json/fluent@1.2.18':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/game-icons@1.2.1':
     dependencies:
       '@iconify/types': 2.0.0
 

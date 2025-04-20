@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-defineProps<{
+const { heading, icon, iconColorClass = 'text-surface-500', subHeading } = defineProps<{
   heading?: string
   icon?: string
+  iconColorClass?: string
   subHeading?: string
 }>()
 </script>
@@ -17,7 +18,7 @@ defineProps<{
           <Icon
             v-if="icon"
             :name="icon"
-            class="text-2xl text-surface-500 drop-shadow-md md:text-4xl"
+            :class="`${iconColorClass} text-2xl drop-shadow-md md:text-4xl`"
           />
           <h2
             v-if="heading"
