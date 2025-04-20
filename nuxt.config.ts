@@ -23,7 +23,7 @@ export default defineNuxtConfig({
     'pinia-plugin-persistedstate/nuxt',
   ],
   imports: {
-    dirs: ['~/stores'],
+    dirs: ['constants', 'stores', 'utils/**'],
     presets: [
       {
         from: 'tailwind-merge',
