@@ -11,7 +11,7 @@
  * ```
  */
 export default function isEmpty(object: Record<string, unknown>) {
-  if (typeof object !== 'object' || object === null || object === undefined) {
+  if (typeof object !== 'object' || object == null) {
     const type = object === null ? 'null' : typeof object
     throw new TypeError(
       `isEmpty.ts: Expected object, got ${type}`,

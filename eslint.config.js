@@ -101,6 +101,7 @@ export default withNuxt(
           ignore: [String.raw`^README\.md$`],
         },
       ],
+      'unicorn/no-null': 'off',
       'unicorn/prevent-abbreviations': ['error', { allowList: {
         props: true,
         Props: true,
