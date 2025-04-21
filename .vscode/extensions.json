@@ -1,5 +1,6 @@
 {
   "recommendations": [
+    "antfu.goto-alias",
     "antfu.iconify",
     "bradlc.vscode-tailwindcss",
     "cpylua.language-postcss",
@@ -8,7 +9,6 @@
     "nuxtr.nuxtr-vscode",
     "romanpeshkov.tailwind-nested",
     "simonhe.common-intellisense",
-    "skyboost.nuxt-3-goto",
     "stivo.tailwind-fold",
     "vitest.explorer",
     "Vue.volar"
