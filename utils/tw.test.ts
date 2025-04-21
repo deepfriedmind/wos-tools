@@ -64,7 +64,6 @@ describe('tw', () => {
   })
 
   it('handles null/undefined interpolated values', () => {
-    // eslint-disable-next-line unicorn/no-null
     const value1 = null
     const value2 = undefined
     const result = tw`class1 ${value1} class2 ${value2} class3`

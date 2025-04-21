@@ -19,7 +19,7 @@
  * setIsStickyHeaderEnabled(false)
  * ```
  */
-export function useStickyHeader() {
+export default function useStickyHeader() {
   const isStickyHeaderEnabled = useState<boolean>('sticky-header-enabled', () => true)
 
   const setIsStickyHeaderEnabled = (value: boolean) => {

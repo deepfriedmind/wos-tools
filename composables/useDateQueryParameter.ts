@@ -21,7 +21,7 @@ import type { Dayjs } from 'dayjs'
  * @property {ComputedRef<boolean>} selectedDateIsValid - True if the selected date is a valid date.
  * @property {Ref<Dayjs>} selectedDayjs - The selected date as a Dayjs object. Useful for date manipulations and comparisons.
  */
-export function useDateQueryParameter() {
+export default function useDateQueryParameter() {
   const route = useRoute()
   const router = useRouter()
   const dayjs = useDayjs()

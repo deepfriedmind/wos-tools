@@ -28,8 +28,9 @@ const { pages } = usePageRoutes()
           >
             <Icon
               v-if="page.icon"
+              class="mt-[0.125em] align-text-top drop-shadow-md"
+              :class="page.iconColorClass ? String(page.iconColorClass) : 'text-surface-500'"
               :name="String(page.icon)"
-              class="mt-[0.125em] align-text-top text-surface-500 drop-shadow-md"
             />
             {{ page.title }}
           </RouterLink>
