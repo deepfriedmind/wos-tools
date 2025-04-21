@@ -7,11 +7,13 @@ import milestones from '~/public/data/server-timeline.json'
 const PAGE_TITLE = 'Server Timeline'
 const PAGE_DESCRIPTION = 'Information about the milestones a server/state goes through and when they unlock (approximately)'
 const PAGE_ICON = 'mdi:chart-timeline-variant-shimmer'
+const PAGE_ICON_COLOR_CLASS = 'bg-gradient-to-t from-blue-600 to-yellow-500 via-blue-500'
 const SERVER_TIMELINE_IMAGE_LABEL = 'Server timeline illustration from the Whiteout Survival Discord server'
 
 definePageMeta({
   description: `${PAGE_DESCRIPTION} for Whiteout Survival.`,
   icon: PAGE_ICON,
+  iconColorClass: PAGE_ICON_COLOR_CLASS,
   title: `${PAGE_TITLE} for Whiteout Survival`,
 })
 
@@ -207,6 +209,7 @@ onUnmounted(() => {
 <template>
   <MainContentCard
     :icon="PAGE_ICON"
+    :icon-color-class="PAGE_ICON_COLOR_CLASS"
     :heading="PAGE_TITLE"
     :sub-heading="PAGE_DESCRIPTION"
   >
@@ -241,7 +244,10 @@ onUnmounted(() => {
                 show-button-bar
                 :invalid="!selectedDateIsValid"
               />
-              <label for="date">Your server start date:</label>
+              <label
+                for="date"
+                class="font-bold tracking-wide"
+              >Server start date:</label>
             </IftaLabel>
             <Message
               v-if="selectedDateIsValid && !isToday"
@@ -515,7 +521,7 @@ onUnmounted(() => {
       v-show="selectedDateIsValid"
       class="mb-8 text-sm text-primary-emphasis-alt md:text-right"
     >
-      Milestone information attributed to the <NuxtLink
+      Milestone information attributed in part to the <NuxtLink
         target="_blank"
         to="https://outof.games/realms/whiteoutsurvival/guides/405-server-age-and-timeline-in-whiteout-survival/"
         class="link-primary"

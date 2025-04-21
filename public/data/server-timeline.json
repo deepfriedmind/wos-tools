@@ -104,6 +104,18 @@
     "content": "<p>At day 360, the following aspects of the game unlock/update:</p><p><strong>Heroes of Generation 6<br /></strong></p><ul><li>[Infantry] Wu Ming</li><li>[Lancer] Renee - Lucky Wheel hero</li><li>[Marksman] Wayne</li></ul>"
   },
   {
+    "day": 370,
+    "title": "Pets Generation 7",
+    "type": "pets",
+    "content": "<p>At day 370, the following aspects of the game unlock/update:</p><p><strong>Pets of Generation 7:</strong></p><ul><li>Mammoth</li></ul>"
+  },
+  {
+    "day": 430,
+    "title": "Pets Generation 8",
+    "type": "pets",
+    "content": "<p>At day 430, the following aspects of the game unlock/update:</p><p><strong>Pets of Generation 8:</strong></p><ul><li>Frost Gorilla</li></ul>"
+  },
+  {
     "day": 440,
     "title": "Heroes Generation 7",
     "type": "heroes",
