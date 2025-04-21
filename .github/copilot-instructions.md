@@ -36,6 +36,8 @@ Always prefer `undefined` over `null` for uninitialized values.
 
 Do NOT use the `any` type. Always use specific types.
 
+Do NOT add explicit types when TypeScript can infer them.
+
 Handle async data with `useAsyncData` and error handling.
 
 Implement API routes with `defineEventHandler` and zod validation.
@@ -78,7 +80,7 @@ Type component methods with `expose`.
 
 Do NOT use `<style>` blocks unless necessary, always prefer Tailwind CSS classes.
 
-After editing files, always check for problems (linting, type errors, etc.) and fix them. **Crucially, continue checking and fixing recursively until NO problems remain.** A task is not complete if any problems are reported after a change.
+Check for problems (linting, type errors, etc.) **using the integrated VS Code problem reporting** and fix them. **Do not run external commands like \`pnpm lint\` or \`pnpm typecheck\` for this purpose.** **Crucially, continue checking and fixing recursively until NO problems remain.** A task is not complete if any problems are reported after a change.
 
 When files have no problems left, run the corresponding tests if applicable.
 

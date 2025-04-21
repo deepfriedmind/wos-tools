@@ -1,10 +1,10 @@
-Place test files in the same directory as the file being tested (co-located), except for `/pages` and `/layouts`, which should be placed in their respective directories in `/tests`.
+Place test files in the same directory as the file being tested (co-located), except for `/pages` and `/layouts`, which should be placed in their respective directories under `/tests`.
 
-Put reusable mocks in `tests/helpers/mocks.ts`.
+Put reusable mocks in `/tests/helpers/mocks.ts`.
 
-Put global plugin setup in `tests/helpers/plugins.ts`.
+Put global plugin setup in `/tests/helpers/plugins.ts`.
 
-Put PrimeVue component mocks in `tests/helpers/primevue.ts`.
+Put PrimeVue component mocks in `/tests/helpers/primevue.ts`.
 
 Use `~/` syntax for imports.
 

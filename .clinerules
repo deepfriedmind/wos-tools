@@ -170,8 +170,9 @@ export const useUserStore = defineStore('user', () => {
 - Always prefer destructuring whenever possible
 - Always prefer `undefined` over `null` for uninitialized values
 - Do NOT use the `any` type. Always use specific types
+- Do NOT add explicit types when TypeScript can infer them
 - Do NOT add imports for anything that is auto-imported via Nuxt or compatible packages, e.g. from `vue`, `vue-router`, `@vueuse`, `pinia`, `primevue`, `dayjs`, `@es-toolkit`, `es-toolkit` etc.
-- After editing, check for problems (linting, type errors, etc.) and fix them. **Crucially, continue checking and fixing recursively until NO problems remain.** A task is not complete if any problems are reported after a change.
+- After editing (`write_to_file` or `apply_diff`), **always re-read the file using `read_file` before checking for problems.** This is because ESLint auto-fixes may run on save, potentially altering the file content slightly. Check for problems (linting, type errors, etc.) **using the integrated VS Code problem reporting (provided in environment_details)** on the re-read content and fix them. **Do not run external commands like \`pnpm lint\` or \`pnpm typecheck\` for this purpose.** **Crucially, continue checking and fixing recursively until NO problems remain.** A task is not complete if any problems are reported after a change.
 - **Strictly forbid comments explaining refactoring steps or code movement.** Comments like `// Changed from`, `// Updated to`, `// Logic moved to X`, or `// Y is now handled by Z` are unnecessary noise and must not be included in the final code. Focus on code quality and self-documentation. Comments should only explain *why* a complex or non-obvious piece of code exists, not *how* it got there.
 - Do not add verbose comments or explanations in the code. The code should be self-explanatory and easy to understand without excessive comments.
 - Use JSDoc comments for complex functions and public APIs
