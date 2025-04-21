@@ -189,4 +189,4 @@ Your goal is to suggest instances where you can use `es-toolkit` (similar to `lo
 - Do not use any other functions from `es-toolkit` than those listed above.
 - Do not add any imports, the functions are auto-imported.
 - Do not use `useIsEqual` for primitive values.
-- Also check for potential usages of utility functions in the `utils` folder, e.g. `isEmpty` for checking if an object is empty.
+- Also check for potential usages of utility functions in the `utils` folder, e.g. `isEmptyObject` for checking if an object is empty.

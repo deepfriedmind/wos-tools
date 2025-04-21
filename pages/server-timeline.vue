@@ -41,7 +41,7 @@ function setTimelineEntryRef(index: number, element: ComponentPublicInstance) {
   if (
     !element
     || typeof element !== 'object'
-    || isEmpty(element as unknown as Record<string, unknown>)
+    || isEmptyObject(element as unknown as Record<string, unknown>)
   ) {
     return
   }
@@ -114,7 +114,7 @@ const setUrlHash = useDebounceFn((newActiveId: string) => {
   const hasScrolledToTop = import.meta.client && firstMilestoneBottom.value > 100
 
   if ((isFirstMilestone || hasScrolledToTop))
-    return history.replaceState(undefined, '', `${route.path}${isEmpty(route.query) ? '' : `?${new URLSearchParams(route.query as Record<string, string>).toString()}`}`)
+    return history.replaceState(undefined, '', `${route.path}${isEmptyObject(route.query) ? '' : `?${new URLSearchParams(route.query as Record<string, string>).toString()}`}`)
 
   if (location.hash !== `#${newActiveId}`)
     history.replaceState(undefined, '', `#${newActiveId}`)

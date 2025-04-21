@@ -6,15 +6,15 @@
  * @throws {TypeError} If the provided value is not an object type or is undefined
  * @example
  * ```ts
- * isEmpty({}) // => true
- * isEmpty({ key: 'value' }) // => false
+ * isEmptyObject({}) // => true
+ * isEmptyObject({ key: 'value' }) // => false
  * ```
  */
-export default function isEmpty(object: Record<string, unknown>) {
+export default function isEmptyObject(object: Record<string, unknown>) {
   if (typeof object !== 'object' || object == null) {
     const type = object === null ? 'null' : typeof object
     throw new TypeError(
-      `isEmpty.ts: Expected object, got ${type}`,
+      `isEmptyObject.ts: Expected object, got ${type}`,
     )
   }
 
