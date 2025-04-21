@@ -2,7 +2,13 @@
 # Bash script to prepare a release using git-cliff.
 # More info: https://github.com/welpo/release
 # Inspired by https://github.com/orhun/git-cliff/blob/main/release.sh
-set -eu
+set -euo pipefail
+
+# Check for required dependencies
+if ! command -v git-cliff &> /dev/null; then
+    echo "Error: git-cliff is not installed or not in PATH." >&2
+    exit 1
+fi
 
 VERSION_FORMAT="^v?[0-9]+\.[0-9]+\.[0-9]+.*"
 
@@ -45,20 +51,25 @@ fi
 # Ensure the local repository is up-to-date.
 echo "Updating local repository…"
 git fetch origin
-git_status=$(git status -uno)
-if echo "$git_status" | grep -q "Your branch is behind"; then
+
+LOCAL_COMMIT=$(git rev-parse @)
+REMOTE_COMMIT=$(git rev-parse "@{u}")
+BASE_COMMIT=$(git merge-base @ "@{u}")
+
+if [ "$LOCAL_COMMIT" = "$REMOTE_COMMIT" ]; then
+    echo "Local repository is up to date with remote."
+elif [ "$LOCAL_COMMIT" = "$BASE_COMMIT" ]; then
     exit_with_message "Your local branch is behind the remote. Pull the latest changes before running this script."
-elif echo "$git_status" | grep -q "Your branch is ahead"; then
+elif [ "$REMOTE_COMMIT" = "$BASE_COMMIT" ]; then
     echo "Your local branch is ahead of the remote. Checking if local changes can be pushed…"
     if git push --dry-run &> /dev/null; then
         echo "Local changes can be pushed without conflicts. Proceeding with the release."
     else
         exit_with_message "Unable to push local changes. Resolve any conflicts before running this script."
     fi
-elif ! echo "$git_status" | grep -q "Your branch is up to date"; then
-    exit_with_message "Unable to determine if branch is up to date. Check your git status manually."
+else
+    exit_with_message "Local and remote branches have diverged. Please resolve before running this script."
 fi
-echo "Local repository is ready for release."
 
 # Check if a version tag is provided.
 if [ "$#" -eq 1 ]; then
