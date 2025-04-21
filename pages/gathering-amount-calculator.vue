@@ -338,7 +338,7 @@ const showGatheringBonusDialog = shallowRef(false)
                   />
                   <label
                     :for="useKebabCase(node.rssName)"
-                    class="flex gap-2 font-bold"
+                    class="flex gap-2 font-bold tracking-wide"
                   >
                     <div>{{ node.rssName }}</div>
                     <img
@@ -377,7 +377,7 @@ const showGatheringBonusDialog = shallowRef(false)
                       <span class="ml-2 text-sm">{{ `(+${slotProps.option.percentage}%)` }}</span>
                     </template>
                   </Select>
-                  <label class="flex gap-2 font-bold">
+                  <label class="flex gap-2 font-bold tracking-wide">
                     <div>{{ node.heroName }}</div>
                     <img
                       :src="node.heroImagePath"

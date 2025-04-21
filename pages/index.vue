@@ -24,7 +24,7 @@ const { pages } = usePageRoutes()
         >
           <RouterLink
             :to="page.path"
-            class="inline-block text-xl font-bold text-primary-emphasis transition text-shadow hover:scale-105 hover:text-primary-emphasis-alt max-sm:origin-left sm:text-2xl md:text-4xl"
+            class="inline-block text-lg font-bold text-primary-emphasis transition text-shadow hover:scale-105 hover:text-primary-emphasis-alt max-sm:origin-left sm:text-2xl md:text-4xl"
           >
             <Icon
               v-if="page.icon"
@@ -35,7 +35,7 @@ const { pages } = usePageRoutes()
             {{ page.title }}
           </RouterLink>
         </li>
-        <li class="translate-y-full text-center text-lg">
+        <li class="translate-y-full text-center sm:text-lg">
           More Coming Soon™
         </li>
       </ul>

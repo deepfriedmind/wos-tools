@@ -433,7 +433,7 @@ function handleBearClick() {
                     />
                     <label
                       for="snowApeLevel"
-                      class="font-bold"
+                      class="font-bold tracking-wide"
                     >Skill level</label>
                   </IftaLabel>
                 </div>
@@ -509,7 +509,7 @@ function handleBearClick() {
                     size="large"
                     @focus="mobileScrollIntoView"
                   />
-                  <label class="font-bold">{{ label }}</label>
+                  <label class="font-bold tracking-wide">{{ label }}</label>
                 </IftaLabel>
               </div>
               <Message
