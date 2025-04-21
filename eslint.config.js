@@ -170,6 +170,13 @@ export default withNuxt(
     },
   },
   {
+    files: ['**/*.test.ts'],
+    name: 'project/tests',
+    rules: {
+      'unicorn/no-useless-undefined': 'off',
+    },
+  },
+  {
     files: ['nuxt.config.ts'],
     name: 'project/nuxtconfig',
     rules: {
