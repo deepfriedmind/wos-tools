@@ -1,4 +1,5 @@
 <script setup lang="ts">
+/* eslint-disable ts/no-restricted-imports */
 // FIXME: workaround to avoid 500 error in prod - https://github.com/fumeapp/dayjs/issues/62
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'

@@ -195,5 +195,24 @@ export default withNuxt(
     name: 'project/packagejson',
     rules: { 'jsonc/sort-keys': 'off' },
   },
+  {
+    files: ['**/*.{ts,vue}'],
+    ignores: ['**/*.test.ts', 'tests/**'],
+    name: 'project/auto-imports',
+    rules: {
+      'ts/no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              allowTypeImports: true,
+              group: ['@vueuse', '~/composables', '~/constants', '~/stores', '~/utils', 'dayjs', 'pinia', 'primevue', 'vue', 'vue-router'],
+              message: 'Remove this import. It is auto-imported by Nuxt.',
+            },
+          ],
+        },
+      ],
+    },
+  },
   globalIgnores(['.github/docs']),
 )
