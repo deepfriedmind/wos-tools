@@ -17,6 +17,7 @@ export interface CalculatorState {
 
 export interface GearPiece {
   icon: string
+  iconColorClass: string
   id: keyof CalculatorState['gear']
   name: string
   stats: string
@@ -38,6 +39,13 @@ export interface LevelOption {
 }
 
 export type Material = keyof UpgradeCost
+
+export interface MaterialInfo {
+  icon: string
+  iconColorClass: string
+  key: Material
+  label: string
+}
 
 export interface UpgradeCost {
   designPlans: number

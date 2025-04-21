@@ -9,7 +9,6 @@ interface GearLevelSelectOption {
 defineProps<Pick<SelectProps, 'disabled' | 'modelValue'> & {
   label: string
   options: GearLevelSelectOption[]
-  tierColorClasses?: Record<string, string>
 }>()
 
 const emit = defineEmits<{
@@ -22,10 +21,7 @@ function onChange(event: { value: string | undefined }) {
 </script>
 
 <template>
-  <FloatLabel
-    variant="on"
-    class="flex-1"
-  >
+  <FloatLabel variant="on">
     <Select
       :disabled="disabled"
       :model-value="modelValue"
@@ -38,12 +34,13 @@ function onChange(event: { value: string | undefined }) {
       option-label="label"
       option-value="id"
       show-clear
+      size="small"
       @change="onChange"
     >
       <template #optiongroup="slotProps">
         <div
           class="py-2 text-lg font-bold uppercase tracking-widest"
-          :class="[tierColorClasses?.[slotProps.option.tier] || '']"
+          :class="[TIER_COLOR_CLASSES[slotProps.option.tier] || '']"
         >
           {{ slotProps.option.tier }}
         </div>

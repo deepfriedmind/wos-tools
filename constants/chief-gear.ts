@@ -1,19 +1,19 @@
-import type { GearPiece, Material, UpgradeLevel } from '~/types/chief-gear'
+import type { GearPiece, MaterialInfo, UpgradeLevel } from '~/types/chief-gear'
 
 export const GEAR_PIECES: GearPiece[] = [
-  { icon: 'game-icons:winter-hat', id: 'hat', name: 'Winter Hat', stats: 'lancer attack/defense' },
-  { icon: 'game-icons:pirate-coat', id: 'coat', name: 'Valor\'s Embrace', stats: 'infantry attack/defense' },
-  { icon: 'game-icons:power-ring', id: 'ring', name: 'Ring of Resilience', stats: 'marksman attack/defense' },
-  { icon: 'game-icons:pocket-watch', id: 'watch', name: 'Durable Watch', stats: 'lancer attack/defense' },
-  { icon: 'game-icons:armored-pants', id: 'pants', name: 'Explorer Pants', stats: 'infantry attack/defense' },
-  { icon: 'game-icons:wood-club', id: 'cudgel', name: 'Cudgel', stats: 'marksman attack/defense' },
+  { icon: 'game-icons:winter-hat', iconColorClass: 'bg-gradient-to-t from-indigo-100 to-indigo-100 via-indigo-500', id: 'hat', name: 'Winter Hat', stats: 'lancer attack/defense' },
+  { icon: 'game-icons:pirate-coat', iconColorClass: 'bg-gradient-to-tr from-yellow-900 to-yellow-900 via-yellow-700', id: 'coat', name: "Valor's Embrace", stats: 'infantry attack/defense' },
+  { icon: 'game-icons:ring', iconColorClass: 'bg-gradient-to-t from-amber-600 via-amber-200 to-amber-400', id: 'ring', name: 'Ring of Resilience', stats: 'marksman attack/defense' },
+  { icon: 'game-icons:pocket-watch', iconColorClass: 'bg-gradient-to-t from-zinc-500 to-zinc-500 via-zinc-300', id: 'watch', name: 'Durable Watch', stats: 'lancer attack/defense' },
+  { icon: 'game-icons:armored-pants', iconColorClass: 'bg-gradient-to-t from-sky-800 via-sky-600 to-sky-700', id: 'pants', name: 'Explorer Pants', stats: 'infantry attack/defense' },
+  { icon: 'game-icons:wood-club', iconColorClass: 'bg-gradient-to-tr from-yellow-700 to-yellow-900 via-yellow-600', id: 'cudgel', name: 'Cudgel', stats: 'marksman attack/defense' },
 ] as const
 
-export const MATERIALS: { icon: string, key: Material, label: string }[] = [
-  { icon: 'game-icons:metal-bar', key: 'hardenedAlloy', label: 'Hardened Alloy' },
-  { icon: 'game-icons:brandy-bottle', key: 'polishingSolution', label: 'Polishing Solution' },
-  { icon: 'game-icons:tied-scroll', key: 'designPlans', label: 'Design Plans' },
-  { icon: 'game-icons:amber-mosquito', key: 'lunarAmber', label: 'Lunar Amber' },
+export const MATERIALS: MaterialInfo[] = [
+  { icon: 'game-icons:metal-bar', iconColorClass: 'bg-gradient-to-tr from-slate-900 to-slate-900 via-gray-400', key: 'hardenedAlloy', label: 'Hardened Alloy' },
+  { icon: 'game-icons:brandy-bottle', iconColorClass: 'bg-gradient-to-tr from-emerald-400 to-emerald-400 via-emerald-200', key: 'polishingSolution', label: 'Polishing Solution' },
+  { icon: 'game-icons:tied-scroll', iconColorClass: 'bg-gradient-to-t from-amber-400 to-amber-200 ', key: 'designPlans', label: 'Design Plans' },
+  { icon: 'game-icons:amber-mosquito', iconColorClass: 'bg-gradient-to-t from-amber-600 to-amber-500 via-amber-300', key: 'lunarAmber', label: 'Lunar Amber' },
 ]
 
 // Cost represents the cost to upgrade *to* this level from the previous one
