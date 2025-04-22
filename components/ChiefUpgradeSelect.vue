@@ -30,7 +30,7 @@ function onChange(event: { value: string | undefined }) {
       :model-value="modelValue"
       :options="options"
       :pt="{ optionLabel: { class: 'tabular-nums' } }"
-      :scroll-height="rem(600)"
+      :scroll-height="rem(636)"
       fluid
       :option-group-children="groupedOptions ? 'levels' : undefined"
       :option-group-label="groupedOptions ? 'tier' : undefined"

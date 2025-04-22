@@ -86,67 +86,61 @@ const charmMaterials = CHARM_MATERIALS
               <div
                 v-for="slotIndex in CHARM_SLOTS_PER_GEAR"
                 :key="slotIndex"
-                class="grid grid-cols-[auto,1fr,auto,1fr] items-center gap-x-2 gap-y-1"
+                class="space-y-2"
               >
-                <span class="text-xs text-gray-400">Slot {{ slotIndex }}</span>
-                <ChiefUpgradeSelect
-                  v-if="state?.gear?.[gearPiece.id]?.[slotIndex - 1]"
-                  :model-value="state.gear[gearPiece.id][slotIndex - 1].from"
-                  :options="selectOptions"
-                  :grouped-options="false"
-                  label="From Lv."
-                  @change="(value: string | undefined) => handleFromChange(gearPiece.id, slotIndex - 1, value)"
-                />
-                <span class="text-gray-400">→</span>
-                <ChiefUpgradeSelect
-                  v-if="state?.gear?.[gearPiece.id]?.[slotIndex - 1]"
-                  :model-value="state.gear[gearPiece.id][slotIndex - 1].to"
-                  :options="getFilteredToOptions(state.gear[gearPiece.id][slotIndex - 1]?.from)"
-                  :grouped-options="false"
-                  :disabled="!state.gear[gearPiece.id][slotIndex - 1]?.from"
-                  label="To Lv."
-                  @change="(value: string | undefined) => handleToChange(gearPiece.id, slotIndex - 1, value)"
-                />
-              </div>
-              <div
-                v-for="slotIndex in CHARM_SLOTS_PER_GEAR"
-                :key="`cost-${slotIndex}`"
-                class="mt-2"
-              >
-                <div v-if="Object.values(gearCosts[gearPiece.id]?.slotCosts?.[slotIndex - 1]?.total || {}).some(v => v > 0)">
-                  <h5 class="mb-1 text-sm font-bold">
-                    Upgrade cost (Slot {{ slotIndex }}):
-                  </h5>
-                  <p class="mb-2">
-                    {{ renderChiefCharmUpgradeMaterialCosts(charmMaterials, gearCosts[gearPiece.id].slotCosts[slotIndex - 1].total) }}
-                  </p>
+                <div class="grid grid-cols-[auto,1fr,auto,1fr] items-center gap-x-2 gap-y-1">
+                  <span class="text-xs text-gray-400">Slot {{ slotIndex }}</span>
+                  <ChiefUpgradeSelect
+                    v-if="state?.gear?.[gearPiece.id]?.[slotIndex - 1]"
+                    :model-value="state.gear[gearPiece.id][slotIndex - 1].from"
+                    :options="selectOptions"
+                    :grouped-options="false"
+                    label="From Lv."
+                    @change="(value: string | undefined) => handleFromChange(gearPiece.id, slotIndex - 1, value)"
+                  />
+                  <span class="text-gray-400">→</span>
+                  <ChiefUpgradeSelect
+                    v-if="state?.gear?.[gearPiece.id]?.[slotIndex - 1]"
+                    :model-value="state.gear[gearPiece.id][slotIndex - 1].to"
+                    :options="getFilteredToOptions(state.gear[gearPiece.id][slotIndex - 1]?.from)"
+                    :grouped-options="false"
+                    :disabled="!state.gear[gearPiece.id][slotIndex - 1]?.from"
+                    label="To Lv."
+                    @change="(value: string | undefined) => handleToChange(gearPiece.id, slotIndex - 1, value)"
+                  />
+                </div>
+                <div
+                  v-if="Object.values(gearCosts[gearPiece.id]?.slotCosts?.[slotIndex - 1]?.total || {}).some(v => v > 0)"
+                  class="space-y-2 text-sm"
+                >
                   <Panel
+                    v-if="gearCosts[gearPiece.id].slotCosts[slotIndex - 1].steps.length > 1"
                     toggleable
+                    collapsed
+                    :header="`Show step costs (${gearCosts[gearPiece.id].slotCosts[slotIndex - 1].steps.length}\u00A0levels)`"
                     class="mb-2"
                   >
-                    <template #header>
-                      <span>Step breakdown</span>
-                    </template>
-                    <div
-                      v-if="gearCosts[gearPiece.id].slotCosts[slotIndex - 1].steps.length > 0"
-                      class="space-y-1"
+                    <ol
+                      v-auto-animate
+                      class="max-h-[25vh] list-decimal space-y-1.5 overflow-y-auto pl-6"
                     >
-                      <div
-                        v-for="(step, stepIndex) in gearCosts[gearPiece.id].slotCosts[slotIndex - 1].steps"
-                        :key="stepIndex"
-                        class="flex items-center gap-2"
+                      <li
+                        v-for="step in gearCosts[gearPiece.id].slotCosts[slotIndex - 1].steps"
+                        :key="step.level.id"
                       >
-                        <span class="text-xs text-gray-400">{{ step.level.label }}</span>
-                        <span class="text-xs">{{ renderChiefCharmUpgradeMaterialCosts(charmMaterials, step.cumulativeCost) }}</span>
-                      </div>
-                    </div>
-                    <div
-                      v-else
-                      class="text-xs text-primary"
-                    >
-                      No steps (select valid levels)
-                    </div>
+                        <span class="block font-bold">To lv. {{ step.level.level }}:</span>
+                        <span v-if="charmMaterials.some(({ key }) => step.level.cost[key] > 0)">
+                          {{ renderChiefCharmUpgradeMaterialCosts(charmMaterials, step.level.cost) }}
+                        </span>
+                      </li>
+                    </ol>
                   </Panel>
+                  <h5 class="font-bold">
+                    Upgrade cost:
+                  </h5>
+                  <p v-if="charmMaterials.some(({ key }) => gearCosts[gearPiece.id].slotCosts[slotIndex - 1].total[key] > 0)">
+                    {{ renderChiefCharmUpgradeMaterialCosts(charmMaterials, gearCosts[gearPiece.id].slotCosts[slotIndex - 1].total) }}
+                  </p>
                 </div>
                 <div
                   v-else-if="state.gear[gearPiece.id]?.[slotIndex - 1]?.from && state.gear[gearPiece.id]?.[slotIndex - 1]?.to"
