@@ -15,12 +15,12 @@ const { mobileScrollIntoView } = useMobileScrollIntoView()
 
 const {
   clearAll,
+  filteredFromOptions,
   getFilteredToOptions,
   handleFromChange,
   handleToChange,
   hasAnySelectionOrInventory,
   queryParameters,
-  selectOptions,
   state,
 } = useChiefGearState()
 
@@ -83,7 +83,7 @@ const {
               <div class="grid gap-x-2 gap-y-4 sm:grid-cols-2 md:max-xl:grid-cols-1">
                 <ChiefUpgradeSelect
                   :model-value="state.gear[gear.id].from"
-                  :options="selectOptions"
+                  :options="filteredFromOptions"
                   grouped-options
                   label="From"
                   @change="(value) => handleFromChange(gear.id, value)"
@@ -219,7 +219,7 @@ const {
                         {{ formatNumber(leftoverInventory[mat.key]) }} left over
                       </template>
                       <template v-else>
-                        Have enough
+                        Have just enough
                       </template>
                     </span>
                   </template>

@@ -137,7 +137,7 @@ export default function useChiefGearState() {
 
   // --- Computed Properties for UI ---
 
-  const selectOptions = computed(() => {
+  const selectOptions = (() => {
     const groupedLevels = useGroupBy(UPGRADE_DATA, level => level.baseTier)
     const baseTierOrder = ['Green', 'Blue', 'Purple', 'Gold', 'Red']
 
@@ -147,19 +147,31 @@ export default function useChiefGearState() {
         levels: groupedLevels[baseTier].map(level => ({ id: level.id, label: level.label })),
         tier: baseTier,
       }))
+  })()
+
+  const filteredFromOptions = computed(() => {
+    const result = [...selectOptions]
+    const lastGroupIndex = result.length - 1
+    const lastGroup = result[lastGroupIndex]
+    result[lastGroupIndex] = {
+      ...lastGroup,
+      levels: useInitial(lastGroup.levels),
+    }
+
+    return result
   })
 
   function getFilteredToOptions(fromId: string | undefined) {
     if (fromId === undefined || fromId === '')
-      return selectOptions.value // Return all if no 'from' selected
+      return selectOptions // Return all if no 'from' selected
 
     const fromLevel = UPGRADE_LEVEL_MAP.get(fromId)
 
     if (fromLevel === undefined)
-      return selectOptions.value
+      return selectOptions
 
     const filteredGroups: LevelGroupOption[] = []
-    for (const group of selectOptions.value) {
+    for (const group of selectOptions) {
       const filteredLevels = group.levels.filter((levelOption) => {
         const levelData = UPGRADE_LEVEL_MAP.get(levelOption.id)
 
@@ -235,6 +247,7 @@ export default function useChiefGearState() {
 
   return {
     clearAll,
+    filteredFromOptions,
     getFilteredToOptions,
     handleFromChange,
     handleToChange,
