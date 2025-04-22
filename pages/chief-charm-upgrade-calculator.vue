@@ -25,7 +25,10 @@ const {
 } = useChiefCharmState()
 
 const {
+  gearCosts,
+  leftoverInventory,
   remainingCost,
+  renderMaterialCosts,
   totalCost,
 } = useChiefCharmCalculator(state)
 
@@ -86,13 +89,12 @@ const filteredTotalMaterials = computed(() => {
               v-auto-animate
               class="mt-4 space-y-4"
             >
-              <!-- Loop directly using the constant for clarity -->
               <div
                 v-for="slotIndex in CHARM_SLOTS_PER_GEAR"
                 :key="slotIndex"
                 class="grid grid-cols-[auto,1fr,auto,1fr] items-center gap-x-2 gap-y-1"
               >
-                <span class="text-xs text-gray-400">Slot {{ slotIndex }}</span> <!-- Use 1-based index -->
+                <span class="text-xs text-gray-400">Slot {{ slotIndex }}</span>
                 <ChiefUpgradeSelect
                   v-if="state?.gear?.[gearPiece.id]?.[slotIndex - 1]"
                   :model-value="state.gear[gearPiece.id][slotIndex - 1].from"
@@ -112,7 +114,21 @@ const filteredTotalMaterials = computed(() => {
                   @change="(value: string | undefined) => handleToChange(gearPiece.id, slotIndex - 1, value)"
                 />
               </div>
-              <!-- TODO: Add cost display per slot/piece if needed -->
+              <div
+                v-if="Object.values(gearCosts[gearPiece.id]?.total || {}).some(v => v > 0)"
+                class="mt-4 space-y-2 text-sm"
+              >
+                <h5 class="font-bold">
+                  Upgrade cost:
+                </h5>
+                <p>{{ renderMaterialCosts(charmMaterials, gearCosts[gearPiece.id].total) }}</p>
+              </div>
+              <div
+                v-else-if="state.gear[gearPiece.id] && Object.values(state.gear[gearPiece.id]).some(sel => sel.from && sel.to)"
+                class="mt-4 text-sm italic text-primary"
+              >
+                Select valid 'From' and 'To' levels to see costs.
+              </div>
             </div>
           </template>
         </Card>
@@ -171,7 +187,6 @@ const filteredTotalMaterials = computed(() => {
                   v-for="mat in charmMaterials"
                   :key="`rem-${mat.key}`"
                 >
-                  <!-- Check if totalCost has value before accessing -->
                   <template v-if="totalCost && (totalCost[mat.key] > 0 || state.inventory[mat.key] > 0)">
                     <Icon
                       :name="mat.icon"
@@ -179,21 +194,22 @@ const filteredTotalMaterials = computed(() => {
                       :class="mat.iconColorClass"
                     />
                     <span class="font-medium">{{ mat.label }}:</span>
-                    <!-- Check if remainingCost has value before accessing -->
                     <span
-                      v-if="remainingCost"
+                      v-if="remainingCost && leftoverInventory"
                       class="text-right font-bold tabular-nums"
                       :class="{
                         'text-red-500': remainingCost[mat.key] > 0,
-                        'text-green-500': remainingCost[mat.key] <= 0, // Simplified logic
+                        'text-green-500': remainingCost[mat.key] <= 0,
                       }"
                     >
                       <template v-if="remainingCost[mat.key] > 0">
                         {{ formatNumber(remainingCost[mat.key]) }} needed
                       </template>
+                      <template v-else-if="leftoverInventory[mat.key] > 0">
+                        {{ formatNumber(leftoverInventory[mat.key]) }} left over
+                      </template>
                       <template v-else>
                         Have enough
-                        <!-- Optionally show leftover: {{ formatNumber(Math.abs(remainingCost[mat.key])) }} left -->
                       </template>
                     </span>
                   </template>
@@ -229,7 +245,6 @@ const filteredTotalMaterials = computed(() => {
                     :class="material.iconColorClass"
                   />
                   <span class="font-medium">{{ material.label }}:</span>
-                  <!-- Check if totalCost has value before accessing -->
                   <span
                     v-if="totalCost"
                     class="text-right font-bold tabular-nums"

@@ -47,7 +47,7 @@ export default function useChiefCharmState() {
         for (const gearId of GEAR_PIECES.map(p => p.id)) {
           if (storageValue.gear?.[gearId] != null) {
             for (let slotIndex = 0; slotIndex < CHARM_SLOTS_PER_GEAR; slotIndex++) {
-              if (storageValue.gear[gearId]?.[slotIndex] != null) {
+              if (Object.prototype.hasOwnProperty.call(storageValue.gear[gearId], slotIndex)) {
                 merged.gear[gearId][slotIndex] = {
                   ...merged.gear[gearId][slotIndex],
                   ...storageValue.gear[gearId][slotIndex],
@@ -73,7 +73,7 @@ export default function useChiefCharmState() {
 
     for (const gearPiece of GEAR_PIECES) {
       for (let slotIndex = 0; slotIndex < CHARM_SLOTS_PER_GEAR; slotIndex++) {
-        const charmState = state.value.gear[gearPiece.id]?.[slotIndex]
+        const charmState = state.value.gear[gearPiece.id][slotIndex]
 
         if (charmState?.from != null) {
           parameters[`${gearPiece.id}_${slotIndex}_from`] = charmState.from
@@ -106,6 +106,10 @@ export default function useChiefCharmState() {
 
     for (const gearPiece of GEAR_PIECES) {
       for (let slotIndex = 0; slotIndex < CHARM_SLOTS_PER_GEAR; slotIndex++) {
+        if (!Object.prototype.hasOwnProperty.call(state.value.gear[gearPiece.id], slotIndex)) {
+          state.value.gear[gearPiece.id][slotIndex] = { from: undefined, to: undefined }
+        }
+
         const fromParameter = query[`${gearPiece.id}_${slotIndex}_from`] as string | undefined
         const toParameter = query[`${gearPiece.id}_${slotIndex}_to`] as string | undefined
 
@@ -138,7 +142,9 @@ export default function useChiefCharmState() {
     if (needsUpdate) {
       for (const gearPiece of GEAR_PIECES) {
         for (let slotIndex = 0; slotIndex < CHARM_SLOTS_PER_GEAR; slotIndex++) {
-          handleFromChange(gearPiece.id, slotIndex, state.value.gear[gearPiece.id][slotIndex].from, false) // Don't auto-set 'to' when loading/fixing
+          if (Object.prototype.hasOwnProperty.call(state.value.gear[gearPiece.id], slotIndex)) {
+            handleFromChange(gearPiece.id, slotIndex, state.value.gear[gearPiece.id][slotIndex].from, false) // Don't auto-set 'to' when loading/fixing
+          }
         }
       }
 
@@ -182,7 +188,7 @@ export default function useChiefCharmState() {
   const hasAnySelectionOrInventory = computed(() => {
     for (const gearId in state.value.gear) {
       for (let slotIndex = 0; slotIndex < CHARM_SLOTS_PER_GEAR; slotIndex++) {
-        const slotData = state.value.gear[gearId as GearPiece['id']]?.[slotIndex]
+        const slotData = state.value.gear[gearId as GearPiece['id']][slotIndex]
 
         if (slotData == null)
           continue
@@ -208,6 +214,10 @@ export default function useChiefCharmState() {
   }
 
   function handleFromChange(gearId: GearPiece['id'], slotIndex: number, newFromId: string | undefined, autoSetNext = true) {
+    if (!Object.prototype.hasOwnProperty.call(state.value.gear[gearId], slotIndex)) {
+      state.value.gear[gearId][slotIndex] = { from: undefined, to: undefined }
+    }
+
     const currentCharmState = state.value.gear[gearId][slotIndex]
     currentCharmState.from = newFromId
 
@@ -242,6 +252,10 @@ export default function useChiefCharmState() {
   }
 
   function handleToChange(gearId: GearPiece['id'], slotIndex: number, newToId: string | undefined) {
+    if (!Object.prototype.hasOwnProperty.call(state.value.gear[gearId], slotIndex)) {
+      state.value.gear[gearId][slotIndex] = { from: undefined, to: undefined }
+    }
+
     state.value.gear[gearId][slotIndex].to = newToId
   }
 
