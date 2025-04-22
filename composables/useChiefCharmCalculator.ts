@@ -133,7 +133,6 @@ export default function useChiefCharmCalculator(state: Ref<CharmCalculatorState>
     hasRemainingCost,
     leftoverInventory,
     remainingCost,
-    renderChiefCharmUpgradeMaterialCosts,
     totalCost,
   }
 }

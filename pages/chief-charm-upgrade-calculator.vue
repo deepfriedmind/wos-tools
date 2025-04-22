@@ -28,7 +28,6 @@ const {
   gearCosts,
   leftoverInventory,
   remainingCost,
-  renderChiefCharmUpgradeMaterialCosts,
   totalCost,
 } = useChiefCharmCalculator(state)
 
