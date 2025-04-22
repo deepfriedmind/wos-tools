@@ -25,20 +25,15 @@ const {
 } = useChiefCharmState()
 
 const {
+  filteredGrandTotalMaterials,
   gearCosts,
+  grandTotalCost,
   leftoverInventory,
   remainingCost,
-  totalCost,
 } = useChiefCharmCalculator(state)
 
 const gearPieces = GEAR_PIECES
 const charmMaterials = CHARM_MATERIALS
-const filteredTotalMaterials = computed(() => {
-  if (!totalCost.value)
-    return []
-
-  return charmMaterials.filter(mat => totalCost.value[mat.key] > 0)
-})
 </script>
 
 <template>
@@ -114,19 +109,51 @@ const filteredTotalMaterials = computed(() => {
                 />
               </div>
               <div
-                v-if="Object.values(gearCosts[gearPiece.id]?.total || {}).some(v => v > 0)"
-                class="mt-4 space-y-2 text-sm"
+                v-for="slotIndex in CHARM_SLOTS_PER_GEAR"
+                :key="`cost-${slotIndex}`"
+                class="mt-2"
               >
-                <h5 class="font-bold">
-                  Upgrade cost:
-                </h5>
-                <p>{{ renderChiefCharmUpgradeMaterialCosts(charmMaterials, gearCosts[gearPiece.id].total) }}</p>
-              </div>
-              <div
-                v-else-if="state.gear[gearPiece.id] && Object.values(state.gear[gearPiece.id]).some(sel => sel.from && sel.to)"
-                class="mt-4 text-sm italic text-primary"
-              >
-                Select valid 'From' and 'To' levels to see costs.
+                <div v-if="Object.values(gearCosts[gearPiece.id]?.slotCosts?.[slotIndex - 1]?.total || {}).some(v => v > 0)">
+                  <h5 class="mb-1 text-sm font-bold">
+                    Upgrade cost (Slot {{ slotIndex }}):
+                  </h5>
+                  <p class="mb-2">
+                    {{ renderChiefCharmUpgradeMaterialCosts(charmMaterials, gearCosts[gearPiece.id].slotCosts[slotIndex - 1].total) }}
+                  </p>
+                  <Panel
+                    toggleable
+                    class="mb-2"
+                  >
+                    <template #header>
+                      <span>Step breakdown</span>
+                    </template>
+                    <div
+                      v-if="gearCosts[gearPiece.id].slotCosts[slotIndex - 1].steps.length > 0"
+                      class="space-y-1"
+                    >
+                      <div
+                        v-for="(step, stepIndex) in gearCosts[gearPiece.id].slotCosts[slotIndex - 1].steps"
+                        :key="stepIndex"
+                        class="flex items-center gap-2"
+                      >
+                        <span class="text-xs text-gray-400">{{ step.level.label }}</span>
+                        <span class="text-xs">{{ renderChiefCharmUpgradeMaterialCosts(charmMaterials, step.cumulativeCost) }}</span>
+                      </div>
+                    </div>
+                    <div
+                      v-else
+                      class="text-xs text-primary"
+                    >
+                      No steps (select valid levels)
+                    </div>
+                  </Panel>
+                </div>
+                <div
+                  v-else-if="state.gear[gearPiece.id]?.[slotIndex - 1]?.from && state.gear[gearPiece.id]?.[slotIndex - 1]?.to"
+                  class="text-sm italic text-primary"
+                >
+                  Select valid 'From' and 'To' levels to see costs.
+                </div>
               </div>
             </div>
           </template>
@@ -179,14 +206,14 @@ const filteredTotalMaterials = computed(() => {
 
               <!-- Remaining Cost Display -->
               <div
-                v-if="hasAnySelectionOrInventory && filteredTotalMaterials.length > 0"
+                v-if="hasAnySelectionOrInventory && filteredGrandTotalMaterials.length > 0"
                 class="inline-grid grid-cols-[auto,auto,auto] items-center gap-x-3 gap-y-1.5"
               >
                 <template
                   v-for="mat in charmMaterials"
                   :key="`rem-${mat.key}`"
                 >
-                  <template v-if="totalCost && (totalCost[mat.key] > 0 || state.inventory[mat.key] > 0)">
+                  <template v-if="grandTotalCost && (grandTotalCost[mat.key] > 0 || state.inventory[mat.key] > 0)">
                     <Icon
                       :name="mat.icon"
                       size="20"
@@ -231,11 +258,11 @@ const filteredTotalMaterials = computed(() => {
               class="mt-2"
             >
               <div
-                v-if="filteredTotalMaterials.length > 0"
+                v-if="filteredGrandTotalMaterials.length > 0"
                 class="inline-grid grid-cols-[repeat(3,auto)] items-center gap-x-3 gap-y-1.5 text-lg"
               >
                 <template
-                  v-for="material in filteredTotalMaterials"
+                  v-for="material in filteredGrandTotalMaterials"
                   :key="material.key"
                 >
                   <Icon
@@ -245,9 +272,9 @@ const filteredTotalMaterials = computed(() => {
                   />
                   <span class="font-medium">{{ material.label }}:</span>
                   <span
-                    v-if="totalCost"
+                    v-if="grandTotalCost"
                     class="text-right font-bold tabular-nums"
-                  >{{ formatNumber(totalCost[material.key]) }}</span>
+                  >{{ formatNumber(grandTotalCost[material.key]) }}</span>
                 </template>
               </div>
               <div

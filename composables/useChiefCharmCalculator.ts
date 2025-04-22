@@ -1,4 +1,5 @@
-import type { CharmCalculatorState, CharmMaterialKey, CharmUpgradeCost } from '~/types/chief-charm'
+import type { CharmCalculatorState, CharmMaterialKey, CharmUpgradeCost, CharmUpgradeLevel } from '~/types/chief-charm'
+import type { GearPiece } from '~/types/chief-gear'
 
 /**
  * Returns a string for Chief Charm upgrade material costs with comma separation, omitting zero values.
@@ -17,122 +18,113 @@ export function renderChiefCharmUpgradeMaterialCosts(
 }
 
 export default function useChiefCharmCalculator(state: Ref<CharmCalculatorState>) {
-  const totalCost = computed<CharmUpgradeCost>(() => {
-    const cost: CharmUpgradeCost = {
-      charmDesign: 0,
-      charmGuide: 0,
-      charmSecret: 0,
-    }
-    for (const gearId of Object.keys(state.value.gear) as Array<keyof typeof state.value.gear>) {
-      for (let slotIndex = 0; slotIndex < CHARM_SLOTS_PER_GEAR; slotIndex++) {
-        const gearPiece = state.value.gear[gearId]
-
-        if (gearPiece === undefined)
-          continue
-        const selection = gearPiece[slotIndex]
-
-        if (
-          selection === undefined
-          || selection.from === undefined || selection.from === ''
-          || selection.to === undefined || selection.to === ''
-        ) {
-          continue
-        }
-
-        const fromLevel = CHARM_UPGRADE_LEVEL_MAP.get(selection.from)
-        const toLevel = CHARM_UPGRADE_LEVEL_MAP.get(selection.to)
-
-        if (!fromLevel || !toLevel)
-          continue
-
-        if (toLevel.index > fromLevel.index) {
-          for (let index = fromLevel.index + 1; index <= toLevel.index; index++) {
-            const levelData = CHARM_UPGRADE_DATA[index]
-
-            if (levelData === undefined)
-              continue
-            cost.charmDesign += levelData.cost.charmDesign
-            cost.charmGuide += levelData.cost.charmGuide
-            cost.charmSecret += levelData.cost.charmSecret
-          }
-        }
-      }
-    }
-
-    return cost
-  })
-
   const gearCosts = computed(() => {
-    const costs: Record<string, { total: CharmUpgradeCost }> = {}
-    for (const gearId of Object.keys(state.value.gear) as Array<keyof typeof state.value.gear>) {
-      const total: CharmUpgradeCost = { charmDesign: 0, charmGuide: 0, charmSecret: 0 }
+    const costs: Record<GearPiece['id'], { slotCosts: Record<number, { steps: { cumulativeCost: CharmUpgradeCost, level: CharmUpgradeLevel }[], total: CharmUpgradeCost }>, total: CharmUpgradeCost }> = {} as Record<GearPiece['id'], { slotCosts: Record<number, { steps: { cumulativeCost: CharmUpgradeCost, level: CharmUpgradeLevel }[], total: CharmUpgradeCost }>, total: CharmUpgradeCost }>
+    for (const gearId of Object.keys(state.value.gear) as GearPiece['id'][]) {
+      const gearPieceData = state.value.gear[gearId]
+      const slotCosts: Record<number, { steps: { cumulativeCost: CharmUpgradeCost, level: CharmUpgradeLevel }[], total: CharmUpgradeCost }> = {}
+      const gearTotal: CharmUpgradeCost = { charmDesign: 0, charmGuide: 0, charmSecret: 0 }
       for (let slotIndex = 0; slotIndex < CHARM_SLOTS_PER_GEAR; slotIndex++) {
-        const selection = state.value.gear[gearId][slotIndex]
-
-        if (
-          selection === undefined
-          || selection.from === undefined || selection.from === ''
-          || selection.to === undefined || selection.to === ''
-        ) {
-          continue
-        }
-
-        const fromLevel = CHARM_UPGRADE_LEVEL_MAP.get(selection.from)
-        const toLevel = CHARM_UPGRADE_LEVEL_MAP.get(selection.to)
-
-        if (!fromLevel || !toLevel || toLevel.index <= fromLevel.index)
-          continue
-
-        for (let index = fromLevel.index + 1; index <= toLevel.index; index++) {
-          const levelData = CHARM_UPGRADE_DATA[index]
-
-          if (levelData === undefined)
-            continue
-          total.charmDesign += levelData.cost.charmDesign
-          total.charmGuide += levelData.cost.charmGuide
-          total.charmSecret += levelData.cost.charmSecret
-        }
+        const selection = gearPieceData[slotIndex]
+        const calculatedSlotCost = calculateCharmSlotCost(selection?.from, selection?.to)
+        slotCosts[slotIndex] = calculatedSlotCost
+        gearTotal.charmDesign += calculatedSlotCost.total.charmDesign
+        gearTotal.charmGuide += calculatedSlotCost.total.charmGuide
+        gearTotal.charmSecret += calculatedSlotCost.total.charmSecret
       }
 
-      costs[gearId] = { total }
+      costs[gearId] = { slotCosts, total: gearTotal }
     }
 
     return costs
   })
 
-  const remainingCost = computed<CharmUpgradeCost>(() => {
-    const remaining: CharmUpgradeCost = {
-      charmDesign: 0,
-      charmGuide: 0,
-      charmSecret: 0,
+  const grandTotalCost = computed(() => {
+    const total: CharmUpgradeCost = { charmDesign: 0, charmGuide: 0, charmSecret: 0 }
+    for (const gearId of Object.keys(gearCosts.value) as GearPiece['id'][]) {
+      const gearData = gearCosts.value[gearId]
+      total.charmDesign += gearData.total.charmDesign
+      total.charmGuide += gearData.total.charmGuide
+      total.charmSecret += gearData.total.charmSecret
     }
-    for (const materialKey of Object.keys(totalCost.value) as CharmMaterialKey[]) {
-      const needed = totalCost.value[materialKey]
-      const owned = state.value.inventory[materialKey] ?? 0
+
+    return total
+  })
+
+  const filteredGrandTotalMaterials = computed(() => CHARM_MATERIALS.filter(({ key }) => grandTotalCost.value[key] > 0))
+
+  const remainingCost = computed(() => {
+    const remaining: CharmUpgradeCost = { charmDesign: 0, charmGuide: 0, charmSecret: 0 }
+    for (const materialKey of Object.keys(grandTotalCost.value) as CharmMaterialKey[]) {
+      const needed = grandTotalCost.value[materialKey]
+      const owned = state.value.inventory[materialKey] === undefined ? 0 : state.value.inventory[materialKey]
       remaining[materialKey] = Math.max(0, needed - owned)
     }
 
     return remaining
   })
 
-  const leftoverInventory = computed<CharmUpgradeCost>(() => {
+  const leftoverInventory = computed(() => {
     const leftover: CharmUpgradeCost = { charmDesign: 0, charmGuide: 0, charmSecret: 0 }
-    for (const materialKey of Object.keys(totalCost.value) as CharmMaterialKey[]) {
-      const owned = state.value.inventory[materialKey] ?? 0
-      const needed = totalCost.value[materialKey] ?? 0
+    for (const materialKey of Object.keys(grandTotalCost.value) as CharmMaterialKey[]) {
+      const owned = state.value.inventory[materialKey] === undefined ? 0 : state.value.inventory[materialKey]
+      const needed = grandTotalCost.value[materialKey] === undefined ? 0 : grandTotalCost.value[materialKey]
       leftover[materialKey] = Math.max(0, owned - needed)
     }
 
     return leftover
   })
 
-  const hasRemainingCost = computed(() => Object.values(remainingCost.value).some(cost => cost > 0))
-
   return {
+    filteredGrandTotalMaterials,
     gearCosts,
-    hasRemainingCost,
+    grandTotalCost,
     leftoverInventory,
     remainingCost,
-    totalCost,
   }
+}
+
+/**
+ * Calculates the upgrade cost for a single charm slot, including intermediate steps.
+ * @param fromId The starting level ID (e.g., 'level_1') or undefined.
+ * @param toId The target level ID (e.g., 'level_5') or undefined.
+ * @returns An object containing the steps and total cost.
+ */
+function calculateCharmSlotCost(fromId: string | undefined, toId: string | undefined): { steps: { cumulativeCost: CharmUpgradeCost, level: CharmUpgradeLevel }[], total: CharmUpgradeCost } {
+  const result = {
+    steps: [] as { cumulativeCost: CharmUpgradeCost, level: CharmUpgradeLevel }[],
+    total: { charmDesign: 0, charmGuide: 0, charmSecret: 0 } as CharmUpgradeCost,
+  }
+
+  if (fromId === undefined || fromId === '' || toId === undefined || toId === '') {
+    return result
+  }
+
+  const fromLevel = CHARM_UPGRADE_LEVEL_MAP.get(fromId)
+  const toLevel = CHARM_UPGRADE_LEVEL_MAP.get(toId)
+
+  if (fromLevel === undefined || toLevel === undefined || fromLevel.index >= toLevel.index) {
+    return result
+  }
+
+  const cumulativeCost: CharmUpgradeCost = { charmDesign: 0, charmGuide: 0, charmSecret: 0 }
+  for (let index = fromLevel.index + 1; index <= toLevel.index; index++) {
+    const currentLevelData = CHARM_UPGRADE_DATA[index]
+
+    if (currentLevelData === undefined) {
+      continue
+    }
+
+    cumulativeCost.charmDesign += currentLevelData.cost.charmDesign
+    cumulativeCost.charmGuide += currentLevelData.cost.charmGuide
+    cumulativeCost.charmSecret += currentLevelData.cost.charmSecret
+    result.steps.push({
+      cumulativeCost: { ...cumulativeCost },
+      level: currentLevelData,
+    })
+  }
+
+  result.total = { ...cumulativeCost }
+
+  return result
 }
