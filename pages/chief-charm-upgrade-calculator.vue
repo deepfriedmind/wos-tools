@@ -1,8 +1,8 @@
 <script setup lang="ts">
-const PAGE_TITLE = 'Chief Gear Upgrade Calculator'
-const PAGE_DESCRIPTION = 'Calculate the material costs for upgrading Chief Gear'
-const PAGE_ICON = 'game-icons:pirate-coat'
-const PAGE_ICON_COLOR_CLASS = 'bg-gradient-to-tr from-yellow-900 to-yellow-900 via-yellow-700'
+const PAGE_TITLE = 'Chief Charm Upgrade Calculator'
+const PAGE_DESCRIPTION = 'Calculate the material costs for upgrading Chief Charms'
+const PAGE_ICON = 'mdi:star-four-points-outline'
+const PAGE_ICON_COLOR_CLASS = 'text-purple-400'
 
 definePageMeta({
   description: `${PAGE_DESCRIPTION} in Whiteout Survival.`,
@@ -22,15 +22,21 @@ const {
   queryParameters,
   selectOptions,
   state,
-} = useChiefGearState()
+} = useChiefCharmState()
 
 const {
-  filteredGrandTotalMaterials,
-  gearCosts,
-  grandTotalCost,
-  leftoverInventory,
   remainingCost,
-} = useChiefGearCalculator(state)
+  totalCost,
+} = useChiefCharmCalculator(state)
+
+const gearPieces = GEAR_PIECES
+const charmMaterials = CHARM_MATERIALS
+const filteredTotalMaterials = computed(() => {
+  if (!totalCost.value)
+    return []
+
+  return charmMaterials.filter(mat => totalCost.value[mat.key] > 0)
+})
 </script>
 
 <template>
@@ -59,19 +65,19 @@ const {
       <!-- Gear Selection Grid -->
       <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         <Card
-          v-for="gear in GEAR_PIECES"
-          :key="gear.id"
+          v-for="gearPiece in gearPieces"
+          :key="gearPiece.id"
         >
           <template #title>
             <div class="flex items-center gap-2 text-lg font-bold">
               <Icon
-                :name="gear.icon"
+                :name="gearPiece.icon"
                 size="40"
-                :class="gear.iconColorClass"
+                :class="gearPiece.iconColorClass"
               />
-              <h4>{{ gear.name }}</h4>
-              <ToolTip>
-                Increases {{ gear.statsBoost }}
+              <h4>{{ gearPiece.name }} Charms</h4>
+              <ToolTip v-if="gearPiece.charmStatsBoost">
+                Increases {{ gearPiece.charmStatsBoost }}
               </ToolTip>
             </div>
           </template>
@@ -80,67 +86,33 @@ const {
               v-auto-animate
               class="mt-4 space-y-4"
             >
-              <div class="grid gap-x-2 gap-y-4 sm:grid-cols-2 md:max-xl:grid-cols-1">
+              <!-- Loop directly using the constant for clarity -->
+              <div
+                v-for="slotIndex in CHARM_SLOTS_PER_GEAR"
+                :key="slotIndex"
+                class="grid grid-cols-[auto,1fr,auto,1fr] items-center gap-x-2 gap-y-1"
+              >
+                <span class="text-xs text-gray-400">Slot {{ slotIndex }}</span> <!-- Use 1-based index -->
                 <ChiefUpgradeSelect
-                  :model-value="state.gear[gear.id].from"
+                  v-if="state?.gear?.[gearPiece.id]?.[slotIndex - 1]"
+                  :model-value="state.gear[gearPiece.id][slotIndex - 1].from"
                   :options="selectOptions"
-                  grouped-options
-                  label="From"
-                  @change="(value) => handleFromChange(gear.id, value)"
+                  :grouped-options="false"
+                  label="From Lv."
+                  @change="(value: string | undefined) => handleFromChange(gearPiece.id, slotIndex - 1, value)"
                 />
+                <span class="text-gray-400">→</span>
                 <ChiefUpgradeSelect
-                  :disabled="!state.gear[gear.id].from"
-                  :model-value="state.gear[gear.id].to"
-                  :options="getFilteredToOptions(state.gear[gear.id].from)"
-                  grouped-options
-                  label="To"
-                  @change="(value) => handleToChange(gear.id, value)"
+                  v-if="state?.gear?.[gearPiece.id]?.[slotIndex - 1]"
+                  :model-value="state.gear[gearPiece.id][slotIndex - 1].to"
+                  :options="getFilteredToOptions(state.gear[gearPiece.id][slotIndex - 1]?.from)"
+                  :grouped-options="false"
+                  :disabled="!state.gear[gearPiece.id][slotIndex - 1]?.from"
+                  label="To Lv."
+                  @change="(value: string | undefined) => handleToChange(gearPiece.id, slotIndex - 1, value)"
                 />
               </div>
-
-              <!-- Cost Display for this Gear Piece -->
-              <div
-                v-if="gearCosts[gear.id].total.hardenedAlloy > 0 || gearCosts[gear.id].total.polishingSolution > 0 || gearCosts[gear.id].total.designPlans > 0 || gearCosts[gear.id].total.lunarAmber > 0"
-                v-auto-animate
-                class="space-y-2 text-sm"
-              >
-                <!-- Intermediate Steps -->
-                <Panel
-                  v-if="gearCosts[gear.id].steps.length > 1"
-                  toggleable
-                  collapsed
-                  :header="`Show step costs (${gearCosts[gear.id].steps.length}&nbsp;levels)`"
-                  class="mb-4"
-                >
-                  <ol
-                    v-auto-animate
-                    class="max-h-[25vh] list-decimal space-y-1.5 overflow-y-auto pl-6"
-                  >
-                    <li
-                      v-for="step in gearCosts[gear.id].steps"
-                      :key="step.level.id"
-                    >
-                      <span class="block font-bold">To {{ step.level.label }}:</span>
-                      <span v-if="MATERIALS.some(({ key }) => step.level.cost[key] > 0)">
-                        {{ renderMaterialCosts(MATERIALS, step.level.cost) }}
-                      </span>
-                    </li>
-                  </ol>
-                </Panel>
-                <!-- Total for Piece -->
-                <h5 class="font-bold">
-                  Upgrade cost:
-                </h5>
-                <p v-if="MATERIALS.some(({ key }) => gearCosts[gear.id].total[key] > 0)">
-                  {{ renderMaterialCosts(MATERIALS, gearCosts[gear.id].total) }}
-                </p>
-              </div>
-              <div
-                v-else-if="state.gear[gear.id].from && state.gear[gear.id].to"
-                class="mt-4 text-sm italic text-primary"
-              >
-                Select valid 'From' and 'To' levels to see costs.
-              </div>
+              <!-- TODO: Add cost display per slot/piece if needed -->
             </div>
           </template>
         </Card>
@@ -162,7 +134,7 @@ const {
             >
               <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <div
-                  v-for="mat in MATERIALS"
+                  v-for="mat in charmMaterials"
                   :key="`inv-${mat.key}`"
                   class="flex items-center gap-2"
                 >
@@ -190,36 +162,38 @@ const {
                 </div>
               </div>
 
+              <!-- Remaining Cost Display -->
               <div
-                v-if="remainingCost.hasInventory && (grandTotalCost.hardenedAlloy > 0 || grandTotalCost.polishingSolution > 0 || grandTotalCost.designPlans > 0 || grandTotalCost.lunarAmber > 0)"
+                v-if="hasAnySelectionOrInventory && filteredTotalMaterials.length > 0"
                 class="inline-grid grid-cols-[auto,auto,auto] items-center gap-x-3 gap-y-1.5"
               >
                 <template
-                  v-for="mat in MATERIALS"
+                  v-for="mat in charmMaterials"
                   :key="`rem-${mat.key}`"
                 >
-                  <template v-if="grandTotalCost[mat.key] > 0 || state.inventory[mat.key] > 0">
+                  <!-- Check if totalCost has value before accessing -->
+                  <template v-if="totalCost && (totalCost[mat.key] > 0 || state.inventory[mat.key] > 0)">
                     <Icon
                       :name="mat.icon"
                       size="20"
                       :class="mat.iconColorClass"
                     />
                     <span class="font-medium">{{ mat.label }}:</span>
+                    <!-- Check if remainingCost has value before accessing -->
                     <span
+                      v-if="remainingCost"
                       class="text-right font-bold tabular-nums"
                       :class="{
-                        'text-red-500': remainingCost.remaining[mat.key] > 0,
-                        'text-green-500': remainingCost.remaining[mat.key] === 0 && leftoverInventory[mat.key] >= 0,
+                        'text-red-500': remainingCost[mat.key] > 0,
+                        'text-green-500': remainingCost[mat.key] <= 0, // Simplified logic
                       }"
                     >
-                      <template v-if="remainingCost.remaining[mat.key] > 0">
-                        {{ formatNumber(remainingCost.remaining[mat.key]) }} needed
-                      </template>
-                      <template v-else-if="leftoverInventory[mat.key] > 0">
-                        {{ formatNumber(leftoverInventory[mat.key]) }} left over
+                      <template v-if="remainingCost[mat.key] > 0">
+                        {{ formatNumber(remainingCost[mat.key]) }} needed
                       </template>
                       <template v-else>
                         Have enough
+                        <!-- Optionally show leftover: {{ formatNumber(Math.abs(remainingCost[mat.key])) }} left -->
                       </template>
                     </span>
                   </template>
@@ -242,11 +216,11 @@ const {
               class="mt-2"
             >
               <div
-                v-if="filteredGrandTotalMaterials.length > 0"
+                v-if="filteredTotalMaterials.length > 0"
                 class="inline-grid grid-cols-[repeat(3,auto)] items-center gap-x-3 gap-y-1.5 text-lg"
               >
                 <template
-                  v-for="material in filteredGrandTotalMaterials"
+                  v-for="material in filteredTotalMaterials"
                   :key="material.key"
                 >
                   <Icon
@@ -255,19 +229,25 @@ const {
                     :class="material.iconColorClass"
                   />
                   <span class="font-medium">{{ material.label }}:</span>
-                  <span class="text-right font-bold tabular-nums">{{ formatNumber(grandTotalCost[material.key]) }}</span>
+                  <!-- Check if totalCost has value before accessing -->
+                  <span
+                    v-if="totalCost"
+                    class="text-right font-bold tabular-nums"
+                  >{{ formatNumber(totalCost[material.key]) }}</span>
                 </template>
               </div>
               <div
                 v-else
                 class="italic text-primary"
               >
-                Select gear levels to calculate total costs
+                Select charm levels to calculate total costs
               </div>
             </div>
           </template>
         </Card>
       </div>
+
+      <!-- Clear Button -->
       <div class="flex items-center justify-center gap-4">
         <Button
           :disabled="!hasAnySelectionOrInventory"

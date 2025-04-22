@@ -16,11 +16,12 @@ export interface CalculatorState {
 }
 
 export interface GearPiece {
+  charmStatsBoost: string
   icon: string
   iconColorClass: string
   id: keyof CalculatorState['gear']
   name: string
-  stats: string
+  statsBoost: string
 }
 
 export interface GearSelection {
