@@ -122,7 +122,7 @@ const {
                     >
                       <span class="block font-bold">To {{ step.level.label }}:</span>
                       <span v-if="MATERIALS.some(({ key }) => step.level.cost[key] > 0)">
-                        {{ renderMaterialCosts(MATERIALS, step.level.cost) }}
+                        {{ renderChiefGearUpgradeMaterialCosts(MATERIALS, step.level.cost) }}
                       </span>
                     </li>
                   </ol>
@@ -132,7 +132,7 @@ const {
                   Upgrade cost:
                 </h5>
                 <p v-if="MATERIALS.some(({ key }) => gearCosts[gear.id].total[key] > 0)">
-                  {{ renderMaterialCosts(MATERIALS, gearCosts[gear.id].total) }}
+                  {{ renderChiefGearUpgradeMaterialCosts(MATERIALS, gearCosts[gear.id].total) }}
                 </p>
               </div>
               <div

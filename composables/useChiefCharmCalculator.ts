@@ -6,7 +6,7 @@ import type { CharmCalculatorState, CharmMaterialKey, CharmUpgradeCost } from '~
  * @param costRecord Record of material key to number
  * @returns string
  */
-export function renderMaterialCosts(
+export function renderChiefCharmUpgradeMaterialCosts(
   materials: { key: CharmMaterialKey, label: string }[],
   costRecord: Record<CharmMaterialKey, number>,
 ): string {
@@ -133,7 +133,7 @@ export default function useChiefCharmCalculator(state: Ref<CharmCalculatorState>
     hasRemainingCost,
     leftoverInventory,
     remainingCost,
-    renderMaterialCosts,
+    renderChiefCharmUpgradeMaterialCosts,
     totalCost,
   }
 }

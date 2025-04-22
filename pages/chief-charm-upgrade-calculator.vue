@@ -28,7 +28,7 @@ const {
   gearCosts,
   leftoverInventory,
   remainingCost,
-  renderMaterialCosts,
+  renderChiefCharmUpgradeMaterialCosts,
   totalCost,
 } = useChiefCharmCalculator(state)
 
@@ -121,7 +121,7 @@ const filteredTotalMaterials = computed(() => {
                 <h5 class="font-bold">
                   Upgrade cost:
                 </h5>
-                <p>{{ renderMaterialCosts(charmMaterials, gearCosts[gearPiece.id].total) }}</p>
+                <p>{{ renderChiefCharmUpgradeMaterialCosts(charmMaterials, gearCosts[gearPiece.id].total) }}</p>
               </div>
               <div
                 v-else-if="state.gear[gearPiece.id] && Object.values(state.gear[gearPiece.id]).some(sel => sel.from && sel.to)"

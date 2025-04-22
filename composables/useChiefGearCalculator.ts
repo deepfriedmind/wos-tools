@@ -13,7 +13,7 @@ import type {
  * @param costRecord Record of material key to number
  * @returns string
  */
-export function renderMaterialCosts(
+export function renderChiefGearUpgradeMaterialCosts(
   materials: { key: Material, label: string }[],
   costRecord: Record<Material, number>,
 ) {

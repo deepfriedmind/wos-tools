@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { Ref } from 'vue'
 
-import useChiefGearCalculator, { renderMaterialCosts } from './useChiefGearCalculator'
+import useChiefGearCalculator, { renderChiefGearUpgradeMaterialCosts } from './useChiefGearCalculator'
 
 import type { CalculatorState, Material, UpgradeCost } from '~/types/chief-gear'
 
@@ -274,7 +274,7 @@ describe('useChiefGearCalculator', () => {
   })
 })
 
-// --- renderMaterialCosts tests ---
+// --- renderChiefGearUpgradeMaterialCosts tests ---
 
 // Mock formatNumber for deterministic output
 vi.mock('~/utils/formatNumber', () => ({
@@ -288,7 +288,7 @@ const materials = [
   { key: 'polishingSolution' as Material, label: 'Solution' },
 ]
 
-describe('renderMaterialCosts', () => {
+describe('renderChiefGearUpgradeMaterialCosts', () => {
   it('returns formatted string for all nonzero costs', () => {
     const costRecord = {
       designPlans: 100,
@@ -297,7 +297,7 @@ describe('renderMaterialCosts', () => {
       polishingSolution: 400,
     }
 
-    expect(renderMaterialCosts(materials, costRecord)).toBe(
+    expect(renderChiefGearUpgradeMaterialCosts(materials, costRecord)).toBe(
       'Plans: #100#, Alloy: #200#, Amber: #300#, Solution: #400#',
     )
   })
@@ -310,7 +310,7 @@ describe('renderMaterialCosts', () => {
       polishingSolution: 400,
     }
 
-    expect(renderMaterialCosts(materials, costRecord)).toBe(
+    expect(renderChiefGearUpgradeMaterialCosts(materials, costRecord)).toBe(
       'Alloy: #200#, Solution: #400#',
     )
   })
@@ -323,7 +323,7 @@ describe('renderMaterialCosts', () => {
       polishingSolution: 0,
     }
 
-    expect(renderMaterialCosts(materials, costRecord)).toBe('')
+    expect(renderChiefGearUpgradeMaterialCosts(materials, costRecord)).toBe('')
   })
 
   it('returns empty string for empty materials array', () => {
@@ -334,7 +334,7 @@ describe('renderMaterialCosts', () => {
       polishingSolution: 400,
     }
 
-    expect(renderMaterialCosts([], costRecord)).toBe('')
+    expect(renderChiefGearUpgradeMaterialCosts([], costRecord)).toBe('')
   })
 
   it('handles missing keys in costRecord as undefined (treated as NaN > 0 is false)', () => {
@@ -345,7 +345,7 @@ describe('renderMaterialCosts', () => {
       // polishingSolution missing
     } as Record<Material, number>
 
-    expect(renderMaterialCosts(materials, costRecord)).toBe('Plans: #100#')
+    expect(renderChiefGearUpgradeMaterialCosts(materials, costRecord)).toBe('Plans: #100#')
   })
 
   it('handles negative and fractional costs (only > 0 included)', () => {
@@ -356,7 +356,7 @@ describe('renderMaterialCosts', () => {
       polishingSolution: 2.7,
     }
 
-    expect(renderMaterialCosts(materials, costRecord)).toBe(
+    expect(renderChiefGearUpgradeMaterialCosts(materials, costRecord)).toBe(
       'Alloy: #0.5#, Solution: #2.7#',
     )
   })
@@ -364,7 +364,7 @@ describe('renderMaterialCosts', () => {
   it('handles single material', () => {
     const singleMaterial = [{ key: 'designPlans' as Material, label: 'Plans' }]
     const costRecord = { designPlans: 123 } as Record<Material, number>
-    expect(renderMaterialCosts(singleMaterial, costRecord)).toBe('Plans: #123#')
+    expect(renderChiefGearUpgradeMaterialCosts(singleMaterial, costRecord)).toBe('Plans: #123#')
   })
 
   it('handles costRecord with extra keys not in materials', () => {
@@ -377,6 +377,6 @@ describe('renderMaterialCosts', () => {
       polishingSolution: 0,
     }
 
-    expect(renderMaterialCosts(materials, costRecord)).toBe('Plans: #10#')
+    expect(renderChiefGearUpgradeMaterialCosts(materials, costRecord)).toBe('Plans: #10#')
   })
 })
