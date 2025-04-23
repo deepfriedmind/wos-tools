@@ -12,10 +12,11 @@ describe('isEmptyObject', () => {
     expect(isEmptyObject({ key: 'value' })).toBe(false)
   })
 
-  it('should return true for an object with inherited properties but no own properties', () => {
+  it('should throw error for an object with inherited properties but no own properties', () => {
     const parent: Record<string, unknown> = { inherited: 'value' }
     const child = Object.create(parent) as Record<string, unknown>
-    expect(isEmptyObject(child)).toBe(true)
+    expect(() => isEmptyObject(child)).toThrow(Error)
+    expect(() => isEmptyObject(child)).toThrow('isEmptyObject.ts: Expected a plain object, got object')
   })
 
   it('should return true for an object with only a symbol property (symbols are not enumerable by for...in)', () => {
@@ -23,54 +24,47 @@ describe('isEmptyObject', () => {
     expect(isEmptyObject({ [sym]: 'value' })).toBe(true)
   })
 
-  it('should throw TypeError for null input', () => {
+  it('should throw error for null input', () => {
     // @ts-expect-error Testing invalid input
-    expect(() => isEmptyObject(null)).toThrow(TypeError)
+    expect(() => isEmptyObject(null)).toThrow(Error)
     // @ts-expect-error Testing invalid input
-    expect(() => isEmptyObject(null)).toThrow('isEmptyObject.ts: Expected object, got null')
+    expect(() => isEmptyObject(null)).toThrow('isEmptyObject.ts: Expected a plain object, got null')
   })
 
-  it('should throw TypeError for undefined input', () => {
+  it('should throw error for undefined input', () => {
     // @ts-expect-error Testing invalid input
-    expect(() => isEmptyObject()).toThrow(TypeError)
+    expect(() => isEmptyObject(undefined)).toThrow(Error)
     // @ts-expect-error Testing invalid input
-    expect(() => isEmptyObject()).toThrow('isEmptyObject.ts: Expected object, got undefined')
+    expect(() => isEmptyObject(undefined)).toThrow('isEmptyObject.ts: Expected a plain object, got undefined')
+    // @ts-expect-error Testing invalid input
+    expect(() => isEmptyObject()).toThrow('isEmptyObject.ts: Expected a plain object, got undefined')
   })
 
-  it('should throw TypeError for string input', () => {
+  it('should throw error for string input', () => {
     // @ts-expect-error Testing invalid input
-    expect(() => isEmptyObject('string')).toThrow(TypeError)
+    expect(() => isEmptyObject('string')).toThrow(Error)
     // @ts-expect-error Testing invalid input
-    expect(() => isEmptyObject('string')).toThrow('isEmptyObject.ts: Expected object, got string')
+    expect(() => isEmptyObject('string')).toThrow('isEmptyObject.ts: Expected a plain object, got string')
   })
 
-  it('should throw TypeError for number input', () => {
+  it('should throw error for number input', () => {
     // @ts-expect-error Testing invalid input
-    expect(() => isEmptyObject(123)).toThrow(TypeError)
+    expect(() => isEmptyObject(123)).toThrow(Error)
     // @ts-expect-error Testing invalid input
-    expect(() => isEmptyObject(123)).toThrow('isEmptyObject.ts: Expected object, got number')
+    expect(() => isEmptyObject(123)).toThrow('isEmptyObject.ts: Expected a plain object, got number')
   })
 
-  it('should throw TypeError for boolean input', () => {
+  it('should throw error for boolean input', () => {
     // @ts-expect-error Testing invalid input
-    expect(() => isEmptyObject(true)).toThrow(TypeError)
+    expect(() => isEmptyObject(true)).toThrow(Error)
     // @ts-expect-error Testing invalid input
-    expect(() => isEmptyObject(true)).toThrow('isEmptyObject.ts: Expected object, got boolean')
+    expect(() => isEmptyObject(true)).toThrow('isEmptyObject.ts: Expected a plain object, got boolean')
   })
 
-  it('should throw TypeError for function input', () => {
+  it('should throw error for function input', () => {
     // @ts-expect-error Testing invalid input
-    expect(() => isEmptyObject(() => {})).toThrow(TypeError)
+    expect(() => isEmptyObject(() => {})).toThrow(Error)
     // @ts-expect-error Testing invalid input
-    expect(() => isEmptyObject(() => {})).toThrow('isEmptyObject.ts: Expected object, got function')
-  })
-
-  it('should handle arrays (which are objects)', () => {
-    // Empty arrays have no enumerable properties (like indices), only non-enumerable 'length'.
-    // Therefore, isEmptyObject returns true for an empty array.
-    // @ts-expect-error Testing array input against object type
-    expect(isEmptyObject([])).toBe(true) // No enumerable properties
-    // @ts-expect-error Testing array input against object type
-    expect(isEmptyObject([1, 2])).toBe(false) // Has index properties '0', '1' and 'length'
+    expect(() => isEmptyObject(() => {})).toThrow('isEmptyObject.ts: Expected a plain object, got function')
   })
 })

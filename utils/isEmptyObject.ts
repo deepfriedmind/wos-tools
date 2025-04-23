@@ -3,7 +3,7 @@
  *
  * @param object - The object to check for properties
  * @returns `true` if the object has no own enumerable properties, `false` otherwise
- * @throws {TypeError} If the provided value is not an object type or is undefined
+ * @throws {Error} If the provided value is not a plain object or is undefined
  * @example
  * ```ts
  * isEmptyObject({}) // => true
@@ -11,12 +11,7 @@
  * ```
  */
 export default function isEmptyObject(object: Record<string, unknown>) {
-  if (typeof object !== 'object' || object == null) {
-    const type = object === null ? 'null' : typeof object
-    throw new TypeError(
-      `isEmptyObject.ts: Expected object, got ${type}`,
-    )
-  }
+  useInvariant(useIsPlainObject(object), `isEmptyObject.ts: Expected a plain object, got ${object === null ? 'null' : typeof object}`)
 
   for (const property in object) {
     if (Object.hasOwn(object, property)) {
