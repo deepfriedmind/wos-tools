@@ -127,12 +127,8 @@ export default function useChiefGearState() {
   })
 
   watchDebounced(queryParameters, (newParameters) => {
-    // Only replace if the computed params actually differ from the current route query
-    // This prevents unnecessary history entries if only internal state changed but not the params
-    if (JSON.stringify(newParameters.parameters) !== JSON.stringify(route.query)) {
-      // Use void to explicitly ignore the promise returned by router.replace
+    if (!useIsEqual(newParameters.parameters, route.query))
       void router.replace({ query: newParameters.parameters })
-    }
   }, { debounce: 300, deep: true })
 
   // --- Computed Properties for UI ---
