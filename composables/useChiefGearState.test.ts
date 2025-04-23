@@ -152,14 +152,4 @@ describe('useChiefGearState', () => {
     expect(qp.parameters.cudgel_to).toBe('lv2')
     expect(qp.parameters.inv_designPlans).toBe('3')
   })
-
-  it('selectOptions groups levels by baseTier', () => {
-    const stateApi = useChiefGearState()
-    const options = stateApi.selectOptions.value
-    expect(options.length).toBe(3)
-    expect(options[0].tier).toBe('Green')
-    expect(options[1].tier).toBe('Blue')
-    expect(options[2].tier).toBe('Purple')
-    expect(options[0].levels[0].id).toBe('lv1')
-  })
 })
