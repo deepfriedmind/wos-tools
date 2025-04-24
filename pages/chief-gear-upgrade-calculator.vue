@@ -65,9 +65,10 @@ const {
           <template #title>
             <div class="flex items-center gap-2 text-lg font-bold">
               <Icon
+                :aria-label="gear.name"
+                :class="gear.iconColorClass"
                 :name="gear.icon"
                 size="40"
-                :class="gear.iconColorClass"
               />
               <h4>{{ gear.name }}</h4>
               <ToolTip>
@@ -117,12 +118,12 @@ const {
                     class="max-h-[25vh] list-decimal space-y-1.5 overflow-y-auto pl-6"
                   >
                     <li
-                      v-for="step in gearCosts[gear.id].steps"
-                      :key="step.level.id"
+                      v-for="{ level } in gearCosts[gear.id].steps"
+                      :key="level.id"
                     >
-                      <span class="block font-bold">To {{ step.level.label }}:</span>
-                      <span v-if="MATERIALS.some(({ key }) => step.level.cost[key] > 0)">
-                        {{ renderChiefGearUpgradeMaterialCosts(MATERIALS, step.level.cost) }}
+                      <span class="block font-bold">To {{ level.label }}:</span>
+                      <span v-if="MATERIALS.some(({ key }) => level.cost[key] > 0)">
+                        {{ renderChiefGearUpgradeMaterialCosts(MATERIALS, level.cost) }}
                       </span>
                     </li>
                   </ol>
@@ -162,21 +163,22 @@ const {
             >
               <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <div
-                  v-for="mat in MATERIALS"
-                  :key="`inv-${mat.key}`"
+                  v-for="{ key, label, icon, iconColorClass } in MATERIALS"
+                  :key="`inv-${key}`"
                   class="flex items-center gap-2"
                 >
                   <Icon
-                    :name="mat.icon"
+                    :aria-label="label"
+                    :class="iconColorClass"
+                    :name="icon"
                     size="40"
-                    :class="mat.iconColorClass"
                   />
                   <FloatLabel
                     variant="on"
                     class="flex-1"
                   >
                     <InputNumber
-                      v-model="state.inventory[mat.key]"
+                      v-model="state.inventory[key]"
                       :allow-empty="false"
                       :min="0"
                       fluid
@@ -185,7 +187,7 @@ const {
                       show-buttons
                       @focus="mobileScrollIntoView"
                     />
-                    <label class="font-bold tracking-wide">{{ mat.label }}</label>
+                    <label class="font-bold tracking-wide">{{ label }}</label>
                   </FloatLabel>
                 </div>
               </div>
@@ -195,28 +197,29 @@ const {
                 class="inline-grid grid-cols-[auto,auto,auto] items-center gap-x-3 gap-y-1.5"
               >
                 <template
-                  v-for="mat in MATERIALS"
-                  :key="`rem-${mat.key}`"
+                  v-for="{ key, label, icon, iconColorClass } in MATERIALS"
+                  :key="`rem-${key}`"
                 >
-                  <template v-if="grandTotalCost[mat.key] > 0 || state.inventory[mat.key] > 0">
+                  <template v-if="grandTotalCost[key] > 0 || state.inventory[key] > 0">
                     <Icon
-                      :name="mat.icon"
+                      :aria-label="label"
+                      :class="iconColorClass"
+                      :name="icon"
                       size="20"
-                      :class="mat.iconColorClass"
                     />
-                    <span class="font-medium">{{ mat.label }}:</span>
+                    <span class="font-medium">{{ label }}:</span>
                     <span
                       class="text-right font-bold tabular-nums"
                       :class="{
-                        'text-red-500': remainingCost.remaining[mat.key] > 0,
-                        'text-green-500': remainingCost.remaining[mat.key] === 0 && leftoverInventory[mat.key] >= 0,
+                        'text-red-500': remainingCost.remaining[key] > 0,
+                        'text-green-500': remainingCost.remaining[key] === 0 && leftoverInventory[key] >= 0,
                       }"
                     >
-                      <template v-if="remainingCost.remaining[mat.key] > 0">
-                        {{ formatNumber(remainingCost.remaining[mat.key]) }} needed
+                      <template v-if="remainingCost.remaining[key] > 0">
+                        {{ formatNumber(remainingCost.remaining[key]) }} needed
                       </template>
-                      <template v-else-if="leftoverInventory[mat.key] > 0">
-                        {{ formatNumber(leftoverInventory[mat.key]) }} left over
+                      <template v-else-if="leftoverInventory[key] > 0">
+                        {{ formatNumber(leftoverInventory[key]) }} left over
                       </template>
                       <template v-else>
                         Have just enough
@@ -246,16 +249,17 @@ const {
                 class="inline-grid grid-cols-[repeat(3,auto)] items-center gap-x-3 gap-y-1.5 text-lg"
               >
                 <template
-                  v-for="material in filteredGrandTotalMaterials"
-                  :key="material.key"
+                  v-for="{ key, label, icon, iconColorClass } in filteredGrandTotalMaterials"
+                  :key="key"
                 >
                   <Icon
-                    :name="material.icon"
+                    :aria-label="label"
+                    :class="iconColorClass"
+                    :name="icon"
                     size="22"
-                    :class="material.iconColorClass"
                   />
-                  <span class="font-medium">{{ material.label }}:</span>
-                  <span class="text-right font-bold tabular-nums">{{ formatNumber(grandTotalCost[material.key]) }}</span>
+                  <span class="font-medium">{{ label }}:</span>
+                  <span class="text-right font-bold tabular-nums">{{ formatNumber(grandTotalCost[key]) }}</span>
                 </template>
               </div>
               <div
