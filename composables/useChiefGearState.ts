@@ -26,28 +26,10 @@ export default function useChiefGearState() {
     },
   }
 
-  const state = useLocalStorage<CalculatorState>(`${STORAGE_PREFIX}chief-gear-calculator-state`, () => structuredClone(defaultState), {
+  const state = useLocalStorage<CalculatorState>(`${STORAGE_PREFIX}chief-gear-calculator-state`, defaultState, {
     initOnMounted: true,
-    mergeDefaults: (storageValue, defaults) => {
-      // Custom merger to prevent deep merge issues with nested objects if structure changes
-      const merged = structuredClone(defaults)
-
-      if (storageValue != null) {
-        // Merge gear selections
-        for (const key of GEAR_PIECES.map(p => p.id)) {
-          if (storageValue.gear?.[key] != null) {
-            merged.gear[key] = { ...merged.gear[key], ...storageValue.gear[key] }
-          }
-        }
-
-        // Merge inventory
-        if (storageValue.inventory != null) {
-          merged.inventory = { ...merged.inventory, ...storageValue.inventory }
-        }
-      }
-
-      return merged
-    },
+    // Deep merge stored state with current defaults to handle potential structure changes
+    mergeDefaults: (storageValue, defaults) => useToMerged(storageValue, defaults),
   })
 
   const queryParameters = computed(() => {
