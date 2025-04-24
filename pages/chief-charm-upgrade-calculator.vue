@@ -68,9 +68,10 @@ const charmMaterials = CHARM_MATERIALS
           <template #title>
             <div class="flex items-center gap-2 text-lg font-bold">
               <Icon
+                :aria-label="gearPiece.name"
+                :class="gearPiece.iconColorClass"
                 :name="gearPiece.icon"
                 size="40"
-                :class="gearPiece.iconColorClass"
               />
               <h4>{{ gearPiece.name }} Charms</h4>
               <ToolTip v-if="gearPiece.charmStatsBoost">
@@ -175,9 +176,10 @@ const charmMaterials = CHARM_MATERIALS
                   class="flex items-center gap-2"
                 >
                   <Icon
+                    :aria-label="mat.label"
+                    :class="mat.iconColorClass"
                     :name="mat.icon"
                     size="40"
-                    :class="mat.iconColorClass"
                   />
                   <FloatLabel
                     variant="on"
@@ -209,6 +211,7 @@ const charmMaterials = CHARM_MATERIALS
                 >
                   <template v-if="grandTotalCost && (grandTotalCost[mat.key] > 0 || state.inventory[mat.key] > 0)">
                     <Icon
+                      :aria-label="mat.label"
                       :name="mat.icon"
                       size="20"
                       :class="mat.iconColorClass"
@@ -260,9 +263,10 @@ const charmMaterials = CHARM_MATERIALS
                   :key="material.key"
                 >
                   <Icon
+                    :aria-label="material.label"
+                    :class="material.iconColorClass"
                     :name="material.icon"
                     size="22"
-                    :class="material.iconColorClass"
                   />
                   <span class="font-medium">{{ material.label }}:</span>
                   <span
