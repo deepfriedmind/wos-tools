@@ -154,9 +154,8 @@ export default function useChiefCharmState() {
   })
 
   watchDebounced(queryParameters, (newParameters) => {
-    if (JSON.stringify(newParameters.parameters) !== JSON.stringify(route.query)) {
+    if (!useIsEqual(newParameters.parameters, route.query))
       void router.replace({ query: newParameters.parameters })
-    }
   }, { debounce: 300, deep: true })
 
   // --- Computed Properties for UI ---
@@ -166,6 +165,11 @@ export default function useChiefCharmState() {
       id: level.id,
       label: `Lv. ${level.level}`,
     })),
+  )
+
+  const filteredFromOptions = computed(() =>
+    // Don't include the last level in "from" options
+    useInitial(selectOptions.value),
   )
 
   function getFilteredToOptions(fromId: string | undefined) {
@@ -221,8 +225,8 @@ export default function useChiefCharmState() {
     const currentCharmState = state.value.gear[gearId][slotIndex]
     currentCharmState.from = newFromId
 
-    const fromLevel: CharmUpgradeLevel | undefined = (newFromId != null && newFromId !== '') ? CHARM_UPGRADE_LEVEL_MAP.get(newFromId) : undefined
-    const currentToLevel: CharmUpgradeLevel | undefined = (currentCharmState.to != null && currentCharmState.to !== '') ? CHARM_UPGRADE_LEVEL_MAP.get(currentCharmState.to) : undefined
+    const fromLevel = (newFromId != null && newFromId !== '') ? CHARM_UPGRADE_LEVEL_MAP.get(newFromId) : undefined
+    const currentToLevel = (currentCharmState.to != null && currentCharmState.to !== '') ? CHARM_UPGRADE_LEVEL_MAP.get(currentCharmState.to) : undefined
 
     // If 'from' is cleared or invalid, clear 'to'
     if (fromLevel === undefined) {
@@ -231,17 +235,14 @@ export default function useChiefCharmState() {
       return
     }
 
-    // Check if fromLevel exists before accessing index
-    const isNotLastLevel = fromLevel != null && fromLevel.index < CHARM_UPGRADE_DATA.length - 1
-    // Check if fromLevel exists before comparing index
-    const isToInvalid = !currentToLevel || (fromLevel != null && currentToLevel.index <= fromLevel.index)
+    const isNotLastLevel = fromLevel.index < CHARM_UPGRADE_DATA.length - 1
+    const isToInvalid = !currentToLevel || currentToLevel.index <= fromLevel.index
 
-    if (isNotLastLevel && fromLevel != null) { // Ensure fromLevel exists here too
+    if (isNotLastLevel) {
       if (isToInvalid) {
         // If 'to' is invalid or non-existent, set it to the next level (if autoSetNext) or clear it
         const nextLevel = CHARM_UPGRADE_DATA[fromLevel.index + 1]
-        // Ensure nextLevel exists before accessing its id
-        currentCharmState.to = autoSetNext && nextLevel != null ? nextLevel.id : undefined
+        currentCharmState.to = autoSetNext ? nextLevel.id : undefined
       }
       // If 'to' is valid and greater than 'from', keep it.
     }
@@ -261,6 +262,7 @@ export default function useChiefCharmState() {
 
   return {
     clearAll,
+    filteredFromOptions,
     getFilteredToOptions,
     handleFromChange,
     handleToChange,

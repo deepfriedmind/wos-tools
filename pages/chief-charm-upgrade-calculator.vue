@@ -15,12 +15,12 @@ const { mobileScrollIntoView } = useMobileScrollIntoView()
 
 const {
   clearAll,
+  filteredFromOptions,
   getFilteredToOptions,
   handleFromChange,
   handleToChange,
   hasAnySelectionOrInventory,
   queryParameters,
-  selectOptions,
   state,
 } = useChiefCharmState()
 
@@ -93,7 +93,7 @@ const charmMaterials = CHARM_MATERIALS
                   <ChiefUpgradeSelect
                     v-if="state?.gear?.[gearPiece.id]?.[slotIndex - 1]"
                     :model-value="state.gear[gearPiece.id][slotIndex - 1].from"
-                    :options="selectOptions"
+                    :options="filteredFromOptions"
                     :grouped-options="false"
                     label="From Lv."
                     @change="(value: string | undefined) => handleFromChange(gearPiece.id, slotIndex - 1, value)"
