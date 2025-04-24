@@ -214,7 +214,16 @@ export default function useChiefCharmState() {
   // --- Methods ---
 
   function clearAll() {
-    state.value = structuredClone(defaultState)
+    const { value: { gear, inventory } } = state
+    for (const materialKey of Object.keys(defaultInventoryState) as CharmMaterialKey[]) {
+      inventory[materialKey] = defaultInventoryState[materialKey]
+    }
+
+    for (const { id } of GEAR_PIECES) {
+      for (let slotIndex = 0; slotIndex < CHARM_SLOTS_PER_GEAR; slotIndex++) {
+        gear[id][slotIndex] = { from: undefined, to: undefined }
+      }
+    }
   }
 
   function handleFromChange(gearId: GearPiece['id'], slotIndex: number, newFromId: string | undefined, autoSetNext = true) {
