@@ -80,38 +80,36 @@ const charmMaterials = CHARM_MATERIALS
             </div>
           </template>
           <template #content>
-            <div
-              v-auto-animate
-              class="mt-4 space-y-4"
-            >
+            <div class="mt-4 space-y-4">
               <div
                 v-for="slotIndex in CHARM_SLOTS_PER_GEAR"
                 :key="slotIndex"
+                v-auto-animate
                 class="space-y-2"
               >
-                <div class="grid grid-cols-[auto,1fr,auto,1fr] items-center gap-x-2 gap-y-1">
-                  <span class="text-xs text-gray-400">Slot {{ slotIndex }}</span>
+                <div class="grid grid-cols-[auto,1fr,1fr] items-center gap-x-2 gap-y-1">
+                  <span class="text-xs text-primary">Slot {{ slotIndex }}</span>
                   <ChiefUpgradeSelect
                     v-if="state?.gear?.[gearPiece.id]?.[slotIndex - 1]"
                     :model-value="state.gear[gearPiece.id][slotIndex - 1].from"
                     :options="filteredFromOptions"
                     :grouped-options="false"
-                    label="From Lv."
+                    label="From"
                     @change="(value: string | undefined) => handleFromChange(gearPiece.id, slotIndex - 1, value)"
                   />
-                  <span class="text-gray-400">→</span>
                   <ChiefUpgradeSelect
                     v-if="state?.gear?.[gearPiece.id]?.[slotIndex - 1]"
                     :model-value="state.gear[gearPiece.id][slotIndex - 1].to"
                     :options="getFilteredToOptions(state.gear[gearPiece.id][slotIndex - 1]?.from)"
                     :grouped-options="false"
                     :disabled="!state.gear[gearPiece.id][slotIndex - 1]?.from"
-                    label="To Lv."
+                    label="To"
                     @change="(value: string | undefined) => handleToChange(gearPiece.id, slotIndex - 1, value)"
                   />
                 </div>
                 <div
                   v-if="Object.values(gearCosts[gearPiece.id]?.slotCosts?.[slotIndex - 1]?.total || {}).some(v => v > 0)"
+                  v-auto-animate
                   class="space-y-2 text-sm"
                 >
                   <Panel
@@ -232,7 +230,7 @@ const charmMaterials = CHARM_MATERIALS
                         {{ formatNumber(leftoverInventory[mat.key]) }} left over
                       </template>
                       <template v-else>
-                        Have enough
+                        Have just enough
                       </template>
                     </span>
                   </template>
