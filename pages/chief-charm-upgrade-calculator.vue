@@ -200,8 +200,8 @@ const charmMaterials = CHARM_MATERIALS
 
               <!-- Remaining Cost Display -->
               <div
-                v-if="hasAnySelectionOrInventory && filteredGrandTotalMaterials.length > 0"
-                class="inline-grid grid-cols-[auto,auto,auto] items-center gap-x-3 gap-y-1.5"
+                v-if="filteredGrandTotalMaterials.length > 0 && Object.values(state.inventory).some(value => value > 0)"
+                class="inline-grid grid-cols-[repeat(3,auto)] items-center gap-x-3 gap-y-1.5"
               >
                 <template
                   v-for="mat in charmMaterials"
