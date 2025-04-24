@@ -2,7 +2,6 @@ import type {
   CharmCalculatorState,
   CharmMaterialInfo,
   CharmMaterialKey,
-  CharmSelection,
   CharmUpgradeLevel,
 } from '~/types/chief-charm'
 import type { GearPiece } from '~/types/chief-gear'
@@ -12,12 +11,11 @@ export default function useChiefCharmState() {
   const router = useRouter()
   const STORAGE_PREFIX = useRuntimeConfig().public.storagePrefix
 
-  // Dynamically create default state based on GEAR_PIECES and CHARM_SLOTS_PER_GEAR
   const defaultGearState = Object.fromEntries(
-    GEAR_PIECES.map((gearPiece: GearPiece) => [
+    GEAR_PIECES.map(gearPiece => [
       gearPiece.id,
       Object.fromEntries(
-        useRange(0, CHARM_SLOTS_PER_GEAR - 1).map((slotIndex: number): [number, CharmSelection] => [
+        useRange(0, CHARM_SLOTS_PER_GEAR).map(slotIndex => [
           slotIndex,
           { from: undefined, to: undefined },
         ]),
@@ -36,35 +34,10 @@ export default function useChiefCharmState() {
     inventory: defaultInventoryState,
   }
 
-  const state = useLocalStorage<CharmCalculatorState>(`${STORAGE_PREFIX}chief-charm-calculator-state`, () => structuredClone(defaultState), {
+  const state = useLocalStorage<CharmCalculatorState>(`${STORAGE_PREFIX}chief-charm-calculator-state`, defaultState, {
     initOnMounted: true,
-    mergeDefaults: (storageValue, defaults) => {
-      // Custom merger to prevent deep merge issues with nested objects
-      const merged = structuredClone(defaults)
-
-      if (storageValue != null) {
-        // Merge gear selections
-        for (const gearId of GEAR_PIECES.map(p => p.id)) {
-          if (storageValue.gear?.[gearId] != null) {
-            for (let slotIndex = 0; slotIndex < CHARM_SLOTS_PER_GEAR; slotIndex++) {
-              if (Object.prototype.hasOwnProperty.call(storageValue.gear[gearId], slotIndex)) {
-                merged.gear[gearId][slotIndex] = {
-                  ...merged.gear[gearId][slotIndex],
-                  ...storageValue.gear[gearId][slotIndex],
-                }
-              }
-            }
-          }
-        }
-
-        // Merge inventory
-        if (storageValue.inventory != null) {
-          merged.inventory = { ...merged.inventory, ...storageValue.inventory }
-        }
-      }
-
-      return merged
-    },
+    // Deep merge stored state with current defaults to handle potential structure changes
+    mergeDefaults: (storageValue, defaults) => useToMerged(storageValue, defaults),
   })
 
   const queryParameters = computed(() => {
@@ -212,16 +185,7 @@ export default function useChiefCharmState() {
   // --- Methods ---
 
   function clearAll() {
-    const { value: { gear, inventory } } = state
-    for (const materialKey of Object.keys(defaultInventoryState) as CharmMaterialKey[]) {
-      inventory[materialKey] = defaultInventoryState[materialKey]
-    }
-
-    for (const { id } of GEAR_PIECES) {
-      for (let slotIndex = 0; slotIndex < CHARM_SLOTS_PER_GEAR; slotIndex++) {
-        gear[id][slotIndex] = { from: undefined, to: undefined }
-      }
-    }
+    state.value = structuredClone(defaultState)
   }
 
   function handleFromChange(gearId: GearPiece['id'], slotIndex: number, newFromId: string | undefined, autoSetNext = true) {
