@@ -23,7 +23,7 @@ export default function useChiefCharmState() {
         ]),
       ),
     ]),
-  ) as CharmCalculatorState['gear'] // Assert type here
+  ) as CharmCalculatorState['gear']
 
   const defaultInventoryState: Record<CharmMaterialKey, number> = {
     charmDesign: 0,
@@ -160,28 +160,26 @@ export default function useChiefCharmState() {
 
   // --- Computed Properties for UI ---
 
-  const selectOptions = computed(() =>
-    CHARM_UPGRADE_DATA.map((level: CharmUpgradeLevel) => ({
-      id: level.id,
-      label: `Lv. ${level.level}`,
-    })),
-  )
+  const selectOptions = (() => CHARM_UPGRADE_DATA.map((level: CharmUpgradeLevel) => ({
+    id: level.id,
+    label: `Lv. ${level.level}`,
+  })))()
 
   const filteredFromOptions = computed(() =>
-    // Don't include the last level in "from" options
-    useInitial(selectOptions.value),
+    // Don't include the last level in "From" options
+    useInitial(selectOptions),
   )
 
   function getFilteredToOptions(fromId: string | undefined) {
     if (fromId === undefined || fromId === '')
-      return selectOptions.value // Return all if no 'from' selected
+      return selectOptions // Return all if no 'From' selected
 
     const fromLevel: CharmUpgradeLevel | undefined = CHARM_UPGRADE_LEVEL_MAP.get(fromId)
 
     if (fromLevel === undefined)
-      return selectOptions.value
+      return selectOptions
 
-    return selectOptions.value.filter((levelOption: { id: string, label: string }) => {
+    return selectOptions.filter((levelOption: { id: string, label: string }) => {
       const levelData: CharmUpgradeLevel | undefined = CHARM_UPGRADE_LEVEL_MAP.get(levelOption.id)
 
       // Ensure both fromLevel and levelData exist before comparing index
