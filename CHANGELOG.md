@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.2] - 2025-04-29
+
+### ✨ Features
+
+- *(chief-charm-upgrade-calculator)* Add chief charm upgrade calculator (#4)
+- *(config)* Add `@nuxtjs/robots` and `@nuxtjs/sitemap` modules
+- *(vscode)* Add ESLint plugin command snippets
+
+### 📚 Documentation
+
+- Update llm docs
+- Add es-toolkit docs
+
+### 🔧 Miscellaneous Tasks
+
+- *(vscode)* Remove unnecessary file exclusions from settings
+- *(release)* Remove GitHub user links from CHANGELOG generation
+
 ## [1.3.1] - 2025-04-21
 
 ### ✨ Features
@@ -27,6 +45,7 @@ All notable changes to this project will be documented in this file.
 - *(roomodes)* Add Boomerang Mode with detailed role instructions
 - Add git-cliff config and release script
 - Update release script for improved dependency checks
+- *(release)* 1.3.1
 
 ## [1.3.0] - 2025-04-21
 
@@ -132,7 +151,7 @@ All notable changes to this project will be documented in this file.
 - *(bear-hunt-rally-calculator)* Clear toast groups before displaying new facts
 - *(gathering-amount-calculator)* Adjust image height for better layout
 - *(useResetCountdown)* Update debug countdown to use specified time
-- Update package references from [@primevue](https://github.com/primevue)/themes to [@primeuix](https://github.com/primeuix)/themes
+- Update package references from @primevue/themes to @primeuix/themes
 - *(gathering-amount-calculator)* Improve accessibility and clarity in UI elements
 - *(gathering-amount-calculator)* Fix hydration mismatch
 - *(bear-hunt-rally-calculator)* Update CopyButton implementation for better accessibility
@@ -215,7 +234,7 @@ All notable changes to this project will be documented in this file.
 - Update ESLint configuration and dependencies
 - Add `type-check` script to `package.json`
 - Add Tailwind CSS configuration and integrate PrimeVue theme
-- Add `[@nuxt](https://github.com/nuxt)/fonts` dependency and update `app.vue` layout
+- Add `@nuxt/fonts` dependency and update `app.vue` layout
 - Add `Logo` component and update `app.vue` layout
 - Update ESLint configuration to enable stylistic rules
 - Update ESLint and Tailwind CSS configurations
