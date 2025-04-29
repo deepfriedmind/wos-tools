@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - *(chief-charm-upgrade-calculator)* Add chief charm upgrade calculator (#4)
 - *(config)* Add `@nuxtjs/robots` and `@nuxtjs/sitemap` modules
 - *(vscode)* Add ESLint plugin command snippets
+- *(google-verification)* Add Google site verification file
 
 ### 📚 Documentation
 
@@ -18,7 +19,8 @@ All notable changes to this project will be documented in this file.
 ### 🔧 Miscellaneous Tasks
 
 - *(vscode)* Remove unnecessary file exclusions from settings
-- *(release)* Remove GitHub user links from CHANGELOG generation
+- *(release-script)* Remove GitHub user links from CHANGELOG generation
+- *(release)* 1.3.2
 
 ## [1.3.1] - 2025-04-21
 
