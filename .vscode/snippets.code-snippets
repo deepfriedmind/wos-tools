@@ -1,0 +1,14 @@
+{
+  "ESLint Plugin Command": {
+    "scope": "javascript,typescript,javascriptreact,typescriptreact",
+    "prefix": "///",
+    "body": "/// ${1|hoist-regexp,inline-arrow,keep-aligned,keep-sorted,keep-unique,no-shorthand,no-type,to-arrow,to-destructuring,to-dynamic-import,to-for-each,to-for-of,to-function,to-one-line,to-promise-all,to-string-literal,to-template-literal,to-ternary|}",
+    "description": "ESLint plugin command"
+  },
+  "ESLint Plugin Command @keep-sorted by keys": {
+    "scope": "javascript,typescript,javascriptreact,typescriptreact",
+    "prefix": "/// keep-sorted",
+    "body": "/// keep-sorted { \"keys\": [\"$1\"] }",
+    "description": "ESLint plugin command @keep-sorted by keys"
+  },
+}
