@@ -5,12 +5,15 @@ import rem from './utils/rem'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  /// keep-sorted
   modules: [
     '@formkit/auto-animate/nuxt',
     '@nuxt/eslint',
     '@nuxt/fonts',
     '@nuxt/icon',
     '@nuxt/test-utils/module',
+    '@nuxtjs/robots',
+    '@nuxtjs/sitemap',
     '@nuxtjs/tailwindcss',
     '@pinia/nuxt',
     '@primevue/nuxt-module',
