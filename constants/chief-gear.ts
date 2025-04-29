@@ -1,12 +1,12 @@
 import type { GearPiece, MaterialInfo, UpgradeLevel } from '~/types/chief-gear'
 
 export const GEAR_PIECES: GearPiece[] = [
-  { icon: 'game-icons:winter-hat', iconColorClass: 'bg-gradient-to-t from-indigo-100 to-indigo-100 via-indigo-500', id: 'hat', name: 'Winter Hat', stats: 'lancer attack/defense' },
-  { icon: 'game-icons:pirate-coat', iconColorClass: 'bg-gradient-to-tr from-yellow-900 to-yellow-900 via-yellow-700', id: 'coat', name: "Valor's Embrace", stats: 'infantry attack/defense' },
-  { icon: 'game-icons:ring', iconColorClass: 'bg-gradient-to-t from-amber-600 via-amber-200 to-amber-400', id: 'ring', name: 'Ring of Resilience', stats: 'marksman attack/defense' },
-  { icon: 'game-icons:pocket-watch', iconColorClass: 'bg-gradient-to-t from-zinc-500 to-zinc-500 via-zinc-300', id: 'watch', name: 'Durable Watch', stats: 'lancer attack/defense' },
-  { icon: 'game-icons:armored-pants', iconColorClass: 'bg-gradient-to-t from-sky-800 via-sky-600 to-sky-700', id: 'pants', name: 'Explorer Pants', stats: 'infantry attack/defense' },
-  { icon: 'game-icons:wood-club', iconColorClass: 'bg-gradient-to-tr from-yellow-700 to-yellow-900 via-yellow-600', id: 'cudgel', name: 'Cudgel', stats: 'marksman attack/defense' },
+  { charmStatsBoost: 'lancer lethality/health', icon: 'game-icons:winter-hat', iconColorClass: 'bg-gradient-to-t from-indigo-100 to-indigo-100 via-indigo-500', id: 'hat', name: 'Winter Hat', statsBoost: 'lancer attack/defense' },
+  { charmStatsBoost: 'infantry lethality/health', icon: 'game-icons:pirate-coat', iconColorClass: 'bg-gradient-to-tr from-yellow-900 to-yellow-900 via-yellow-700', id: 'coat', name: "Valor's Embrace", statsBoost: 'infantry attack/defense' },
+  { charmStatsBoost: 'marksman lethality/health', icon: 'game-icons:ring', iconColorClass: 'bg-gradient-to-t from-amber-600 via-amber-200 to-amber-400', id: 'ring', name: 'Ring of Resilience', statsBoost: 'marksman attack/defense' },
+  { charmStatsBoost: 'lancer lethality/health', icon: 'game-icons:pocket-watch', iconColorClass: 'bg-gradient-to-t from-zinc-500 to-zinc-500 via-zinc-300', id: 'watch', name: 'Durable Watch', statsBoost: 'lancer attack/defense' },
+  { charmStatsBoost: 'infantry lethality/health', icon: 'game-icons:armored-pants', iconColorClass: 'bg-gradient-to-t from-sky-800 via-sky-600 to-sky-700', id: 'pants', name: 'Explorer Pants', statsBoost: 'infantry attack/defense' },
+  { charmStatsBoost: 'marksman lethality/health', icon: 'game-icons:wood-club', iconColorClass: 'bg-gradient-to-tr from-yellow-700 to-yellow-900 via-yellow-600', id: 'cudgel', name: 'Cudgel', statsBoost: 'marksman attack/defense' },
 ] as const
 
 export const MATERIALS: MaterialInfo[] = [

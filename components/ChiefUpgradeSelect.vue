@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import type { SelectProps } from 'primevue/select'
 
-interface GearLevelSelectOption {
+interface LevelGroupOption {
   levels: { id: string, label: string }[]
   tier: string
 }
 
+type SelectOption = LevelGroupOption | { id: string, label: string }
+
 defineProps<Pick<SelectProps, 'disabled' | 'modelValue'> & {
+  groupedOptions: boolean
   label: string
-  options: GearLevelSelectOption[]
+  options: SelectOption[] | { id: string, label: string }[]
 }>()
 
 const emit = defineEmits<{
@@ -27,17 +30,20 @@ function onChange(event: { value: string | undefined }) {
       :model-value="modelValue"
       :options="options"
       :pt="{ optionLabel: { class: 'tabular-nums' } }"
-      :scroll-height="rem(600)"
+      :scroll-height="rem(636)"
       fluid
-      option-group-children="levels"
-      option-group-label="tier"
+      :option-group-children="groupedOptions ? 'levels' : undefined"
+      :option-group-label="groupedOptions ? 'tier' : undefined"
       option-label="label"
       option-value="id"
       show-clear
       size="small"
       @change="onChange"
     >
-      <template #optiongroup="slotProps">
+      <template
+        v-if="groupedOptions"
+        #optiongroup="slotProps"
+      >
         <div
           class="py-2 text-lg font-bold uppercase tracking-widest"
           :class="[TIER_COLOR_CLASSES[slotProps.option.tier] || '']"

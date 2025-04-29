@@ -13,7 +13,7 @@ import type {
  * @param costRecord Record of material key to number
  * @returns string
  */
-export function renderMaterialCosts(
+export function renderChiefGearUpgradeMaterialCosts(
   materials: { key: Material, label: string }[],
   costRecord: Record<Material, number>,
 ) {
@@ -47,12 +47,11 @@ export default function useChiefGearCalculator(state: Ref<CalculatorState>) {
   const filteredGrandTotalMaterials = computed(() => MATERIALS.filter(({ key }) => grandTotalCost.value[key] > 0))
 
   const remainingCost = computed(() => {
-    const remaining: UpgradeCost = { designPlans: 0, hardenedAlloy: 0, lunarAmber: 0, polishingSolution: 0 }
-    for (const mat of MATERIALS) {
-      const needed = grandTotalCost.value[mat.key]
-      const owned = state.value.inventory[mat.key] || 0
-      remaining[mat.key] = Math.max(0, needed - owned)
-    }
+    const remaining = useMapValues(grandTotalCost.value, (needed, materialKey) => {
+      const owned = state.value.inventory[materialKey] || 0
+
+      return Math.max(0, needed - owned)
+    })
 
     const hasInventory = Object.values(state.value.inventory).some(owned => owned > 0)
 

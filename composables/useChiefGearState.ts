@@ -26,28 +26,10 @@ export default function useChiefGearState() {
     },
   }
 
-  const state = useLocalStorage<CalculatorState>(`${STORAGE_PREFIX}chief-gear-calculator-state`, () => structuredClone(defaultState), {
+  const state = useLocalStorage<CalculatorState>(`${STORAGE_PREFIX}chief-gear-calculator-state`, defaultState, {
     initOnMounted: true,
-    mergeDefaults: (storageValue, defaults) => {
-      // Custom merger to prevent deep merge issues with nested objects if structure changes
-      const merged = structuredClone(defaults)
-
-      if (storageValue != null) {
-        // Merge gear selections
-        for (const key of GEAR_PIECES.map(p => p.id)) {
-          if (storageValue.gear?.[key] != null) {
-            merged.gear[key] = { ...merged.gear[key], ...storageValue.gear[key] }
-          }
-        }
-
-        // Merge inventory
-        if (storageValue.inventory != null) {
-          merged.inventory = { ...merged.inventory, ...storageValue.inventory }
-        }
-      }
-
-      return merged
-    },
+    // Deep merge stored state with current defaults to handle potential structure changes
+    mergeDefaults: (storageValue, defaults) => useToMerged(storageValue, defaults),
   })
 
   const queryParameters = computed(() => {
@@ -127,17 +109,13 @@ export default function useChiefGearState() {
   })
 
   watchDebounced(queryParameters, (newParameters) => {
-    // Only replace if the computed params actually differ from the current route query
-    // This prevents unnecessary history entries if only internal state changed but not the params
-    if (JSON.stringify(newParameters.parameters) !== JSON.stringify(route.query)) {
-      // Use void to explicitly ignore the promise returned by router.replace
+    if (!useIsEqual(newParameters.parameters, route.query))
       void router.replace({ query: newParameters.parameters })
-    }
   }, { debounce: 300, deep: true })
 
   // --- Computed Properties for UI ---
 
-  const selectOptions = computed(() => {
+  const selectOptions = (() => {
     const groupedLevels = useGroupBy(UPGRADE_DATA, level => level.baseTier)
     const baseTierOrder = ['Green', 'Blue', 'Purple', 'Gold', 'Red']
 
@@ -147,19 +125,31 @@ export default function useChiefGearState() {
         levels: groupedLevels[baseTier].map(level => ({ id: level.id, label: level.label })),
         tier: baseTier,
       }))
+  })()
+
+  const filteredFromOptions = computed(() => {
+    const result = [...selectOptions]
+    const lastGroupIndex = result.length - 1
+    const lastGroup = result[lastGroupIndex]
+    result[lastGroupIndex] = {
+      ...lastGroup,
+      levels: useInitial(lastGroup.levels),
+    }
+
+    return result
   })
 
   function getFilteredToOptions(fromId: string | undefined) {
     if (fromId === undefined || fromId === '')
-      return selectOptions.value // Return all if no 'from' selected
+      return selectOptions // Return all if no 'from' selected
 
     const fromLevel = UPGRADE_LEVEL_MAP.get(fromId)
 
     if (fromLevel === undefined)
-      return selectOptions.value
+      return selectOptions
 
     const filteredGroups: LevelGroupOption[] = []
-    for (const group of selectOptions.value) {
+    for (const group of selectOptions) {
       const filteredLevels = group.levels.filter((levelOption) => {
         const levelData = UPGRADE_LEVEL_MAP.get(levelOption.id)
 
@@ -235,6 +225,7 @@ export default function useChiefGearState() {
 
   return {
     clearAll,
+    filteredFromOptions,
     getFilteredToOptions,
     handleFromChange,
     handleToChange,
