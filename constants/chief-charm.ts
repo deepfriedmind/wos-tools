@@ -1,9 +1,9 @@
 import type { CharmMaterialInfo, CharmUpgradeLevel } from '~/types/chief-charm'
 
 export const CHARM_MATERIALS: CharmMaterialInfo[] = [
-  { icon: 'game-icons:scroll-unfurled', iconColorClass: 'bg-gradient-to-t from-amber-400 to-amber-200', key: 'charmDesign', label: 'Charm Design' },
-  { icon: 'game-icons:book-cover', iconColorClass: 'bg-gradient-to-t from-blue-400 to-blue-200', key: 'charmGuide', label: 'Charm Guide' },
-  { icon: 'game-icons:secret-book', iconColorClass: 'bg-gradient-to-t from-purple-500 to-purple-300', key: 'charmSecret', label: 'Charm Secret' },
+  { icon: 'game-icons:scroll-unfurled', iconColorClass: 'bg-gradient-to-t from-amber-400 to-amber-300 via-amber-200', key: 'charmDesign', label: 'Charm Design' },
+  { icon: 'game-icons:book-cover', iconColorClass: 'bg-gradient-to-t from-yellow-900 to-yellow-800 via-yellow-600', key: 'charmGuide', label: 'Charm Guide' },
+  { icon: 'game-icons:secret-book', iconColorClass: 'bg-gradient-to-t from-red-900 to-red-800 via-red-600', key: 'charmSecret', label: 'Charm Secret' },
 ] as const
 
 // Cost represents the cost to upgrade *to* this level from the previous one

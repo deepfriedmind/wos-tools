@@ -1,8 +1,8 @@
 <script setup lang="ts">
 const PAGE_TITLE = 'Chief Charm Upgrade Calculator'
 const PAGE_DESCRIPTION = 'Calculate the material costs for upgrading Chief Charms'
-const PAGE_ICON = 'mdi:star-four-points-outline'
-const PAGE_ICON_COLOR_CLASS = 'text-purple-400'
+const PAGE_ICON = 'game-icons:emerald'
+const PAGE_ICON_COLOR_CLASS = 'bg-gradient-to-tl from-indigo-500 to-purple-500 via-fuchsia-400'
 
 definePageMeta({
   description: `${PAGE_DESCRIPTION} in Whiteout Survival.`,
@@ -88,7 +88,7 @@ const charmMaterials = CHARM_MATERIALS
                 class="space-y-2"
               >
                 <div class="grid grid-cols-[auto,1fr,1fr] items-center gap-x-2 gap-y-1">
-                  <span class="text-xs text-primary">Slot {{ slotIndex }}</span>
+                  <span class="text-xs font-medium tabular-nums text-primary">#{{ slotIndex }}</span>
                   <ChiefUpgradeSelect
                     v-if="state?.gear?.[gearPiece.id]?.[slotIndex - 1]"
                     :model-value="state.gear[gearPiece.id][slotIndex - 1].from"
