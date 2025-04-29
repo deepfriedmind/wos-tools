@@ -55,23 +55,10 @@
     "xml",
     "yaml"
   ],
+  "explorer.excludeGitIgnore": true,
   "explorerExclude.backup": {},
   "files.associations": {
     "*.css": "tailwindcss"
-  },
-  "files.exclude": {
-    "**/.DS_Store": true,
-    "**/.git": true,
-    "**/.hg": true,
-    "**/.stylelintcache": true,
-    "**/.svn": true,
-    "**/CVS": true,
-    "**/Thumbs.db": true,
-    ".eslintcache": true,
-    ".nuxt": true,
-    ".output": true,
-    "node_modules": true,
-    "pnpm-lock.yaml": true
   },
   "files.readonlyInclude": {
     "**/.stylelintcache": true,
