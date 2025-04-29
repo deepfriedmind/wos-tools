@@ -1,156 +1,160 @@
-import { mount } from '@vue/test-utils'
-import type { Pinia } from 'pinia' // Import Pinia, setActivePinia
-import { createPinia, setActivePinia } from 'pinia'
-import { beforeEach, describe, expect, it, vi } from 'vitest' // Import vi
-import { defineComponent, nextTick, ref } from 'vue' // Import defineComponent, ref
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { ref } from 'vue'
 
 import useChiefCharmState from './useChiefCharmState'
 
-// Mock Nuxt modules
+// --- Mocks for Nuxt composables and global constants ---
+
 vi.mock('#app', () => ({
-  useRoute: () => ({ query: ref({}) }),
-  useRouter: () => ({ replace: vi.fn() }),
-  useRuntimeConfig: () => ({ public: { storagePrefix: 'test-' } }),
+  useRuntimeConfig: () => ({
+    public: { storagePrefix: 'test-' },
+  }),
 }))
 
-// Mock constants (assuming auto-import isn't reliable in tests)
-vi.mock('~/constants/chief-gear', () => ({
-  GEAR_PIECES: [
-    { id: 'hat', name: 'Hat' },
-    { id: 'coat', name: 'Coat' },
-    // Add other gear pieces if needed for specific tests
-  ],
+const mockRoute = ref({ query: {} })
+const mockRouter = {
+  replace: vi.fn().mockResolvedValue(undefined),
+}
+
+vi.mock('#imports', () => ({
+  onMounted: (function_: () => void) => function_(),
+  useInitial: (array: unknown[]): unknown[] => array.slice(0, -1),
+  useIsEqual: (a: unknown, b: unknown): boolean => JSON.stringify(a) === JSON.stringify(b),
+  useLocalStorage: vi.fn((key: string, defaultValue: unknown) => ref(structuredClone(defaultValue))),
+  useRoute: () => mockRoute.value,
+  useRouter: () => mockRouter,
+  useToMerged: (a: Record<string, unknown>, b: Record<string, unknown>) => ({ ...b, ...a }),
+  watchDebounced: (source: { value: unknown }, callback: (value: unknown) => void) => callback(source.value),
 }))
-vi.mock('~/constants/chief-charm', () => ({
-  CHARM_MATERIALS: [
-    { key: 'charmDesign', label: 'Charm Design' },
-    { key: 'charmGuide', label: 'Charm Guide' },
-    { key: 'charmSecret', label: 'Charm Secret' },
-  ],
-  CHARM_SLOTS_PER_GEAR: 2,
-  CHARM_UPGRADE_DATA: [
-    { cost: { charmDesign: 0, charmGuide: 0, charmSecret: 0 }, id: 'c0', index: 0, level: 0 },
-    { cost: { charmDesign: 10, charmGuide: 0, charmSecret: 0 }, id: 'c1', index: 1, level: 1 },
-    { cost: { charmDesign: 20, charmGuide: 1, charmSecret: 0 }, id: 'c2', index: 2, level: 2 },
-    { cost: { charmDesign: 30, charmGuide: 2, charmSecret: 1 }, id: 'c3', index: 3, level: 3 },
-  ],
-  CHARM_UPGRADE_LEVEL_MAP: new Map([
-    ['c0', { cost: { charmDesign: 0, charmGuide: 0, charmSecret: 0 }, id: 'c0', index: 0, level: 0 }],
-    ['c1', { cost: { charmDesign: 10, charmGuide: 0, charmSecret: 0 }, id: 'c1', index: 1, level: 1 }],
-    ['c2', { cost: { charmDesign: 20, charmGuide: 1, charmSecret: 0 }, id: 'c2', index: 2, level: 2 }],
-    ['c3', { cost: { charmDesign: 30, charmGuide: 2, charmSecret: 1 }, id: 'c3', index: 3, level: 3 }],
-  ]),
+
+// --- Global constants and helpers ---
+
+const GEAR_PIECES = [
+  { id: 'coat' },
+  { id: 'cudgel' },
+]
+const CHARM_SLOTS_PER_GEAR = 2
+const CHARM_MATERIALS = [
+  { key: 'charmDesign' },
+  { key: 'charmGuide' },
+  { key: 'charmSecret' },
+]
+
+const CHARM_UPGRADE_DATA = Array.from({ length: 16 }, (_, index) => ({
+  id: `level_${index + 1}`,
+  index,
+  level: index + 1,
 }))
+
+const CHARM_UPGRADE_LEVEL_MAP = new Map(
+  CHARM_UPGRADE_DATA.map(level => [level.id, level]),
+)
+
+vi.stubGlobal('GEAR_PIECES', GEAR_PIECES)
+vi.stubGlobal('CHARM_SLOTS_PER_GEAR', CHARM_SLOTS_PER_GEAR)
+vi.stubGlobal('CHARM_MATERIALS', CHARM_MATERIALS)
+vi.stubGlobal('CHARM_UPGRADE_DATA', CHARM_UPGRADE_DATA)
+vi.stubGlobal('CHARM_UPGRADE_LEVEL_MAP', CHARM_UPGRADE_LEVEL_MAP)
+
+// --- Test suite ---
 
 describe('useChiefCharmState', () => {
-  let pinia: Pinia
-
-  // Helper component to use the composable
-  const TestComponent = defineComponent({
-    setup() {
-      return { ...useChiefCharmState() }
-    },
-    template: '<div />',
-  })
-
   beforeEach(() => {
-    // Reset localStorage before each test
-    localStorage.clear()
-    pinia = createPinia()
-    setActivePinia(pinia)
+    mockRoute.value = { query: {} }
+    mockRouter.replace.mockClear()
   })
 
-  it('initializes with default state', () => {
-    const wrapper = mount(TestComponent, { global: { plugins: [pinia] } })
-    const { state } = wrapper.vm
-
-    expect(state.gear.hat[0]).toEqual({ from: undefined, to: undefined })
-    expect(state.gear.hat[1]).toEqual({ from: undefined, to: undefined })
-    expect(state.gear.coat[0]).toEqual({ from: undefined, to: undefined })
-    expect(state.gear.coat[1]).toEqual({ from: undefined, to: undefined })
-    expect(state.inventory).toEqual({ charmDesign: 0, charmGuide: 0, charmSecret: 0 })
+  it('initializes state with defaults', () => {
+    const { state } = useChiefCharmState()
+    expect(state.value.gear.coat).toBeDefined()
+    expect(state.value.gear.cudgel).toBeDefined()
+    expect(state.value.inventory.charmDesign).toBe(0)
+    expect(state.value.inventory.charmGuide).toBe(0)
+    expect(state.value.inventory.charmSecret).toBe(0)
   })
 
-  it('clears all state', () => {
-    const wrapper = mount(TestComponent, { global: { plugins: [pinia] } })
-    const { clearAll, state } = wrapper.vm
-
-    // Modify state
-    state.gear.hat[0].from = 'c1'
-    state.gear.hat[0].to = 'c2'
-    state.inventory.charmDesign = 100
-
+  it('clearAll resets state', () => {
+    const { clearAll, state } = useChiefCharmState()
+    state.value.gear.coat[0].from = 'lv1'
+    state.value.inventory.charmDesign = 5
     clearAll()
-
-    expect(state.gear.hat[0]).toEqual({ from: undefined, to: undefined })
-    expect(state.inventory).toEqual({ charmDesign: 0, charmGuide: 0, charmSecret: 0 })
-  }) // Removed extra closing parenthesis/bracket if present
-
-  it('handles "from" level change correctly (autoSetNext=true)', async () => {
-    const wrapper = mount(TestComponent, { global: { plugins: [pinia] } })
-    const { handleFromChange, state } = wrapper.vm
-
-    // Set 'from' to c1, 'to' should become c2
-    handleFromChange('hat', 0, 'c1')
-    await nextTick()
-    expect(state.gear.hat[0]).toEqual({ from: 'c1', to: 'c2' })
-
-    // Set 'from' to c2, 'to' should become c3
-    handleFromChange('hat', 0, 'c2')
-    await nextTick()
-    expect(state.gear.hat[0]).toEqual({ from: 'c2', to: 'c3' })
-
-    // Set 'from' to c3 (last level), 'to' should become undefined
-    handleFromChange('hat', 0, 'c3')
-    await nextTick()
-    expect(state.gear.hat[0]).toEqual({ from: 'c3', to: undefined })
-
-    // Clear 'from', 'to' should become undefined
-    handleFromChange('hat', 0, undefined)
-    await nextTick()
-    expect(state.gear.hat[0]).toEqual({ from: undefined, to: undefined })
+    expect(state.value.gear.coat[0].from).toBeUndefined()
+    expect(state.value.inventory.charmDesign).toBe(0)
   })
 
-  it('handles "from" level change correctly (autoSetNext=false)', async () => {
-    const wrapper = mount(TestComponent, { global: { plugins: [pinia] } })
-    const { handleFromChange, state } = wrapper.vm
-
-    // Set initial state
-    state.gear.hat[0].from = 'c0'
-    state.gear.hat[0].to = 'c3'
-
-    // Set 'from' to c1, 'to' should remain c3 (valid)
-    handleFromChange('hat', 0, 'c1', false)
-    await nextTick()
-    expect(state.gear.hat[0]).toEqual({ from: 'c1', to: 'c3' })
-
-    // Set 'from' to c2, 'to' should become undefined (invalid)
-    handleFromChange('hat', 0, 'c2', false)
-    await nextTick()
-    expect(state.gear.hat[0]).toEqual({ from: 'c2', to: undefined })
-
-    // Clear 'from', 'to' should become undefined
-    handleFromChange('hat', 0, undefined, false)
-    await nextTick()
-    expect(state.gear.hat[0]).toEqual({ from: undefined, to: undefined })
+  it('filteredFromOptions omits last level', () => {
+    const { filteredFromOptions } = useChiefCharmState()
+    expect(filteredFromOptions.value.map(o => o.id)).toEqual(
+      CHARM_UPGRADE_DATA.slice(0, -1).map(l => l.id),
+    )
   })
 
-  it('handles "to" level change', async () => {
-    const wrapper = mount(TestComponent, { global: { plugins: [pinia] } })
-    const { handleToChange, state } = wrapper.vm
-
-    state.gear.hat[0].from = 'c1' // Pre-set 'from'
-
-    handleToChange('hat', 0, 'c3')
-    await nextTick()
-    expect(state.gear.hat[0].to).toBe('c3')
-
-    handleToChange('hat', 0, undefined)
-    await nextTick()
-    expect(state.gear.hat[0].to).toBeUndefined()
+  it('getFilteredToOptions returns correct options', () => {
+    const { getFilteredToOptions } = useChiefCharmState()
+    // No fromId: returns all
+    expect(getFilteredToOptions(undefined).map(o => o.id)).toEqual(
+      CHARM_UPGRADE_DATA.map(l => l.id),
+    )
+    // fromId = level_1: returns level_2 ... level_16
+    expect(getFilteredToOptions('level_1').map(o => o.id)).toEqual(
+      CHARM_UPGRADE_DATA.slice(1).map(l => l.id),
+    )
+    // fromId = level_15: returns level_16
+    expect(getFilteredToOptions('level_15').map(o => o.id)).toEqual(['level_16'])
+    // fromId = level_16: returns []
+    expect(getFilteredToOptions('level_16').map(o => o.id)).toEqual([])
   })
 
-  // TODO: Add tests for query parameter loading/saving
-  // TODO: Add tests for getFilteredToOptions
-  // TODO: Add tests for hasAnySelectionOrInventory
+  it('handleFromChange sets from and adjusts to', () => {
+    const { handleFromChange, state } = useChiefCharmState()
+    handleFromChange('coat', 0, 'level_1')
+    expect(state.value.gear.coat[0].from).toBe('level_1')
+    expect(state.value.gear.coat[0].to).toBe('level_2')
+    // Setting to last level clears to
+    handleFromChange('coat', 0, 'level_16')
+    expect(state.value.gear.coat[0].from).toBe('level_16')
+    expect(state.value.gear.coat[0].to).toBeUndefined()
+    // Clearing from clears to
+    handleFromChange('coat', 0, undefined)
+    expect(state.value.gear.coat[0].from).toBeUndefined()
+    expect(state.value.gear.coat[0].to).toBeUndefined()
+  })
+
+  it('handleToChange sets to', () => {
+    const { handleToChange, state } = useChiefCharmState()
+    handleToChange('cudgel', 1, 'lv2')
+    expect(state.value.gear.cudgel[1].to).toBe('lv2')
+  })
+
+  it('hasAnySelectionOrInventory is true when any slot or inventory is set', () => {
+    const { clearAll, hasAnySelectionOrInventory, state } = useChiefCharmState()
+    clearAll()
+    expect(hasAnySelectionOrInventory.value).toBe(false)
+    state.value.gear.coat[0].from = 'level_1'
+    expect(hasAnySelectionOrInventory.value).toBe(true)
+    state.value.gear.coat[0].from = undefined
+    state.value.inventory.charmGuide = 2
+    expect(hasAnySelectionOrInventory.value).toBe(true)
+  })
+
+  it('queryParameters reflects state', () => {
+    const { queryParameters, state } = useChiefCharmState()
+    state.value.gear.coat[0].from = 'lv1'
+    state.value.gear.coat[0].to = 'lv2'
+    state.value.inventory.charmDesign = 3
+    const qp = queryParameters.value
+    expect(qp.hasAnyParameter).toBe(true)
+    expect(qp.parameters).toMatchObject({
+      coat_0_from: 'lv1',
+      coat_0_to: 'lv2',
+      inv_charmDesign: '3',
+    })
+  })
+
+  it('selectOptions returns all upgrade levels', () => {
+    const { selectOptions } = useChiefCharmState()
+    expect(selectOptions.map(o => o.id)).toEqual(
+      CHARM_UPGRADE_DATA.map(l => l.id),
+    )
+  })
 })

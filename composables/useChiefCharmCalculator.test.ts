@@ -1,220 +1,164 @@
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { Ref } from 'vue'
 import { ref } from 'vue'
 
-import useChiefCharmCalculator from './useChiefCharmCalculator'
+import useChiefCharmCalculator, { renderChiefCharmUpgradeMaterialCosts } from './useChiefCharmCalculator'
 
-import type { CharmCalculatorState } from '~/types/chief-charm'
-import type { GearPiece } from '~/types/chief-gear' // Import GearPiece type
+import type { CharmCalculatorState, CharmMaterialKey, CharmSelection } from '~/types/chief-charm'
 
-// Mock constants
-// We only mock chief-charm here. chief-gear will be imported dynamically in createMockState.
-vi.mock('~/constants/chief-charm', () => ({
-  CHARM_SLOTS_PER_GEAR: 2, // Keep this simple mock
-  CHARM_UPGRADE_DATA: [
-    { cost: { charmDesign: 0, charmGuide: 0, charmSecret: 0 }, id: 'c0', index: 0, level: 0 },
-    { cost: { charmDesign: 10, charmGuide: 0, charmSecret: 0 }, id: 'c1', index: 1, level: 1 },
-    { cost: { charmDesign: 20, charmGuide: 1, charmSecret: 0 }, id: 'c2', index: 2, level: 2 },
-    { cost: { charmDesign: 30, charmGuide: 2, charmSecret: 1 }, id: 'c3', index: 3, level: 3 },
-  ],
-  CHARM_UPGRADE_LEVEL_MAP: new Map([
-    ['c0', { cost: { charmDesign: 0, charmGuide: 0, charmSecret: 0 }, id: 'c0', index: 0, level: 0 }],
-    ['c1', { cost: { charmDesign: 10, charmGuide: 0, charmSecret: 0 }, id: 'c1', index: 1, level: 1 }],
-    ['c2', { cost: { charmDesign: 20, charmGuide: 1, charmSecret: 0 }, id: 'c2', index: 2, level: 2 }],
-    ['c3', { cost: { charmDesign: 30, charmGuide: 2, charmSecret: 1 }, id: 'c3', index: 3, level: 3 }],
-  ]),
-}))
+const GEAR_PIECES = [
+  { id: 'coat' },
+  { id: 'cudgel' },
+  { id: 'hat' },
+  { id: 'pants' },
+  { id: 'ring' },
+  { id: 'watch' },
+]
+const CHARM_SLOTS_PER_GEAR = 2
+const CHARM_MATERIALS: { key: CharmMaterialKey, label: string }[] = [
+  { key: 'charmDesign', label: 'Design' },
+  { key: 'charmGuide', label: 'Guide' },
+  { key: 'charmSecret', label: 'Secret' },
+]
 
-// Helper to create a mock state based on actual GEAR_PIECES and mocked CHARM_SLOTS_PER_GEAR
-async function createMockState(initialState?: Partial<CharmCalculatorState>): Promise<Ref<CharmCalculatorState>> {
-  // Use importActual to get the *real* GEAR_PIECES within this scope
-  const { GEAR_PIECES } = await vi.importActual<{ GEAR_PIECES: GearPiece[] }>('~/constants/chief-gear')
-  // Use the mocked CHARM_SLOTS_PER_GEAR
-  const { CHARM_SLOTS_PER_GEAR } = await vi.importActual<{ CHARM_SLOTS_PER_GEAR: number }>('~/constants/chief-charm')
+const CHARM_UPGRADE_DATA = [
+  { cost: { charmDesign: 1, charmGuide: 2, charmSecret: 3 }, id: 'level_1', index: 0, level: 1 },
+  { cost: { charmDesign: 2, charmGuide: 3, charmSecret: 4 }, id: 'level_2', index: 1, level: 2 },
+  { cost: { charmDesign: 3, charmGuide: 4, charmSecret: 5 }, id: 'level_3', index: 2, level: 3 },
+  { cost: { charmDesign: 4, charmGuide: 5, charmSecret: 6 }, id: 'level_4', index: 3, level: 4 },
+]
 
-  // Dynamically create default gear state based on actual GEAR_PIECES
-  const defaultGearState = Object.fromEntries(
-    GEAR_PIECES.map((gearPiece: GearPiece) => [ // Add type here
-      gearPiece.id,
-      Object.fromEntries(
-        // Create array [0, 1, ..., CHARM_SLOTS_PER_GEAR - 1]
-        Array.from({ length: CHARM_SLOTS_PER_GEAR }, (_, index) => index).map(slotIndex => [
-          slotIndex,
-          { from: undefined, to: undefined },
-        ]),
-      ),
-    ]),
-  ) as CharmCalculatorState['gear']
+const CHARM_UPGRADE_LEVEL_MAP = new Map(
+  CHARM_UPGRADE_DATA.map(level => [level.id, level]),
+)
 
-  const defaultInventoryState = {
-    charmDesign: 0,
-    charmGuide: 0,
-    charmSecret: 0,
-  }
+vi.stubGlobal('GEAR_PIECES', GEAR_PIECES)
+vi.stubGlobal('CHARM_SLOTS_PER_GEAR', CHARM_SLOTS_PER_GEAR)
+vi.stubGlobal('CHARM_MATERIALS', CHARM_MATERIALS)
+vi.stubGlobal('CHARM_UPGRADE_DATA', CHARM_UPGRADE_DATA)
+vi.stubGlobal('CHARM_UPGRADE_LEVEL_MAP', CHARM_UPGRADE_LEVEL_MAP)
 
-  const defaultState: CharmCalculatorState = {
-    gear: defaultGearState,
-    inventory: defaultInventoryState,
-  }
+describe('renderChiefCharmUpgradeMaterialCosts', () => {
+  it('renders costs with non-zero values', () => {
+    const result = renderChiefCharmUpgradeMaterialCosts(
+      CHARM_MATERIALS,
+      { charmDesign: 10, charmGuide: 0, charmSecret: 5 },
+    )
 
-  // Merge initialState with defaultState, ensuring all gear keys are present
-  const mergedGear = { ...defaultState.gear } // Start with a full copy of default gear
+    expect(result).toBe('Design: 10, Secret: 5')
+  })
 
-  if (initialState?.gear) {
-    // Iterate over keys provided in initialState.gear
-    for (const gearId in initialState.gear) {
-      // Check if the key exists in both initialState.gear and defaultState.gear
-      if (Object.prototype.hasOwnProperty.call(initialState.gear, gearId) && gearId in mergedGear) {
-        const initialSlots = initialState.gear[gearId as keyof typeof initialState.gear]
-        const defaultSlots = defaultState.gear[gearId as keyof typeof defaultState.gear]
-        // Merge the slots for this gear piece
-        mergedGear[gearId as keyof typeof mergedGear] = {
-          ...defaultSlots, // Start with default slots
-          ...initialSlots, // Overwrite with initial slots
-        }
-      }
-      // If gearId from initialState is not in defaultState, it's ignored (shouldn't happen with GearPieceId type)
-    }
-  }
+  it('returns empty string if all values are zero', () => {
+    const result = renderChiefCharmUpgradeMaterialCosts(
+      CHARM_MATERIALS,
+      { charmDesign: 0, charmGuide: 0, charmSecret: 0 },
+    )
 
-  const mergedState: CharmCalculatorState = {
-    // Spread default and initial for top-level (like inventory)
-    ...defaultState,
-    ...initialState,
-    // Assign the carefully merged gear object
-    gear: mergedGear,
-    // Ensure inventory is also merged correctly if provided
-    inventory: {
-      ...defaultState.inventory,
-      ...initialState?.inventory,
-    },
-  }
+    expect(result).toBe('')
+  })
+})
 
-  return ref(mergedState)
-}
-
-// Adjust describe block to handle async createMockState
 describe('useChiefCharmCalculator', () => {
-  it('calculates total cost correctly', async () => { // Make test async
-    const state = await createMockState({ // Await the state creation
+  let state: Ref<CharmCalculatorState>
+  beforeEach(() => {
+    state = ref({
       gear: {
         coat: {
-          0: { from: 'c2', to: 'c3' }, // Cost: c3 = (30,2,1)
-          1: { from: undefined, to: undefined }, // Cost: (0,0,0)
+          0: { from: 'level_1', to: 'level_3' } as CharmSelection,
+          1: { from: undefined, to: undefined } as CharmSelection,
+        },
+        cudgel: {
+          0: { from: undefined, to: undefined } as CharmSelection,
+          1: { from: undefined, to: undefined } as CharmSelection,
         },
         hat: {
-          0: { from: 'c0', to: 'c2' }, // Cost: c1 + c2 = (10,0,0) + (20,1,0) = (30,1,0)
-          1: { from: 'c1', to: 'c3' }, // Cost: c2 + c3 = (20,1,0) + (30,2,1) = (50,3,1)
+          0: { from: undefined, to: undefined } as CharmSelection,
+          1: { from: undefined, to: undefined } as CharmSelection,
         },
-        // Other gear pieces will exist due to dynamic creation
-      },
-    } as unknown as Partial<CharmCalculatorState>) // Cast via unknown
-    const { totalCost } = useChiefCharmCalculator(state)
-
-    // Total: (30+50+30, 1+3+2, 0+1+1) = (110, 6, 2)
-    expect(totalCost.value).toEqual({
-      charmDesign: 110,
-      charmGuide: 6,
-      charmSecret: 2,
-    })
-  })
-
-  it('calculates total cost as zero when no selections', async () => { // Make test async
-    const state = await createMockState() // Await the state creation (no initial state, no cast needed)
-    const { totalCost } = useChiefCharmCalculator(state)
-    expect(totalCost.value).toEqual({ charmDesign: 0, charmGuide: 0, charmSecret: 0 })
-  })
-
-  it('calculates total cost as zero when "to" is not after "from"', async () => { // Make test async
-    const state = await createMockState({ // Await the state creation
-      gear: {
-        coat: {
-          0: { from: 'c3', to: undefined }, // No 'to'
-          1: { from: undefined, to: 'c2' }, // No 'from'
+        pants: {
+          0: { from: undefined, to: undefined } as CharmSelection,
+          1: { from: undefined, to: undefined } as CharmSelection,
         },
-        hat: {
-          0: { from: 'c2', to: 'c1' }, // Invalid range
-          1: { from: 'c1', to: 'c1' }, // Invalid range
+        ring: {
+          0: { from: undefined, to: undefined } as CharmSelection,
+          1: { from: undefined, to: undefined } as CharmSelection,
         },
-        // Other gear pieces will exist
-      },
-    } as unknown as Partial<CharmCalculatorState>) // Cast via unknown
-    const { totalCost } = useChiefCharmCalculator(state)
-    expect(totalCost.value).toEqual({ charmDesign: 0, charmGuide: 0, charmSecret: 0 })
-  })
-
-  it('calculates remaining cost correctly', async () => { // Make test async
-    const state = await createMockState({ // Await the state creation
-      gear: {
-        hat: {
-          0: { from: 'c0', to: 'c2' }, // Total Cost: (30, 1, 0)
+        watch: {
+          0: { from: undefined, to: undefined } as CharmSelection,
+          1: { from: undefined, to: undefined } as CharmSelection,
         },
-        // coat is included by default from createMockState
       },
       inventory: {
-        charmDesign: 20,
-        charmGuide: 5,
+        charmDesign: 2,
+        charmGuide: 1,
         charmSecret: 0,
       },
-    } as unknown as Partial<CharmCalculatorState>) // Cast via unknown
-    const { remainingCost } = useChiefCharmCalculator(state)
+    }) as Ref<CharmCalculatorState>
+  })
 
-    // Remaining: (max(0, 30-20), max(0, 1-5), max(0, 0-0)) = (10, 0, 0)
+  it('computes gearCosts and grandTotalCost correctly', () => {
+    const { gearCosts, grandTotalCost } = useChiefCharmCalculator(state)
+    // Only coat[0] has a range, so its slot cost is as expected
+    expect(gearCosts.value.coat.slotCosts[0].steps.length).toBe(2)
+    expect(gearCosts.value.coat.slotCosts[0].total).toEqual({ charmDesign: 55, charmGuide: 100, charmSecret: 0 })
+    // Grand total sums all gear pieces, most are zero except coat[0]
+    expect(grandTotalCost.value).toEqual({ charmDesign: 55, charmGuide: 100, charmSecret: 0 })
+  })
+
+  it('filteredGrandTotalMaterials omits zero totals', () => {
+    state.value.inventory.charmDesign = 100
+    state.value.inventory.charmGuide = 100
+    state.value.inventory.charmSecret = 100
+    const { filteredGrandTotalMaterials } = useChiefCharmCalculator(state)
+    expect(filteredGrandTotalMaterials.value.map(m => m.key)).toEqual(['charmDesign', 'charmGuide'])
+  })
+
+  it('remainingCost computes needed minus owned, never negative', () => {
+    const { remainingCost } = useChiefCharmCalculator(state)
     expect(remainingCost.value).toEqual({
-      charmDesign: 10,
-      charmGuide: 0,
+      charmDesign: 53,
+      charmGuide: 99,
       charmSecret: 0,
     })
   })
 
-  it('calculates remaining cost when inventory exceeds total', async () => { // Make test async
-    const state = await createMockState({ // Await the state creation
-      gear: {
-        hat: {
-          0: { from: 'c0', to: 'c1' }, // Total Cost: (10, 0, 0)
-        },
-        // coat is included by default
-      },
-      inventory: {
-        charmDesign: 100,
-        charmGuide: 10,
-        charmSecret: 1,
-      },
-    } as unknown as Partial<CharmCalculatorState>) // Cast via unknown
-    const { remainingCost } = useChiefCharmCalculator(state)
+  it('leftoverInventory computes owned minus needed, never negative', () => {
+    const { leftoverInventory } = useChiefCharmCalculator(state)
+    expect(leftoverInventory.value).toEqual({
+      charmDesign: 0,
+      charmGuide: 0,
+      charmSecret: 0,
+    })
+    state.value.inventory.charmDesign = 10
+    state.value.inventory.charmGuide = 10
+    state.value.inventory.charmSecret = 10
+    const { leftoverInventory: updatedLeftover } = useChiefCharmCalculator(state)
+    expect(updatedLeftover.value).toEqual({
+      charmDesign: 0,
+      charmGuide: 0,
+      charmSecret: 10,
+    })
+  })
 
-    // Remaining: (max(0, 10-100), max(0, 0-10), max(0, 0-1)) = (0, 0, 0)
+  it('handles undefined inventory gracefully', () => {
+    state.value.inventory = { charmDesign: 0, charmGuide: 0, charmSecret: 0 }
+    const { leftoverInventory, remainingCost } = useChiefCharmCalculator(state)
     expect(remainingCost.value).toEqual({
+      charmDesign: 55,
+      charmGuide: 100,
+      charmSecret: 0,
+    })
+    expect(leftoverInventory.value).toEqual({
       charmDesign: 0,
       charmGuide: 0,
       charmSecret: 0,
     })
   })
 
-  it('updates hasRemainingCost correctly', async () => { // Make test async
-    const state = await createMockState({ // Await the state creation
-      gear: {
-        hat: {
-          0: { from: 'c0', to: 'c2' }, // Total Cost: (30, 1, 0)
-        },
-        // coat is included by default
-      },
-      inventory: {
-        charmDesign: 0, // Needs 30
-        charmGuide: 0, // Needs 1
-        charmSecret: 0,
-      },
-    } as unknown as Partial<CharmCalculatorState>) // Cast via unknown
-    const { hasRemainingCost } = useChiefCharmCalculator(state)
-    expect(hasRemainingCost.value).toBe(true)
-
-    // Update inventory to meet needs
-    state.value.inventory.charmDesign = 30
-    state.value.inventory.charmGuide = 1
-    expect(hasRemainingCost.value).toBe(false)
-
-    // Update inventory to be insufficient again
-    state.value.inventory.charmDesign = 29
-    expect(hasRemainingCost.value).toBe(true)
+  it('returns zero costs if from or to is undefined', () => {
+    state.value.gear.coat[0] = { from: undefined, to: undefined }
+    const { gearCosts, grandTotalCost } = useChiefCharmCalculator(state)
+    expect(gearCosts.value.coat.slotCosts[0].total).toEqual({ charmDesign: 0, charmGuide: 0, charmSecret: 0 })
+    expect(grandTotalCost.value).toEqual({ charmDesign: 0, charmGuide: 0, charmSecret: 0 })
   })
 })
