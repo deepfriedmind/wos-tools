@@ -200,6 +200,7 @@ export const useUserStore = defineStore('user', () => {
 - Use watch with immediate option when needed
 - Use named slots for component composition
 - Type component methods with expose
+- Use destructuring syntax in `v-for` loops
 - Do NOT use `<style>` blocks unless necessary, always prefer Tailwind CSS classes.
 
 ### API Development
@@ -219,7 +220,6 @@ export const useUserStore = defineStore('user', () => {
 ### Routing
 
 - Implement middleware with `defineNuxtRouteMiddleware`
-- Use `useHead` for dynamic meta updates
 
 ### Utilities
 

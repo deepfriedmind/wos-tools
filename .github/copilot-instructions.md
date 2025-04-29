@@ -54,8 +54,6 @@ Implement middleware with `defineNuxtRouteMiddleware`.
 
 Handle errors with `createError` and `<NuxtErrorBoundary>`.
 
-Use `useHead` for dynamic meta updates.
-
 Manage server state with `useState`.
 
 Create reusable PrimeVue component compositions.
@@ -77,6 +75,8 @@ Implement store actions with proper typing.
 Create reusable transition components.
 
 Type component methods with `expose`.
+
+Use destructuring syntax in `v-for` loops.
 
 Do NOT use `<style>` blocks unless necessary, always prefer Tailwind CSS classes.
 

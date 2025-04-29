@@ -45,3 +45,5 @@ Check file upload error handling.
 Review API response typing.
 
 Verify proper ref usage.
+
+Recommend potential usages of es-toolkit functions instead of custom implementations. Use context7.

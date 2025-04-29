@@ -10,3 +10,4 @@ Requirements:
 
 - Read [`/.github/prompts/generate-tests.prompt.md`](../copilot-test-generation-instructions.md) for instructions on test generation.
 - Check `/tests` for existing tests as a reference.
+- Use context7

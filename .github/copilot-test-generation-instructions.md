@@ -1,5 +1,7 @@
 Place test files in the same directory as the file being tested (co-located), except for `/pages` and `/layouts`, which should be placed in their respective directories under `/tests`.
 
+Add `data-test` attributes where needed for targeting in tests.
+
 Put reusable mocks in `/tests/helpers/mocks.ts`.
 
 Put global plugin setup in `/tests/helpers/plugins.ts`.
