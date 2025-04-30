@@ -427,9 +427,10 @@ function handleBearClick() {
                     <Select
                       v-model="settings.snowApe.level"
                       :options="SNOW_APE_LEVELS"
+                      label-id="snowApeLevel"
                       option-label="label"
                       option-value="value"
-                      label-id="snowApeLevel"
+                      scroll-height="none"
                     />
                     <label
                       for="snowApeLevel"
@@ -529,6 +530,14 @@ function handleBearClick() {
                 Marksmen % must be the highest
               </Message>
               <Message
+                v-else-if="remainingMarksmen < 1"
+                severity="error"
+                size="small"
+                icon="pi pi-exclamation-triangle"
+              >
+                Not enough marksmen available to join rallies
+              </Message>
+              <Message
                 v-else
                 severity="success"
                 icon="pi pi-check"
@@ -540,88 +549,92 @@ function handleBearClick() {
           </div>
         </div>
 
-        <div class="gap-8 max-lg:space-y-8 lg:flex">
-          <Card>
-            <template #title>
-              <h3 class="text-xl font-semibold">
-                <Icon
-                  name="fluent-emoji:1st-place-medal"
-                  size="24"
-                  class="align-text-top"
-                />
-                Rally leader composition
-              </h3>
-            </template>
-            <template #content>
-              <div class="inline-block space-y-2">
-                <div
-                  v-for="(row, index) in rallyLeaderRows"
-                  :key="index"
-                  class="flex h-10 items-center justify-between gap-2"
-                >
-                  <span>{{ row.label }}</span>
-                  <span class="font-medium tabular-nums">{{ formatNumber(row.value) }}</span>
+        <div
+          v-auto-animate
+          class="gap-8 max-lg:space-y-8 lg:flex"
+        >
+          <template v-if="isTotalValid && isMarksmenHighest && remainingMarksmen > 1">
+            <Card>
+              <template #title>
+                <h3 class="text-xl font-semibold">
+                  <Icon
+                    name="fluent-emoji:1st-place-medal"
+                    size="24"
+                    class="align-text-top"
+                  />
+                  Rally leader composition
+                </h3>
+              </template>
+              <template #content>
+                <div class="inline-block space-y-2">
+                  <div
+                    v-for="(row, index) in rallyLeaderRows"
+                    :key="index"
+                    class="flex h-10 items-center justify-between gap-2"
+                  >
+                    <span>{{ row.label }}</span>
+                    <span class="font-medium tabular-nums">{{ formatNumber(row.value) }}</span>
+                  </div>
                 </div>
-              </div>
-              <Divider type="dotted" />
-              Marksmen left for joining rallies: <span class="font-medium tabular-nums">{{ formatNumber(remainingMarksmen) }}</span>
-            </template>
-          </Card>
-
-          <Card class="flex-1">
-            <template #title>
-              <h3 class="text-xl font-semibold">
-                <Icon
-                  name="fluent-emoji:2nd-place-medal"
-                  size="24"
-                  class="align-text-top"
-                />
-                Joining rallies composition
-              </h3>
-            </template>
-            <template #content>
-              <div class="inline-grid gap-8 md:grid-flow-col">
-                <div
-                  v-for="{ title, values }, index in joiningRallySections"
-                  :key="title"
-                  class="space-y-2"
-                >
-                  <h3 class="font-semibold">
-                    {{ title }}
-                  </h3>
-                  <div class="inline-block space-y-2">
-                    <div
-                      v-for="troopType in ['infantry', 'lancers', 'marksmen'] as const"
-                      :key="troopType"
-                      class="flex h-10 items-center justify-between gap-2"
-                    >
-                      <span :class="{ 'md:hidden': index !== 0 }">{{ useCapitalize(troopType) }}:</span>
-                      <CopyButton
-                        v-if="index === 0"
-                        v-tooltip="{ content: 'Copy value', delay: { show: 700 } }"
-                        :copy-string="String(values[troopType])"
-                        :label="formatNumber(values[troopType])"
-                        class="font-medium tabular-nums text-green-500"
-                        icon-pos="right"
-                        icon="pi pi-copy"
-                        variant="text"
-                        icon-class="text-primary"
-                      />
-                      <span
-                        v-else
-                        class="font-medium tabular-nums"
-                      >{{ formatNumber(values[troopType]) }}</span>
-                    </div>
-                    <Divider type="dotted" />
-                    <div class="flex justify-between gap-2 pt-2 font-medium tabular-nums">
-                      <span :class="{ 'md:hidden': index !== 0 }">Total:</span>
-                      <span>{{ formatNumber(values.total) }}</span>
+                <Divider type="dotted" />
+                Marksmen left for joining rallies: <span class="font-medium tabular-nums">{{ formatNumber(remainingMarksmen) }}</span>
+              </template>
+            </Card>
+            <Card class="flex-1">
+              <template #title>
+                <h3 class="text-xl font-semibold">
+                  <Icon
+                    name="fluent-emoji:2nd-place-medal"
+                    size="24"
+                    class="align-text-top"
+                  />
+                  Joining rallies composition
+                </h3>
+              </template>
+              <template #content>
+                <div class="inline-grid gap-8 md:grid-flow-col">
+                  <div
+                    v-for="{ title, values }, index in joiningRallySections"
+                    :key="title"
+                    class="space-y-2"
+                  >
+                    <h3 class="font-semibold">
+                      {{ title }}
+                    </h3>
+                    <div class="inline-block space-y-2">
+                      <div
+                        v-for="troopType in ['infantry', 'lancers', 'marksmen'] as const"
+                        :key="troopType"
+                        class="flex h-10 items-center justify-between gap-2"
+                      >
+                        <span :class="{ 'md:hidden': index !== 0 }">{{ useCapitalize(troopType) }}:</span>
+                        <CopyButton
+                          v-if="index === 0"
+                          v-tooltip="{ content: 'Copy value', delay: { show: 700 } }"
+                          :copy-string="String(values[troopType])"
+                          :label="formatNumber(values[troopType])"
+                          class="font-medium tabular-nums text-green-500"
+                          icon-pos="right"
+                          icon="pi pi-copy"
+                          variant="text"
+                          icon-class="text-primary"
+                        />
+                        <span
+                          v-else
+                          class="font-medium tabular-nums"
+                        >{{ formatNumber(values[troopType]) }}</span>
+                      </div>
+                      <Divider type="dotted" />
+                      <div class="flex justify-between gap-2 pt-2 font-medium tabular-nums">
+                        <span :class="{ 'md:hidden': index !== 0 }">Total:</span>
+                        <span>{{ formatNumber(values.total) }}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </template>
-          </Card>
+              </template>
+            </Card>
+          </template>
         </div>
 
         <div class="text-center">
