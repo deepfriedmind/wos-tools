@@ -239,7 +239,7 @@ const isTotalValid = computed(() => totalPercentage.value === 100)
 const isMarksmenHighest = computed(() => {
   const currentMarksmenPercent = settings.value.marksmenPercent
 
-  return currentMarksmenPercent > settings.value.infantryPercent && currentMarksmenPercent > settings.value.lancersPercent
+  return currentMarksmenPercent >= settings.value.infantryPercent && currentMarksmenPercent >= settings.value.lancersPercent
 })
 
 const rallyLeaderRows = computed(() => [
@@ -527,7 +527,7 @@ function handleBearClick() {
                 size="small"
                 icon="pi pi-exclamation-triangle"
               >
-                Marksmen % must be the highest
+                Marksmen % must be the highest or equal
               </Message>
               <Message
                 v-else-if="remainingMarksmen < 1"
