@@ -11,6 +11,10 @@ definePageMeta({
 
 const MAX_MARCHES = 6
 
+const DEFAULT_INFANTRY_PERCENT = 12
+const DEFAULT_LANCERS_PERCENT = 19
+const DEFAULT_MARKSMEN_PERCENT = 69
+
 interface RallyComposition {
   infantry: number
   lancers: number
@@ -42,9 +46,9 @@ const { mobileScrollIntoView } = useMobileScrollIntoView()
 
 const settings = useLocalStorage<Settings>(`${STORAGE_PREFIX}bear-rally-settings`, {
   deployment: 100_000,
-  infantryPercent: 12,
-  lancersPercent: 19,
-  marksmenPercent: 69,
+  infantryPercent: DEFAULT_INFANTRY_PERCENT,
+  lancersPercent: DEFAULT_LANCERS_PERCENT,
+  marksmenPercent: DEFAULT_MARKSMEN_PERCENT,
   rallyCount: useClamp(Number(route.query.rallies) || MAX_MARCHES, 1, MAX_MARCHES),
   rallyOptions: Array.from({ length: MAX_MARCHES }, (_, index) => ({ value: index + 1 })),
   snowApe: {
@@ -242,6 +246,10 @@ const isMarksmenHighest = computed(() => {
   return currentMarksmenPercent >= settings.value.infantryPercent && currentMarksmenPercent >= settings.value.lancersPercent
 })
 
+const isTroopDistributionChanged = computed(() => settings.value.infantryPercent !== DEFAULT_INFANTRY_PERCENT
+  || settings.value.lancersPercent !== DEFAULT_LANCERS_PERCENT
+  || settings.value.marksmenPercent !== DEFAULT_MARKSMEN_PERCENT)
+
 const rallyLeaderRows = computed(() => [
   { label: `Infantry (${settings.value.infantryPercent}%):`, value: rallyLeader.value.infantry },
   { label: `Lancers (${settings.value.lancersPercent}%):`, value: rallyLeader.value.lancers },
@@ -286,6 +294,12 @@ const joiningRallySections = computed(() => {
 
   return sections
 })
+
+function resetTroopDistribution() {
+  settings.value.infantryPercent = DEFAULT_INFANTRY_PERCENT
+  settings.value.lancersPercent = DEFAULT_LANCERS_PERCENT
+  settings.value.marksmenPercent = DEFAULT_MARKSMEN_PERCENT
+}
 
 const isShaking = shallowRef(false)
 let lastFactIndex = -1
@@ -545,6 +559,16 @@ function handleBearClick() {
               >
                 100%
               </Message>
+              <Button
+                v-if="isTroopDistributionChanged"
+                v-tooltip="'Reset troop distribution'"
+                aria-label="Reset troop distribution"
+                icon="pi pi-refresh"
+                rounded
+                size="small"
+                text
+                @click="resetTroopDistribution"
+              />
             </div>
           </div>
         </div>
