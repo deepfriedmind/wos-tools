@@ -40,7 +40,6 @@ const { bottom: firstMilestoneBottom } = useElementBounding(firstTimelineEntryRe
 function setTimelineEntryRef(index: number, element: ComponentPublicInstance) {
   if (
     !element
-    || typeof element !== 'object'
     || isEmptyObject(element as unknown as Record<string, unknown>)
   ) {
     return
@@ -419,7 +418,7 @@ onUnmounted(() => {
             class="flex flex-1 basis-auto items-center justify-between gap-2 lg:justify-end lg:gap-4"
           >
             <Button
-              v-if="!isToday"
+              v-if="!isToday && nextUpcomingMilestoneIndex !== -1"
               :label="isMinSmBreakpoint ? 'Go to upcoming milestone' : 'Upcoming milestone'"
               :size="isMinSmBreakpoint ? undefined : 'small'"
               icon-pos="right"
