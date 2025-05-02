@@ -129,6 +129,9 @@ export default defineNuxtConfig({
     storage: 'localStorage',
   },
   primevue,
+  sitemap: {
+    sitemapName: 'sitemap_index.xml',
+  },
   tailwindcss: {
     exposeConfig: true,
     config: {
