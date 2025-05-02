@@ -346,25 +346,11 @@ function handleBearClick() {
     </ClientOnly>
 
     <MainContentCard
-      :icon="PAGE_ICON"
+      :copy-url-button="Boolean(route.query.marksmen)"
       :heading="PAGE_TITLE"
+      :icon="PAGE_ICON"
       :sub-heading="PAGE_DESCRIPTION"
     >
-      <CopyButton
-        v-if="route.query.marksmen"
-        v-tooltip="'Copy link to current settings'"
-        copy-string="currentUrl"
-        variant="text"
-        rounded
-        class="!absolute right-0 top-0 size-12 animate-zoomin animate-once md:right-[rem(18)] md:top-[rem(18)]"
-      >
-        <Icon
-          name="fluent:copy-link-24-regular"
-          size="24"
-          aria-label="Copy link to current settings"
-        />
-      </CopyButton>
-
       <div class="space-y-12">
         <div class="space-y-8">
           <div class="flex items-center gap-4 max-md:flex-col max-md:items-start">

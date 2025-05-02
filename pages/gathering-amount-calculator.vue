@@ -263,25 +263,11 @@ const showGatheringBonusDialog = shallowRef(false)
 
 <template>
   <MainContentCard
-    :icon="PAGE_ICON"
+    :copy-url-button="Boolean(route.query.meat_boost)"
     :heading="PAGE_TITLE"
+    :icon="PAGE_ICON"
     :sub-heading="PAGE_DESCRIPTION"
   >
-    <CopyButton
-      v-if="route.query.meat_boost"
-      v-tooltip="'Copy link to current settings'"
-      copy-string="currentUrl"
-      variant="text"
-      rounded
-      class="!absolute right-0 top-0 size-12 animate-zoomin animate-once md:right-[rem(18)] md:top-[rem(18)]"
-    >
-      <Icon
-        name="fluent:copy-link-24-regular"
-        size="24"
-        aria-label="Copy link to current settings"
-      />
-    </CopyButton>
-
     <div class="space-y-12">
       <div class="space-y-8">
         <div class="space-y-8">

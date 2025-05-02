@@ -207,25 +207,13 @@ onUnmounted(() => {
 
 <template>
   <MainContentCard
-    :icon="PAGE_ICON"
-    :icon-color-class="PAGE_ICON_COLOR_CLASS"
+    :copy-url-button="selectedDateIsValid && !isToday"
     :heading="PAGE_TITLE"
+    :icon-color-class="PAGE_ICON_COLOR_CLASS"
+    :icon="PAGE_ICON"
     :sub-heading="PAGE_DESCRIPTION"
+    copy-url-button-label="Copy link for selected server age"
   >
-    <CopyButton
-      v-if="selectedDateIsValid && !isToday"
-      v-tooltip="'Copy link for selected server age'"
-      copy-string="currentUrl"
-      variant="text"
-      rounded
-      class="!absolute right-0 top-0 size-12 animate-zoomin animate-once md:right-[rem(18)] md:top-[rem(18)]"
-    >
-      <Icon
-        name="fluent:copy-link-24-regular"
-        size="24"
-        aria-label="Copy link to current settings"
-      />
-    </CopyButton>
     <ClientOnly>
       <div class="sticky -top-20 z-20 mb-12 rounded-xl bg-surface-900 p-4 shadow-xl lg:-top-3">
         <div class="flex flex-wrap justify-between gap-4">

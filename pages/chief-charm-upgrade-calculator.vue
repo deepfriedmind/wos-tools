@@ -38,26 +38,12 @@ const charmMaterials = CHARM_MATERIALS
 
 <template>
   <MainContentCard
-    :icon="PAGE_ICON"
-    :icon-color-class="PAGE_ICON_COLOR_CLASS"
+    :copy-url-button="queryParameters.hasAnyParameter"
     :heading="PAGE_TITLE"
+    :icon-color-class="PAGE_ICON_COLOR_CLASS"
+    :icon="PAGE_ICON"
     :sub-heading="PAGE_DESCRIPTION"
   >
-    <CopyButton
-      v-if="queryParameters.hasAnyParameter"
-      v-tooltip="'Copy link to current settings'"
-      copy-string="currentUrl"
-      variant="text"
-      rounded
-      class="!absolute right-0 top-0 size-12 animate-zoomin animate-once md:right-[rem(18)] md:top-[rem(18)]"
-    >
-      <Icon
-        name="fluent:copy-link-24-regular"
-        size="24"
-        aria-label="Copy link to current settings"
-      />
-    </CopyButton>
-
     <div class="space-y-12">
       <!-- Gear Selection Grid -->
       <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
