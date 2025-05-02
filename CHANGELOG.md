@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.3] - 2025-05-02
+
+### ✨ Features
+
+- *(bear-hunt-rally)* Add reset button for troop distribution
+- *(seo)* Add nuxt-seo-utils for improved SEO capabilities
+
+### 🐛 Bug Fixes
+
+- *(bear-hunt-rally)* Allow marksmen percentage to be equal to others
+
+### ♻️ Refactor
+
+- *(polar-bear)* Remove outdated facts and update temperature detail
+- *(bear-hunt-rally)* Improve rally composition display logic
+- *(footer)* Update date formatting and improve build time handling
+- *(eslint)* Update global ignores to include 'public' directory
+
+### 🚨 Testing
+
+- *(PolarBear)* Add unit tests for SVG rendering and interactions
+
 ## [1.3.2] - 2025-04-29
 
 ### ✨ Features
@@ -20,6 +42,7 @@ All notable changes to this project will be documented in this file.
 
 - *(vscode)* Remove unnecessary file exclusions from settings
 - *(release-script)* Remove GitHub user links from CHANGELOG generation
+- *(release)* 1.3.2
 - *(release)* 1.3.2
 
 ## [1.3.1] - 2025-04-21
