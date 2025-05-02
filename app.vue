@@ -26,9 +26,6 @@ const { name } = useSiteConfig()
 
 useSeoMeta({
   description,
-  ogDescription: description,
-  ogTitle: title,
-  ogType: 'website',
   title,
   titleTemplate: title => title ? `${title} | ${name}` : `${name} for Whiteout Survival`,
   twitterCard: 'summary_large_image',
@@ -39,10 +36,7 @@ defineOgImageComponent('NuxtSeo', { colorMode: 'dark', theme: '#4072b3' })
 </script>
 
 <template>
-  <Html
-    lang="en"
-    class="dark"
-  >
+  <Html class="dark">
     <Toast />
     <NuxtLayout>
       <NuxtPage />

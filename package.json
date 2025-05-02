@@ -40,6 +40,7 @@
     "nuxt": "^3.16.2",
     "nuxt-gtag": "3.0.2",
     "nuxt-og-image": "5.1.1",
+    "nuxt-seo-utils": "7.0.10",
     "pinia": "^3.0.1",
     "pinia-plugin-persistedstate": "^4.2.0",
     "primeicons": "^7.0.0",
