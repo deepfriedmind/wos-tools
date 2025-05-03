@@ -1,8 +1,33 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { nextTick } from 'vue'
 
 import type { UpgradeLevel } from '~/types/fire-crystal-building'
 import { BuildingType } from '~/types/fire-crystal-building'
+
+// --- Mocks for Nuxt composables and helpers ---
+const replaceMock = vi.fn()
+const watchDebouncedMock = vi.fn(
+  <T>(source: { value: T }, callback: (value: T) => void) => callback(source.value),
+)
+
+vi.stubGlobal('useRoute', (): { query: Record<string, unknown> } => ({
+  query: {},
+}))
+vi.stubGlobal('useRouter', () => ({
+  replace: replaceMock,
+}))
+vi.stubGlobal('useRuntimeConfig', () => ({
+  public: { storagePrefix: 'test-' },
+}))
+vi.stubGlobal(
+  'useLocalStorage',
+  <T>(
+    _key: string,
+    init: T,
+    _options?: unknown,
+  ) => ref(init),
+)
+vi.stubGlobal('onMounted', (function_: () => void) => function_())
+vi.stubGlobal('watchDebounced', watchDebouncedMock)
 
 // Mock the types/fire-crystal-building module
 vi.mock('~/types/fire-crystal-building', () => ({
@@ -82,35 +107,12 @@ vi.mock('~/constants/fire-crystal-building', () => {
   }
 })
 
-// Mock the useLocalStorage composable
-vi.mock('~/composables/useLocalStorage', () => ({
-  default: vi.fn((_key, defaultValue) => ref(defaultValue)),
-}))
-
-// Mock the useRoute and useRouter composables
-vi.mock('vue-router', () => ({
-  useRoute: vi.fn(() => ({
-    query: {},
-  })),
-  useRouter: vi.fn(() => ({
-    replace: vi.fn(),
-  })),
-}))
-
-// Mock the useRuntimeConfig composable
-vi.mock('#app', () => ({
-  useRuntimeConfig: vi.fn(() => ({
-    public: {
-      storagePrefix: 'test_',
-    },
-  })),
-}))
-
 describe('useFireCrystalBuildingState', () => {
   let state: ReturnType<typeof useFireCrystalBuildingState>
 
   beforeEach(() => {
     vi.clearAllMocks()
+    replaceMock.mockClear()
     state = useFireCrystalBuildingState()
   })
 
@@ -145,7 +147,7 @@ describe('useFireCrystalBuildingState', () => {
     expect(state.hasAnySelectionOrInventory.value).toBe(true)
   })
 
-  it('clears all selections and inventory', () => {
+  it('clearAll resets state', () => {
     // Set some values
     state.state.value.buildings.furnace.from = 'fc1_0'
     state.state.value.buildings.furnace.to = 'fc2_0'

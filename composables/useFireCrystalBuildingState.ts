@@ -322,10 +322,8 @@ export default function useFireCrystalBuildingState() {
     return needsUpdate
   }
 
-  // Load state from URL on initial load
-  loadStateFromURL()
-
-  // Also load on mount to ensure client-side hydration
+  // Load state from URL only on mount to ensure client-side hydration
+  // and to avoid reloading state after clearAll is called
   onMounted(() => {
     loadStateFromURL()
   })
