@@ -17,6 +17,7 @@ export default withNuxt(
     typescript: {
       overrides: {
         'ts/no-explicit-any': 'error',
+        'ts/no-inferrable-types': 'error',
         'ts/prefer-destructuring': [
           'error',
           {
