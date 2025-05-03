@@ -163,32 +163,13 @@ export default function useFireCrystalBuildingState() {
 
   // Clear all selections and inventory
   function clearAll() {
-    state.value = useCloneDeep(defaultState)
+    state.value = structuredClone(defaultState)
   }
 
-  // Filter 'from' options to exclude the last level since you can't upgrade from it
-  const filteredFromOptions = computed(() => {
-    // Create a deep copy of the options
-    const result = [...selectOptions.value]
+  // Filter 'From' options to exclude the last tier (FC10) since you can't upgrade from it
+  const filteredFromOptions = computed(() => useInitial(selectOptions.value))
 
-    // Process each tier group to remove the last level from the last tier
-    if (result.length > 0) {
-      const lastGroupIndex = result.length - 1
-      const lastGroup = result[lastGroupIndex]
-
-      // If the last tier has levels, remove the last level
-      if (lastGroup.levels.length > 0) {
-        result[lastGroupIndex] = {
-          ...lastGroup,
-          levels: useInitial(lastGroup.levels),
-        }
-      }
-    }
-
-    return result
-  })
-
-  // Get filtered 'to' options based on the selected 'from' level
+  // Get filtered 'To' options based on the selected 'From' level
   function getFilteredToOptions(buildingType: keyof BuildingCalculatorState['buildings'], fromId: string | undefined): LevelGroupOption[] {
     if (fromId == null || fromId === '')
       return []
