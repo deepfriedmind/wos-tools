@@ -205,7 +205,7 @@ export default function useFireCrystalBuildingState() {
     if (!fromLevel)
       return []
 
-    // Filter options to only include levels higher than the 'from' level
+    // Filter options to only include levels higher than the 'From' level
     return selectOptions.value
       .map(group => ({
         ...group,
@@ -218,7 +218,7 @@ export default function useFireCrystalBuildingState() {
       .filter(group => group.levels.length > 0)
   }
 
-  // Handle 'from' level change
+  // Handle 'From' level change
   function handleFromChange(
     buildingId: keyof BuildingCalculatorState['buildings'],
     newFromId: string | undefined,
@@ -247,7 +247,7 @@ export default function useFireCrystalBuildingState() {
     if (!fromLevel)
       return
 
-    // Check if there's a valid 'to' level selected
+    // Check if there's a valid 'To' level selected
     const currentToId = currentBuildingState.to
     const currentToLevel = (currentToId != null && currentToId !== '') ?
         levelMap.get(currentToId)
@@ -265,19 +265,19 @@ export default function useFireCrystalBuildingState() {
 
     if (isNotLastLevel) {
       if (isToInvalid) {
-        // If 'to' is invalid or non-existent, set it to the next level (if autoSetNext) or clear it
+        // If 'To' is invalid or non-existent, set it to the next level (if autoSetNext) or clear it
         const nextLevel = data[fromLevel.index + 1]
         currentBuildingState.to = autoSetNext ? nextLevel.id : undefined
       }
-      // If 'to' is valid and greater than 'from', keep it.
+      // If 'To' is valid and greater than 'From', keep it.
     }
     else {
-      // If 'from' is the last level, clear 'to'
+      // If 'From' is the last level, clear 'To'
       currentBuildingState.to = undefined
     }
   }
 
-  // Handle 'to' level change
+  // Handle 'To' level change
   function handleToChange(
     buildingId: keyof BuildingCalculatorState['buildings'],
     newToId: string | undefined,
@@ -327,10 +327,10 @@ export default function useFireCrystalBuildingState() {
       }
     }
 
-    // If state was loaded from URL, ensure 'to' levels are valid relative to 'from'
+    // If state was loaded from URL, ensure 'To' levels are valid relative to 'From'
     if (needsUpdate) {
       for (const buildingId of Object.keys(state.value.buildings) as (keyof BuildingCalculatorState['buildings'])[]) {
-        handleFromChange(buildingId, state.value.buildings[buildingId].from, false) // Don't auto-set 'to' when loading/fixing
+        handleFromChange(buildingId, state.value.buildings[buildingId].from, false) // Don't auto-set 'To' when loading/fixing
       }
 
       // Trigger immediate URL update if loaded state caused changes

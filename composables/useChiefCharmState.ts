@@ -111,12 +111,12 @@ export default function useChiefCharmState() {
       }
     }
 
-    // If state was loaded from URL or storage, ensure 'to' levels are valid relative to 'from'
+    // If state was loaded from URL or storage, ensure 'To' levels are valid relative to 'From'
     if (needsUpdate) {
       for (const gearPiece of GEAR_PIECES) {
         for (let slotIndex = 0; slotIndex < CHARM_SLOTS_PER_GEAR; slotIndex++) {
           if (Object.prototype.hasOwnProperty.call(state.value.gear[gearPiece.id], slotIndex)) {
-            handleFromChange(gearPiece.id, slotIndex, state.value.gear[gearPiece.id][slotIndex].from, false) // Don't auto-set 'to' when loading/fixing
+            handleFromChange(gearPiece.id, slotIndex, state.value.gear[gearPiece.id][slotIndex].from, false) // Don't auto-set 'To' when loading/fixing
           }
         }
       }
@@ -199,7 +199,7 @@ export default function useChiefCharmState() {
     const fromLevel = (newFromId != null && newFromId !== '') ? CHARM_UPGRADE_LEVEL_MAP.get(newFromId) : undefined
     const currentToLevel = (currentCharmState.to != null && currentCharmState.to !== '') ? CHARM_UPGRADE_LEVEL_MAP.get(currentCharmState.to) : undefined
 
-    // If 'from' is cleared or invalid, clear 'to'
+    // If 'From' is cleared or invalid, clear 'To'
     if (fromLevel === undefined) {
       currentCharmState.to = undefined
 
@@ -211,14 +211,14 @@ export default function useChiefCharmState() {
 
     if (isNotLastLevel) {
       if (isToInvalid) {
-        // If 'to' is invalid or non-existent, set it to the next level (if autoSetNext) or clear it
+        // If 'To' is invalid or non-existent, set it to the next level (if autoSetNext) or clear it
         const nextLevel = CHARM_UPGRADE_DATA[fromLevel.index + 1]
         currentCharmState.to = autoSetNext ? nextLevel.id : undefined
       }
-      // If 'to' is valid and greater than 'from', keep it.
+      // If 'To' is valid and greater than 'From', keep it.
     }
     else {
-      // If 'from' is the last level, clear 'to'
+      // If 'From' is the last level, clear 'To'
       currentCharmState.to = undefined
     }
   }

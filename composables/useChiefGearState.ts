@@ -95,11 +95,11 @@ export default function useChiefGearState() {
       }
     }
 
-    // If state was loaded from URL, ensure 'to' levels are valid relative to 'from'
-    // Also, if the stored state had invalid 'to' relative to 'from', fix it.
+    // If state was loaded from URL, ensure 'To' levels are valid relative to 'From'
+    // Also, if the stored state had invalid 'To' relative to 'From', fix it.
     if (needsUpdate) {
       for (const gearPiece of GEAR_PIECES) {
-        handleFromChange(gearPiece.id, state.value.gear[gearPiece.id].from, false) // Don't auto-set 'to' when loading/fixing
+        handleFromChange(gearPiece.id, state.value.gear[gearPiece.id].from, false) // Don't auto-set 'To' when loading/fixing
       }
 
       // Trigger immediate URL update if loaded state caused changes
@@ -141,7 +141,7 @@ export default function useChiefGearState() {
 
   function getFilteredToOptions(fromId: string | undefined) {
     if (fromId === undefined || fromId === '')
-      return selectOptions // Return all if no 'from' selected
+      return selectOptions // Return all if no 'From' selected
 
     const fromLevel = UPGRADE_LEVEL_MAP.get(fromId)
 
@@ -195,7 +195,7 @@ export default function useChiefGearState() {
     const fromLevel = (newFromId != null && newFromId !== '') ? UPGRADE_LEVEL_MAP.get(newFromId) : undefined
     const currentToLevel = (currentGearState.to != null && currentGearState.to !== '') ? UPGRADE_LEVEL_MAP.get(currentGearState.to) : undefined
 
-    // If 'from' is cleared or invalid, clear 'to'
+    // If 'From' is cleared or invalid, clear 'To'
     if (fromLevel === undefined) {
       currentGearState.to = undefined
 
@@ -207,14 +207,14 @@ export default function useChiefGearState() {
 
     if (isNotLastLevel) {
       if (isToInvalid) {
-        // If 'to' is invalid or non-existent, set it to the next level (if autoSetNext) or clear it
+        // If 'To' is invalid or non-existent, set it to the next level (if autoSetNext) or clear it
         const nextLevel = UPGRADE_DATA[fromLevel.index + 1]
         currentGearState.to = autoSetNext ? nextLevel.id : undefined
       }
-      // If 'to' is valid and greater than 'from', keep it.
+      // If 'To' is valid and greater than 'From', keep it.
     }
     else {
-      // If 'from' is the last level, clear 'to'
+      // If 'From' is the last level, clear 'To'
       currentGearState.to = undefined
     }
   }
