@@ -22,7 +22,7 @@ export function renderFireCrystalBuildingUpgradeMaterialCosts(
 ) {
   return materials
     .filter(({ key }) => costRecord[key] > 0)
-    .map(({ key, label }) => `${label}: ${formatNumber(costRecord[key])}`)
+    .map(({ key, label }) => `${label}: ${formatNumber(costRecord[key], true)}`)
     .join(', ')
 }
 
@@ -100,6 +100,7 @@ export default function useFireCrystalBuildingCalculator(
     grandTotalCost,
     leftoverInventory,
     remainingCost,
+    renderFireCrystalBuildingUpgradeMaterialCosts,
   }
 
   function calculateCost(

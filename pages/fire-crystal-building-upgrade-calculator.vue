@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { MaterialInfo, UpgradeCost } from '~/types/fire-crystal-building'
-
 const PAGE_TITLE = 'Fire Crystal Building Upgrade Calculator'
 const PAGE_DESCRIPTION = 'Calculate the material costs for upgrading Fire Crystal buildings'
 const PAGE_ICON = 'game-icons:crystal-growth'
@@ -40,14 +38,8 @@ const {
   grandTotalCost,
   leftoverInventory,
   remainingCost,
+  renderFireCrystalBuildingUpgradeMaterialCosts,
 } = useFireCrystalBuildingCalculator(state, upgradeData, upgradeLevelMap)
-
-function renderBuildingUpgradeMaterialCosts(materials: MaterialInfo[], costs: UpgradeCost): string {
-  return materials
-    .filter(({ key }) => costs[key as keyof UpgradeCost] > 0)
-    .map(({ key, label }) => `${formatNumber(costs[key as keyof UpgradeCost], true)} ${label}`)
-    .join(', ')
-}
 </script>
 
 <template>
