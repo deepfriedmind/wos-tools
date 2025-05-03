@@ -4,10 +4,6 @@ const PAGE_DESCRIPTION = 'Calculate the material costs for upgrading Fire Crysta
 const PAGE_ICON = 'game-icons:crystal-growth'
 const PAGE_ICON_COLOR_CLASS = 'bg-gradient-to-tr from-red-800 to-red-500'
 
-// Auto-imported by Nuxt
-const BUILDINGS = FC_BUILDINGS
-const MATERIALS = FC_MATERIALS
-
 definePageMeta({
   description: `${PAGE_DESCRIPTION} in Whiteout Survival.`,
   icon: PAGE_ICON,
@@ -54,7 +50,7 @@ const {
       <!-- Building Selection Grid -->
       <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         <Card
-          v-for="building in BUILDINGS"
+          v-for="building in FC_BUILDINGS"
           :key="building.id"
         >
           <template #title>
@@ -118,8 +114,8 @@ const {
                       :key="level.id"
                     >
                       <span class="block font-bold">To {{ level.label }}:</span>
-                      <span v-if="MATERIALS.some(({ key }) => level.cost[key] > 0)">
-                        {{ renderBuildingUpgradeMaterialCosts(MATERIALS, level.cost) }}
+                      <span v-if="FC_MATERIALS.some(({ key }) => level.cost[key] > 0)">
+                        {{ renderFireCrystalBuildingUpgradeMaterialCosts(FC_MATERIALS, level.cost) }}
                       </span>
                     </li>
                   </ol>
@@ -128,8 +124,8 @@ const {
                 <h5 class="font-bold">
                   Upgrade cost:
                 </h5>
-                <p v-if="MATERIALS.some(({ key }) => buildingCosts[building.id].total[key] > 0)">
-                  {{ renderBuildingUpgradeMaterialCosts(MATERIALS, buildingCosts[building.id].total) }}
+                <p v-if="FC_MATERIALS.some(({ key }) => buildingCosts[building.id].total[key] > 0)">
+                  {{ renderFireCrystalBuildingUpgradeMaterialCosts(FC_MATERIALS, buildingCosts[building.id].total) }}
                 </p>
               </div>
               <div
@@ -159,7 +155,7 @@ const {
             >
               <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <div
-                  v-for="{ key, label, icon, iconColorClass } in MATERIALS"
+                  v-for="{ key, label, icon, iconColorClass } in FC_MATERIALS"
                   :key="`inv-${key}`"
                   class="flex items-center gap-2"
                 >
@@ -193,7 +189,7 @@ const {
                 class="inline-grid grid-cols-[auto,auto,auto] items-center gap-x-3 gap-y-1.5"
               >
                 <template
-                  v-for="{ key, label, icon, iconColorClass } in MATERIALS"
+                  v-for="{ key, label, icon, iconColorClass } in FC_MATERIALS"
                   :key="`rem-${key}`"
                 >
                   <template v-if="grandTotalCost[key] > 0 || state.inventory[key] > 0">
