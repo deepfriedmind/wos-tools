@@ -1,5 +1,10 @@
 # Conventional Commits Guide for LLMs
 
+IMPORTANT:
+
+- Do NOT use the `fix` type for anything other than bug fixes
+- Changes to config files should use the `chore` type
+
 ## Format
 
 ```
