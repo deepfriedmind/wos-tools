@@ -64,8 +64,7 @@ export interface LevelOption {
 export type Material = keyof UpgradeCost
 
 export interface MaterialInfo {
-  icon: string
-  iconColorClass: string
+  imagePath: string
   key: Material
   label: string
 }

@@ -5,36 +5,34 @@ import type {
 } from '~/types/fire-crystal-building'
 import { BuildingType } from '~/types/fire-crystal-building'
 
-// Define materials with their icons and colors
 export const FC_MATERIALS: MaterialInfo[] = [
-  { icon: 'game-icons:pine-tree', iconColorClass: 'bg-gradient-to-tr from-green-800 to-green-600 via-green-700', key: 'wood', label: 'Wood' },
-  { icon: 'game-icons:meat', iconColorClass: 'bg-gradient-to-tr from-red-800 to-red-600 via-red-700', key: 'meat', label: 'Meat' },
-  { icon: 'game-icons:coal', iconColorClass: 'bg-gradient-to-tr from-gray-900 to-gray-700 via-gray-800', key: 'coal', label: 'Coal' },
-  { icon: 'game-icons:anvil', iconColorClass: 'bg-gradient-to-tr from-slate-700 to-slate-500 via-slate-600', key: 'iron', label: 'Iron' },
-  { icon: 'game-icons:crystal-growth', iconColorClass: 'bg-gradient-to-tr from-orange-600 to-orange-400 via-orange-500', key: 'fireCrystal', label: 'Fire Crystal' },
-  { icon: 'game-icons:crystal-shine', iconColorClass: 'bg-gradient-to-tr from-purple-600 to-purple-400 via-purple-500', key: 'refinedFireCrystal', label: 'Refined Fire Crystal' },
+  { imagePath: '/img/rss-wood.webp', key: 'wood', label: 'Wood' },
+  { imagePath: '/img/rss-meat.webp', key: 'meat', label: 'Meat' },
+  { imagePath: '/img/rss-coal.webp', key: 'coal', label: 'Coal' },
+  { imagePath: '/img/rss-iron.webp', key: 'iron', label: 'Iron' },
+  { imagePath: '/img/fc.webp', key: 'fireCrystal', label: 'Fire Crystal' },
+  { imagePath: '/img/fc.webp', key: 'refinedFireCrystal', label: 'Refined Fire Crystal' }, // Using FC image as a temporary placeholder
 ]
 
-// Define building information
 export const FC_BUILDINGS: BuildingInfo[] = [
   {
     description: 'Main building for Fire Crystal Age upgrades',
     icon: 'game-icons:furnace',
-    iconColorClass: 'bg-gradient-to-tr from-red-700 to-orange-500 via-red-600',
+    iconColorClass: 'bg-gradient-to-t from-red-700 to-red-600 via-orange-600',
     id: BuildingType.FURNACE,
     name: 'Furnace',
   },
   {
     description: 'Required for alliance interactions',
-    icon: 'game-icons:castle',
-    iconColorClass: 'bg-gradient-to-tr from-blue-700 to-blue-500 via-blue-600',
+    icon: 'game-icons:olive',
+    iconColorClass: 'bg-gradient-to-tl from-green-600 to-green-500 via-lime-600',
     id: BuildingType.EMBASSY,
     name: 'Embassy',
   },
   {
     description: 'Controls troop movements and rallies',
-    icon: 'game-icons:control-tower',
-    iconColorClass: 'bg-gradient-to-tr from-gray-700 to-gray-500 via-gray-600',
+    icon: 'game-icons:tower-flag',
+    iconColorClass: 'bg-gradient-to-t from-gray-600 to-red-600 via-gray-400',
     id: BuildingType.COMMAND_CENTER,
     name: 'Command Center',
   },
@@ -47,28 +45,28 @@ export const FC_BUILDINGS: BuildingInfo[] = [
   },
   {
     description: 'Trains infantry troops',
-    icon: 'game-icons:spear-head',
+    icon: 'game-icons:templar-shield',
     iconColorClass: 'bg-gradient-to-tr from-yellow-700 to-yellow-500 via-yellow-600',
     id: BuildingType.INFANTRY_CAMP,
     name: 'Infantry Camp',
   },
   {
     description: 'Trains lancer troops',
-    icon: 'game-icons:cavalry',
+    icon: 'game-icons:barbed-spear',
     iconColorClass: 'bg-gradient-to-tr from-blue-700 to-blue-500 via-blue-600',
     id: BuildingType.LANCER_CAMP,
     name: 'Lancer Camp',
   },
   {
     description: 'Trains marksman troops',
-    icon: 'game-icons:bow-arrow',
+    icon: 'game-icons:pocket-bow',
     iconColorClass: 'bg-gradient-to-tr from-green-700 to-green-500 via-green-600',
     id: BuildingType.MARKSMAN_CAMP,
     name: 'Marksman Camp',
   },
   {
     description: 'Researches military technologies',
-    icon: 'game-icons:scroll-unfurled',
+    icon: 'game-icons:great-war-tank',
     iconColorClass: 'bg-gradient-to-tr from-purple-700 to-purple-500 via-purple-600',
     id: BuildingType.WAR_ACADEMY,
     name: 'War Academy',

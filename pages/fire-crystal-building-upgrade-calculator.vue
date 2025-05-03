@@ -155,16 +155,17 @@ const {
             >
               <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <div
-                  v-for="{ key, label, icon, iconColorClass } in FC_MATERIALS"
+                  v-for="{ key, label, imagePath } in FC_MATERIALS"
                   :key="`inv-${key}`"
                   class="flex items-center gap-2"
                 >
-                  <Icon
-                    :aria-label="label"
-                    :class="iconColorClass"
-                    :name="icon"
-                    size="40"
-                  />
+                  <img
+                    :alt="label"
+                    :src="imagePath"
+                    width="40"
+                    height="40"
+                    class="drop-shadow-lg"
+                  >
                   <FloatLabel
                     variant="on"
                     class="flex-1"
@@ -189,16 +190,17 @@ const {
                 class="inline-grid grid-cols-[auto,auto,auto] items-center gap-x-3 gap-y-1.5"
               >
                 <template
-                  v-for="{ key, label, icon, iconColorClass } in FC_MATERIALS"
+                  v-for="{ key, label, imagePath } in FC_MATERIALS"
                   :key="`rem-${key}`"
                 >
                   <template v-if="grandTotalCost[key] > 0 || state.inventory[key] > 0">
-                    <Icon
-                      :aria-label="label"
-                      :class="iconColorClass"
-                      :name="icon"
-                      size="20"
-                    />
+                    <img
+                      :alt="label"
+                      :src="imagePath"
+                      width="20"
+                      height="20"
+                      class="drop-shadow"
+                    >
                     <span class="font-medium">{{ label }}:</span>
                     <span
                       class="text-right font-bold tabular-nums"
@@ -241,15 +243,16 @@ const {
                 class="inline-grid grid-cols-[repeat(3,auto)] items-center gap-x-3 gap-y-1.5 text-lg"
               >
                 <template
-                  v-for="{ key, label, icon, iconColorClass } in filteredGrandTotalMaterials"
+                  v-for="{ key, label, imagePath } in filteredGrandTotalMaterials"
                   :key="key"
                 >
-                  <Icon
-                    :aria-label="label"
-                    :class="iconColorClass"
-                    :name="icon"
-                    size="22"
-                  />
+                  <img
+                    :alt="label"
+                    :src="imagePath"
+                    width="24"
+                    height="24"
+                    class="drop-shadow"
+                  >
                   <span class="font-medium">{{ label }}:</span>
                   <span class="text-right font-bold tabular-nums">{{ formatNumber(grandTotalCost[key]) }}</span>
                 </template>

@@ -8,8 +8,6 @@ import type {
   UpgradeLevel,
 } from '~/types/fire-crystal-building'
 
-// FC_MATERIALS is auto-imported by Nuxt
-
 /**
  * Returns a string for Fire Crystal building upgrade material costs with comma separation, omitting zero values.
  * @param materials Array of { key, label }
@@ -55,12 +53,7 @@ export default function useFireCrystalBuildingCalculator(
     }
   })
 
-  // Use type assertion to ensure type safety
-  const filteredGrandTotalMaterials = computed(() => {
-    const materials = FC_MATERIALS as { icon: string, iconColorClass: string, key: keyof UpgradeCost, label: string }[]
-
-    return materials.filter(({ key }) => grandTotalCost.value[key] > 0)
-  })
+  const filteredGrandTotalMaterials = computed(() => FC_MATERIALS.filter(({ key }) => grandTotalCost.value[key] > 0))
 
   const remainingCost = computed(() => {
     const { inventory } = state.value
@@ -126,9 +119,6 @@ export default function useFireCrystalBuildingCalculator(
     // Get the appropriate upgrade level map for this building type
     const levelMap = upgradeLevelMap[buildingType]
 
-    // This check is for type safety, but the IDE knows levelMap will always exist
-    // We'll keep it for robustness in case the data structure changes
-    /* c8 ignore next 2 */
     if (levelMap === undefined)
       return result
 
@@ -150,9 +140,6 @@ export default function useFireCrystalBuildingCalculator(
     // Get the appropriate upgrade data for this building type
     const data = upgradeData[buildingType]
 
-    // This check is for type safety, but the IDE knows data will always exist
-    // We'll keep it for robustness in case the data structure changes
-    /* c8 ignore next 2 */
     if (data === undefined)
       return result
 
