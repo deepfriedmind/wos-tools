@@ -42,16 +42,10 @@ const {
   remainingCost,
 } = useFireCrystalBuildingCalculator(state, upgradeData, upgradeLevelMap)
 
-// Format numbers with commas
-function formatNumber(value: number): string {
-  return value.toLocaleString()
-}
-
-// Helper function to render material costs as a string
 function renderBuildingUpgradeMaterialCosts(materials: MaterialInfo[], costs: UpgradeCost): string {
   return materials
     .filter(({ key }) => costs[key as keyof UpgradeCost] > 0)
-    .map(({ key, label }) => `${formatNumber(costs[key as keyof UpgradeCost])} ${label}`)
+    .map(({ key, label }) => `${formatNumber(costs[key as keyof UpgradeCost], true)} ${label}`)
     .join(', ')
 }
 </script>
