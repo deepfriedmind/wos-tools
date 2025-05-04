@@ -137,10 +137,10 @@ const EMBASSY_UPGRADE_DATA_RAW: Array<Omit<UpgradeLevel, 'baseTier' | 'index'>> 
   { cost: { coal: 2_700_000, fireCrystal: 33, iron: 670_000, meat: 13_000_000, refinedFireCrystal: 0, wood: 13_000_000 }, id: 'l30_3', label: '30-3', prerequisites: 'Furnace FC-1', stars: 3, tier: '30' },
   { cost: { coal: 2_700_000, fireCrystal: 33, iron: 670_000, meat: 13_000_000, refinedFireCrystal: 0, wood: 13_000_000 }, id: 'l30_4', label: '30-4', prerequisites: 'Furnace FC-1', stars: 4, tier: '30' },
   { cost: { coal: 2_700_000, fireCrystal: 33, iron: 670_000, meat: 13_000_000, refinedFireCrystal: 0, wood: 13_000_000 }, id: 'fc1_0', label: 'FC 1', prerequisites: 'Furnace FC-1', stars: 0, tier: 'FC 1' },
-  { cost: { coal: 2_900_000, fireCrystal: 39, iron: 720_000, meat: 14_000_000, refinedFireCrystal: 0, wood: 14_000_000 }, id: 'fc1_1', label: 'FC 1-1', prerequisites: 'Furnace FC-2', stars: 1, tier: 'FC 1' },
-  { cost: { coal: 2_900_000, fireCrystal: 39, iron: 720_000, meat: 14_000_000, refinedFireCrystal: 0, wood: 14_000_000 }, id: 'fc1_2', label: 'FC 1-2', prerequisites: 'Furnace FC-2', stars: 2, tier: 'FC 1' },
-  { cost: { coal: 2_900_000, fireCrystal: 39, iron: 720_000, meat: 14_000_000, refinedFireCrystal: 0, wood: 14_000_000 }, id: 'fc1_3', label: 'FC 1-3', prerequisites: 'Furnace FC-2', stars: 3, tier: 'FC 1' },
-  { cost: { coal: 2_900_000, fireCrystal: 39, iron: 720_000, meat: 14_000_000, refinedFireCrystal: 0, wood: 14_000_000 }, id: 'fc1_4', label: 'FC 1-4', prerequisites: 'Furnace FC-2', stars: 4, tier: 'FC 1' },
+  { cost: { coal: 2_900_000, fireCrystal: 39, iron: 720_000, meat: 14_000_000, refinedFireCrystal: 0, wood: 14_000_000 }, id: 'fc1_1', label: 'FC1-1', prerequisites: 'Furnace FC-2', stars: 1, tier: 'FC 1' },
+  { cost: { coal: 2_900_000, fireCrystal: 39, iron: 720_000, meat: 14_000_000, refinedFireCrystal: 0, wood: 14_000_000 }, id: 'fc1_2', label: 'FC1-2', prerequisites: 'Furnace FC-2', stars: 2, tier: 'FC 1' },
+  { cost: { coal: 2_900_000, fireCrystal: 39, iron: 720_000, meat: 14_000_000, refinedFireCrystal: 0, wood: 14_000_000 }, id: 'fc1_3', label: 'FC1-3', prerequisites: 'Furnace FC-2', stars: 3, tier: 'FC 1' },
+  { cost: { coal: 2_900_000, fireCrystal: 39, iron: 720_000, meat: 14_000_000, refinedFireCrystal: 0, wood: 14_000_000 }, id: 'fc1_4', label: 'FC1-4', prerequisites: 'Furnace FC-2', stars: 4, tier: 'FC 1' },
   { cost: { coal: 2_900_000, fireCrystal: 39, iron: 1_000_000, meat: 14_000_000, refinedFireCrystal: 0, wood: 14_000_000 }, id: 'fc2_0', label: 'FC 2', prerequisites: 'Furnace FC-2', stars: 0, tier: 'FC 2' },
   { cost: { coal: 3_100_000, fireCrystal: 59, iron: 790_000, meat: 15_000_000, refinedFireCrystal: 0, wood: 15_000_000 }, id: 'fc2_1', label: 'FC2-1', prerequisites: 'Furnace FC-3', stars: 1, tier: 'FC 2' },
   { cost: { coal: 3_100_000, fireCrystal: 59, iron: 790_000, meat: 15_000_000, refinedFireCrystal: 0, wood: 15_000_000 }, id: 'fc2_2', label: 'FC2-2', prerequisites: 'Furnace FC-3', stars: 2, tier: 'FC 2' },
@@ -427,17 +427,4 @@ export const FC_UPGRADE_LEVEL_MAP: Record<string, Map<string, UpgradeLevel>> = {
   [BuildingType.LANCER_CAMP]: new Map(FC_UPGRADE_DATA[BuildingType.LANCER_CAMP].map(level => [level.id, level])),
   [BuildingType.MARKSMAN_CAMP]: new Map(FC_UPGRADE_DATA[BuildingType.MARKSMAN_CAMP].map(level => [level.id, level])),
   [BuildingType.WAR_ACADEMY]: new Map(FC_UPGRADE_DATA[BuildingType.WAR_ACADEMY].map(level => [level.id, level])),
-}
-
-export const FC_TIER_COLOR_CLASSES: Record<string, string> = {
-  'FC 1': 'text-blue-400',
-  'FC 2': 'text-green-400',
-  'FC 3': 'text-yellow-400',
-  'FC 4': 'text-orange-400',
-  'FC 5': 'text-red-400',
-  'FC 6': 'text-purple-400',
-  'FC 7': 'text-pink-400',
-  'FC 8': 'text-indigo-400',
-  'FC 9': 'text-teal-400',
-  'FC 10': 'text-amber-400',
 }

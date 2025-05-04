@@ -98,10 +98,6 @@ vi.mock('~/constants/fire-crystal-building', () => {
       { icon: 'icon', iconColorClass: 'class', key: 'fireCrystal', label: 'Fire Crystal' },
       { icon: 'icon', iconColorClass: 'class', key: 'refinedFireCrystal', label: 'Refined Fire Crystal' },
     ],
-    FC_TIER_COLOR_CLASSES: {
-      'FC 1': 'text-blue-400',
-      'FC 2': 'text-green-400',
-    },
     FC_UPGRADE_DATA: mockUpgradeData,
     FC_UPGRADE_LEVEL_MAP: mockUpgradeLevelMap,
   }
