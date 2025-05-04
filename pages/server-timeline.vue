@@ -7,7 +7,7 @@ import milestones from '~/public/data/server-timeline.json'
 const PAGE_TITLE = 'Server Timeline'
 const PAGE_DESCRIPTION = 'Information about the milestones a server/state goes through and when they unlock (approximately)'
 const PAGE_ICON = 'mdi:chart-timeline-variant-shimmer'
-const PAGE_ICON_COLOR_CLASS = 'bg-gradient-to-t from-blue-600 to-yellow-500 via-blue-500'
+const PAGE_ICON_COLOR_CLASS = 'bg-gradient-to-t from-blue-600 to-yellow-500 to-85% via-blue-500'
 const SERVER_TIMELINE_IMAGE_LABEL = 'Server timeline illustration from the Whiteout Survival Discord server'
 
 definePageMeta({
