@@ -1,7 +1,6 @@
 import type {
   BuildingInfo,
   MaterialInfo,
-  UpgradeLevel,
 } from '~/types/fire-crystal-building'
 import { BuildingType } from '~/types/fire-crystal-building'
 
@@ -73,15 +72,7 @@ export const FC_BUILDINGS: BuildingInfo[] = [
   },
 ]
 
-// Helper to extract base tier (FC level)
-function getBaseTier(tier: string): string {
-  // Extract the FC part (e.g., "FC 1" from "FC 1-2")
-  const match = tier.match(/^(FC \d+)/)
-
-  return match ? match[1] : tier
-}
-
-const FURNACE_UPGRADE_DATA_RAW: Array<Omit<UpgradeLevel, 'baseTier' | 'index'>> = [
+const FURNACE_UPGRADE_DATA = [
   { cost: { coal: 13_000_000, fireCrystal: 132, iron: 3_300_000, meat: 67_000_000, refinedFireCrystal: 0, wood: 67_000_000 }, id: 'fc1_0', label: 'FC 1', prerequisites: 'Embassy Lv. 30', stars: 0, tier: 'FC 1' },
   { cost: { coal: 14_000_000, fireCrystal: 158, iron: 3_600_000, meat: 72_000_000, refinedFireCrystal: 0, wood: 72_000_000 }, id: 'fc1_1', label: 'FC 1-1', prerequisites: 'Embassy FC 1', stars: 1, tier: 'FC 1' },
   { cost: { coal: 14_000_000, fireCrystal: 158, iron: 3_600_000, meat: 72_000_000, refinedFireCrystal: 0, wood: 72_000_000 }, id: 'fc1_2', label: 'FC 1-2', prerequisites: 'Embassy FC 1', stars: 2, tier: 'FC 1' },
@@ -131,7 +122,7 @@ const FURNACE_UPGRADE_DATA_RAW: Array<Omit<UpgradeLevel, 'baseTier' | 'index'>> 
 ]
 
 // Embassy upgrade data - similar to furnace but with different costs
-const EMBASSY_UPGRADE_DATA_RAW: Array<Omit<UpgradeLevel, 'baseTier' | 'index'>> = [
+const EMBASSY_UPGRADE_DATA = [
   { cost: { coal: 2_700_000, fireCrystal: 33, iron: 670_000, meat: 13_000_000, refinedFireCrystal: 0, wood: 13_000_000 }, id: 'l30_1', label: '30-1', prerequisites: 'Furnace FC-1', stars: 1, tier: '30' },
   { cost: { coal: 2_700_000, fireCrystal: 33, iron: 670_000, meat: 13_000_000, refinedFireCrystal: 0, wood: 13_000_000 }, id: 'l30_2', label: '30-2', prerequisites: 'Furnace FC-1', stars: 2, tier: '30' },
   { cost: { coal: 2_700_000, fireCrystal: 33, iron: 670_000, meat: 13_000_000, refinedFireCrystal: 0, wood: 13_000_000 }, id: 'l30_3', label: '30-3', prerequisites: 'Furnace FC-1', stars: 3, tier: '30' },
@@ -185,7 +176,7 @@ const EMBASSY_UPGRADE_DATA_RAW: Array<Omit<UpgradeLevel, 'baseTier' | 'index'>> 
 ]
 
 // Command Center upgrade data
-const COMMAND_CENTER_UPGRADE_DATA_RAW: Array<Omit<UpgradeLevel, 'baseTier' | 'index'>> = [
+const COMMAND_CENTER_UPGRADE_DATA = [
   { cost: { coal: 4_000_000, fireCrystal: 26, iron: 1_000_000, meat: 20_000_000, refinedFireCrystal: 0, wood: 20_000_000 }, id: 'l30_1', label: '30-1', prerequisites: 'Embassy FC-1, Furnace FC-1', stars: 1, tier: '30' },
   { cost: { coal: 4_000_000, fireCrystal: 26, iron: 1_000_000, meat: 20_000_000, refinedFireCrystal: 0, wood: 20_000_000 }, id: 'l30_2', label: '30-2', prerequisites: 'Embassy FC-1, Furnace FC-1', stars: 2, tier: '30' },
   { cost: { coal: 4_000_000, fireCrystal: 26, iron: 1_000_000, meat: 20_000_000, refinedFireCrystal: 0, wood: 20_000_000 }, id: 'l30_3', label: '30-3', prerequisites: 'Embassy FC-1, Furnace FC-1', stars: 3, tier: '30' },
@@ -239,7 +230,7 @@ const COMMAND_CENTER_UPGRADE_DATA_RAW: Array<Omit<UpgradeLevel, 'baseTier' | 'in
 ]
 
 // Infirmary upgrade data
-const INFIRMARY_UPGRADE_DATA_RAW: Array<Omit<UpgradeLevel, 'baseTier' | 'index'>> = [
+const INFIRMARY_UPGRADE_DATA = [
   { cost: { coal: 3_300_000, fireCrystal: 26, iron: 840_000, meat: 16_000_000, refinedFireCrystal: 0, wood: 16_000_000 }, id: 'l30_1', label: '30-1', prerequisites: 'Furnace FC-1', stars: 1, tier: '30' },
   { cost: { coal: 3_300_000, fireCrystal: 26, iron: 840_000, meat: 16_000_000, refinedFireCrystal: 0, wood: 16_000_000 }, id: 'l30_2', label: '30-2', prerequisites: 'Furnace FC-1', stars: 2, tier: '30' },
   { cost: { coal: 3_300_000, fireCrystal: 26, iron: 840_000, meat: 16_000_000, refinedFireCrystal: 0, wood: 16_000_000 }, id: 'l30_3', label: '30-3', prerequisites: 'Furnace FC-1', stars: 3, tier: '30' },
@@ -293,7 +284,7 @@ const INFIRMARY_UPGRADE_DATA_RAW: Array<Omit<UpgradeLevel, 'baseTier' | 'index'>
 ]
 
 // Camp upgrade data (shared by all camp types)
-const CAMP_UPGRADE_DATA_RAW: Array<Omit<UpgradeLevel, 'baseTier' | 'index'>> = [
+const CAMP_UPGRADE_DATA = [
   { cost: { coal: 4_700_000, fireCrystal: 59, iron: 1_100_000, meat: 23_000_000, refinedFireCrystal: 0, wood: 23_000_000 }, id: 'l30_1', label: '30-1', prerequisites: 'Furnace FC-1', stars: 1, tier: '30' },
   { cost: { coal: 4_700_000, fireCrystal: 59, iron: 1_100_000, meat: 23_000_000, refinedFireCrystal: 0, wood: 23_000_000 }, id: 'l30_2', label: '30-2', prerequisites: 'Furnace FC-1', stars: 2, tier: '30' },
   { cost: { coal: 4_700_000, fireCrystal: 59, iron: 1_100_000, meat: 23_000_000, refinedFireCrystal: 0, wood: 23_000_000 }, id: 'l30_3', label: '30-3', prerequisites: 'Furnace FC-1', stars: 3, tier: '30' },
@@ -347,7 +338,7 @@ const CAMP_UPGRADE_DATA_RAW: Array<Omit<UpgradeLevel, 'baseTier' | 'index'>> = [
 ]
 
 // War Academy upgrade data
-const WAR_ACADEMY_UPGRADE_DATA_RAW: Array<Omit<UpgradeLevel, 'baseTier' | 'index'>> = [
+const WAR_ACADEMY_UPGRADE_DATA = [
   { cost: { coal: 0, fireCrystal: 0, iron: 0, meat: 0, refinedFireCrystal: 0, wood: 0 }, id: 'fc1_0', label: 'FC 1', prerequisites: 'Furnace FC 1', stars: 0, tier: 'FC 1' },
   { cost: { coal: 7_200_000, fireCrystal: 71, iron: 1_800_000, meat: 36_000_000, refinedFireCrystal: 0, wood: 36_000_000 }, id: 'fc1_1', label: 'FC 1-1', prerequisites: 'Furnace FC 2', stars: 1, tier: 'FC 1' },
   { cost: { coal: 7_200_000, fireCrystal: 71, iron: 1_800_000, meat: 36_000_000, refinedFireCrystal: 0, wood: 36_000_000 }, id: 'fc1_2', label: 'FC 1-2', prerequisites: 'Furnace FC 2', stars: 2, tier: 'FC 1' },
@@ -396,35 +387,22 @@ const WAR_ACADEMY_UPGRADE_DATA_RAW: Array<Omit<UpgradeLevel, 'baseTier' | 'index
   { cost: { coal: 16_000_000, fireCrystal: 78, iron: 7_200_000, meat: 84_000_000, refinedFireCrystal: 61, wood: 84_000_000 }, id: 'fc10_0', label: 'FC 10', prerequisites: 'Furnace FC 10', stars: 0, tier: 'FC 10' },
 ]
 
-// Process the raw data to add baseTier and index
-function processUpgradeData(rawData: Array<Omit<UpgradeLevel, 'baseTier' | 'index'>>): UpgradeLevel[] {
-  return rawData.map((level, index) => ({
-    ...level,
-    baseTier: getBaseTier(level.tier),
-    index,
-  }))
-}
-
 // Create the upgrade data for each building type
-export const FC_UPGRADE_DATA: Record<string, UpgradeLevel[]> = {
-  [BuildingType.COMMAND_CENTER]: processUpgradeData(COMMAND_CENTER_UPGRADE_DATA_RAW),
-  [BuildingType.EMBASSY]: processUpgradeData(EMBASSY_UPGRADE_DATA_RAW),
-  [BuildingType.FURNACE]: processUpgradeData(FURNACE_UPGRADE_DATA_RAW),
-  [BuildingType.INFANTRY_CAMP]: processUpgradeData(CAMP_UPGRADE_DATA_RAW),
-  [BuildingType.INFIRMARY]: processUpgradeData(INFIRMARY_UPGRADE_DATA_RAW),
-  [BuildingType.LANCER_CAMP]: processUpgradeData(CAMP_UPGRADE_DATA_RAW),
-  [BuildingType.MARKSMAN_CAMP]: processUpgradeData(CAMP_UPGRADE_DATA_RAW),
-  [BuildingType.WAR_ACADEMY]: processUpgradeData(WAR_ACADEMY_UPGRADE_DATA_RAW),
+export const FC_UPGRADE_DATA = {
+  [BuildingType.COMMAND_CENTER]: COMMAND_CENTER_UPGRADE_DATA,
+  [BuildingType.EMBASSY]: EMBASSY_UPGRADE_DATA,
+  [BuildingType.FURNACE]: FURNACE_UPGRADE_DATA,
+  [BuildingType.INFANTRY_CAMP]: CAMP_UPGRADE_DATA,
+  [BuildingType.INFIRMARY]: INFIRMARY_UPGRADE_DATA,
+  [BuildingType.LANCER_CAMP]: CAMP_UPGRADE_DATA,
+  [BuildingType.MARKSMAN_CAMP]: CAMP_UPGRADE_DATA,
+  [BuildingType.WAR_ACADEMY]: WAR_ACADEMY_UPGRADE_DATA,
 }
 
 // Create the upgrade level maps for each building type
-export const FC_UPGRADE_LEVEL_MAP: Record<string, Map<string, UpgradeLevel>> = {
-  [BuildingType.COMMAND_CENTER]: new Map(FC_UPGRADE_DATA[BuildingType.COMMAND_CENTER].map(level => [level.id, level])),
-  [BuildingType.EMBASSY]: new Map(FC_UPGRADE_DATA[BuildingType.EMBASSY].map(level => [level.id, level])),
-  [BuildingType.FURNACE]: new Map(FC_UPGRADE_DATA[BuildingType.FURNACE].map(level => [level.id, level])),
-  [BuildingType.INFANTRY_CAMP]: new Map(FC_UPGRADE_DATA[BuildingType.INFANTRY_CAMP].map(level => [level.id, level])),
-  [BuildingType.INFIRMARY]: new Map(FC_UPGRADE_DATA[BuildingType.INFIRMARY].map(level => [level.id, level])),
-  [BuildingType.LANCER_CAMP]: new Map(FC_UPGRADE_DATA[BuildingType.LANCER_CAMP].map(level => [level.id, level])),
-  [BuildingType.MARKSMAN_CAMP]: new Map(FC_UPGRADE_DATA[BuildingType.MARKSMAN_CAMP].map(level => [level.id, level])),
-  [BuildingType.WAR_ACADEMY]: new Map(FC_UPGRADE_DATA[BuildingType.WAR_ACADEMY].map(level => [level.id, level])),
-}
+export const FC_UPGRADE_LEVEL_MAP = Object.fromEntries(
+  Object.entries(FC_UPGRADE_DATA).map(([buildingType, levels]) => [
+    buildingType,
+    new Map(levels.map(level => [level.id, level])),
+  ]),
+)

@@ -79,10 +79,8 @@ export interface UpgradeCost {
 }
 
 export interface UpgradeLevel {
-  baseTier: string // e.g., 'FC 1', 'FC 2'
   cost: UpgradeCost // Cost to reach THIS level from the PREVIOUS one
   id: string // e.g., 'fc1_0', 'fc2_3'
-  index: number // Added index for easier comparison
   label: string // e.g., 'FC 1', 'FC 1-1', 'FC 2-3'
   prerequisites?: string // e.g., 'Embassy FC 1'
   stars: number // 0-4 (for sub-levels)

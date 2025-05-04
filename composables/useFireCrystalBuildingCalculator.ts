@@ -119,13 +119,19 @@ export default function useFireCrystalBuildingCalculator(
     // Get the appropriate upgrade level map for this building type
     const levelMap = upgradeLevelMap[buildingType]
 
-    if (levelMap === undefined)
-      return result
-
     const fromLevel = levelMap.get(fromId)
     const toLevel = levelMap.get(toId)
 
-    if (fromLevel == null || toLevel == null || fromLevel.index >= toLevel.index)
+    if (fromLevel == null || toLevel == null)
+      return result
+
+    // Get the data array for this building type
+    const data = upgradeData[buildingType]
+
+    const fromIndex = data.indexOf(fromLevel)
+    const toIndex = data.indexOf(toLevel)
+
+    if (fromIndex >= toIndex)
       return result
 
     let cumulativeCost: UpgradeCost = {
@@ -137,13 +143,7 @@ export default function useFireCrystalBuildingCalculator(
       wood: 0,
     }
 
-    // Get the appropriate upgrade data for this building type
-    const data = upgradeData[buildingType]
-
-    if (data === undefined)
-      return result
-
-    for (let index = fromLevel.index + 1; index <= toLevel.index; index++) {
+    for (let index = fromIndex + 1; index <= toIndex; index++) {
       const currentLevel = data[index]
 
       if (currentLevel != null) {

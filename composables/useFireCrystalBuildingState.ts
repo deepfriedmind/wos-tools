@@ -38,20 +38,17 @@ export default function useFireCrystalBuildingState() {
     const groupedLevels: Record<string, LevelOption[]> = {}
 
     for (const level of furnaceData) {
-      const { baseTier } = level
+      const { tier } = level
 
-      // Ensure baseTier is a valid string
-      if (baseTier != null && typeof baseTier === 'string' && baseTier !== '') {
-        // Initialize array for this tier if it doesn't exist
-        if (groupedLevels[baseTier] == null) {
-          groupedLevels[baseTier] = []
-        }
-
-        groupedLevels[baseTier].push({
-          id: level.id,
-          label: level.label,
-        })
+      // Initialize array for this tier if it doesn't exist
+      if (groupedLevels[tier] == null) {
+        groupedLevels[tier] = []
       }
+
+      groupedLevels[tier].push({
+        id: level.id,
+        label: level.label,
+      })
     }
 
     // Convert grouped levels to select options
@@ -177,14 +174,16 @@ export default function useFireCrystalBuildingState() {
     // FC_UPGRADE_LEVEL_MAP is guaranteed to have entries for all building types
     const levelMap = FC_UPGRADE_LEVEL_MAP[buildingType]
 
-    // Safety check, but this should never happen with valid building types
-    if (levelMap == null || !(levelMap instanceof Map) || levelMap.size === 0)
-      return []
-
     const fromLevel = levelMap.get(fromId)
 
     if (!fromLevel)
       return []
+
+    // Get the data array for this building type
+    const data = FC_UPGRADE_DATA[buildingType]
+
+    // Get the index of the fromLevel in the data array
+    const fromIndex = data.indexOf(fromLevel)
 
     // Filter options to only include levels higher than the 'From' level
     return selectOptions.value
@@ -193,7 +192,7 @@ export default function useFireCrystalBuildingState() {
         levels: group.levels.filter((level) => {
           const toLevel = levelMap.get(level.id)
 
-          return toLevel && toLevel.index > fromLevel.index
+          return toLevel && data.indexOf(toLevel) > fromIndex
         }),
       }))
       .filter(group => group.levels.length > 0)
@@ -219,10 +218,6 @@ export default function useFireCrystalBuildingState() {
     // FC_UPGRADE_LEVEL_MAP is guaranteed to have entries for all building types
     const levelMap = FC_UPGRADE_LEVEL_MAP[buildingId]
 
-    // Safety check, but this should never happen with valid building types
-    if (levelMap == null || !(levelMap instanceof Map) || levelMap.size === 0)
-      return
-
     const fromLevel = levelMap.get(newFromId)
 
     if (!fromLevel)
@@ -237,17 +232,14 @@ export default function useFireCrystalBuildingState() {
     // FC_UPGRADE_DATA is guaranteed to have entries for all building types
     const data = FC_UPGRADE_DATA[buildingId]
 
-    // Safety check, but this should never happen with valid building types
-    if (data == null || !Array.isArray(data) || data.length === 0)
-      return
-
-    const isNotLastLevel = fromLevel.index < data.length - 1
-    const isToInvalid = !currentToLevel || currentToLevel.index <= fromLevel.index
+    const fromIndex = data.indexOf(fromLevel)
+    const isNotLastLevel = fromIndex < data.length - 1
+    const isToInvalid = !currentToLevel || data.indexOf(currentToLevel) <= fromIndex
 
     if (isNotLastLevel) {
       if (isToInvalid) {
         // If 'To' is invalid or non-existent, set it to the next level (if autoSetNext) or clear it
-        const nextLevel = data[fromLevel.index + 1]
+        const nextLevel = data[fromIndex + 1]
         currentBuildingState.to = autoSetNext ? nextLevel.id : undefined
       }
       // If 'To' is valid and greater than 'From', keep it.
@@ -278,10 +270,6 @@ export default function useFireCrystalBuildingState() {
 
       // FC_UPGRADE_LEVEL_MAP is guaranteed to have entries for all building types
       const levelMap = FC_UPGRADE_LEVEL_MAP[buildingId]
-
-      // Safety check, but this should never happen with valid building types
-      if (levelMap == null || !(levelMap instanceof Map) || levelMap.size === 0)
-        continue
 
       if (fromParameter != null && fromParameter !== '' && levelMap.has(fromParameter)) {
         state.value.buildings[buildingId].from = fromParameter

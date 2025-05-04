@@ -33,30 +33,24 @@ describe('useFireCrystalBuildingCalculator', () => {
   const mockUpgradeData: Record<string, UpgradeLevel[]> = {
     [BuildingType.FURNACE]: [
       {
-        baseTier: 'FC 1',
         cost: { coal: 0, fireCrystal: 0, iron: 0, meat: 0, refinedFireCrystal: 0, wood: 0 },
         id: 'fc1_0',
-        index: 0,
         label: 'FC 1',
         prerequisites: '',
         stars: 0,
         tier: 'FC 1',
       },
       {
-        baseTier: 'FC 1',
         cost: { coal: 14_000_000, fireCrystal: 158, iron: 3_600_000, meat: 72_000_000, refinedFireCrystal: 0, wood: 72_000_000 },
         id: 'fc1_1',
-        index: 1,
         label: 'FC 1-1',
         prerequisites: '',
         stars: 1,
         tier: 'FC 1',
       },
       {
-        baseTier: 'FC 2',
         cost: { coal: 14_000_000, fireCrystal: 158, iron: 3_600_000, meat: 72_000_000, refinedFireCrystal: 0, wood: 72_000_000 },
         id: 'fc2_0',
-        index: 2,
         label: 'FC 2',
         prerequisites: '',
         stars: 0,
