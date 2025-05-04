@@ -11,7 +11,7 @@ export const FC_MATERIALS: MaterialInfo[] = [
   { imagePath: '/img/rss-coal.webp', key: 'coal', label: 'Coal' },
   { imagePath: '/img/rss-iron.webp', key: 'iron', label: 'Iron' },
   { imagePath: '/img/fc.webp', key: 'fireCrystal', label: 'Fire Crystal' },
-  { imagePath: '/img/fc.webp', key: 'refinedFireCrystal', label: 'Refined Fire Crystal' }, // Using FC image as a temporary placeholder
+  { imagePath: '/img/rfc.webp', key: 'refinedFireCrystal', label: 'Refined Fire Crystal' },
 ]
 
 export const FC_BUILDINGS: BuildingInfo[] = [
