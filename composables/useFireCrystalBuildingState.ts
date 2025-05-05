@@ -1,5 +1,4 @@
 import type {
-  BuildingSelection,
   CalculatorState,
   LevelGroupOption,
   Material,
@@ -246,7 +245,7 @@ export default function useFireCrystalBuildingState() {
   // Updates the "Set All" select's "From" value and applies it to all buildings
   function updateSetAllFromSelect(newFromId: string | undefined, autoSetNext = true) {
     // Update the "From" value in the "Set All" select
-    const setAll = state.value.setAll as BuildingSelection
+    const { setAll } = state.value
     setAll.from = newFromId
 
     // Clear or set the "To" level based on the "From" level
@@ -274,7 +273,7 @@ export default function useFireCrystalBuildingState() {
 
   // Updates the "Set All" select's "To" value and applies it to all buildings
   function updateSetAllToSelect(newToId: string | undefined) {
-    (state.value.setAll as BuildingSelection).to = newToId
+    (state.value.setAll).to = newToId
     applyToLevelToAllBuildings(newToId)
   }
 
@@ -299,7 +298,7 @@ export default function useFireCrystalBuildingState() {
 
   // Get filtered 'To' options for the "Set All" functionality
   const setAllToOptions = computed(() => {
-    const setAll = state.value.setAll as BuildingSelection
+    const { setAll } = state.value
 
     if (setAll.from == null || setAll.from === '') {
       return []

@@ -70,20 +70,20 @@ vi.mock('~/constants/fire-crystal-building', () => {
   }
 
   // Create mock upgrade data for all building types
-  Object.values(BuildingType).forEach((buildingType) => {
-    if (!mockUpgradeData[buildingType]) {
+  for (const buildingType of Object.values(BuildingType)) {
+    if (!(buildingType in mockUpgradeData)) {
       mockUpgradeData[buildingType] = mockUpgradeData[BuildingType.FURNACE]
     }
-  })
+  }
 
   // Create mock upgrade level map for all building types
   const mockUpgradeLevelMap: Record<string, Map<string, UpgradeLevel>> = {}
 
-  Object.values(BuildingType).forEach((buildingType) => {
+  for (const buildingType of Object.values(BuildingType)) {
     mockUpgradeLevelMap[buildingType] = new Map(
       mockUpgradeData[buildingType].map(level => [level.id, level]),
     )
-  })
+  }
 
   return {
     FC_BUILDINGS: [],
