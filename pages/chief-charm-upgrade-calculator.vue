@@ -75,7 +75,7 @@ const charmMaterials = CHARM_MATERIALS
               >
                 <div class="grid grid-cols-[auto,1fr,1fr] items-center gap-x-2 gap-y-1">
                   <span class="text-xs font-medium tabular-nums text-primary">#{{ slotIndex }}</span>
-                  <ChiefUpgradeSelect
+                  <UpgradeSelect
                     v-if="state?.gear?.[gearPiece.id]?.[slotIndex - 1]"
                     :model-value="state.gear[gearPiece.id][slotIndex - 1].from"
                     :options="filteredFromOptions"
@@ -83,7 +83,7 @@ const charmMaterials = CHARM_MATERIALS
                     label="From"
                     @change="(value: string | undefined) => handleFromChange(gearPiece.id, slotIndex - 1, value)"
                   />
-                  <ChiefUpgradeSelect
+                  <UpgradeSelect
                     v-if="state?.gear?.[gearPiece.id]?.[slotIndex - 1]"
                     :model-value="state.gear[gearPiece.id][slotIndex - 1].to"
                     :options="getFilteredToOptions(state.gear[gearPiece.id][slotIndex - 1]?.from)"

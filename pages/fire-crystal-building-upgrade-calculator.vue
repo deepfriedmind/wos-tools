@@ -63,14 +63,14 @@ const {
           <template #content>
             <div class="mt-4 space-y-4">
               <div class="grid gap-x-2 gap-y-4 sm:grid-cols-2 md:max-xl:grid-cols-1">
-                <ChiefUpgradeSelect
+                <UpgradeSelect
                   :model-value="state.setAll?.from"
                   :options="filteredFromOptions"
                   grouped-options
                   label="From"
                   @change="(value) => updateSetAllFromSelect(value)"
                 />
-                <ChiefUpgradeSelect
+                <UpgradeSelect
                   :disabled="!state.setAll?.from"
                   :model-value="state.setAll?.to"
                   :options="setAllToOptions"
@@ -104,14 +104,14 @@ const {
               class="mt-4 space-y-4"
             >
               <div class="grid gap-x-2 gap-y-4 sm:grid-cols-2 md:max-xl:grid-cols-1">
-                <ChiefUpgradeSelect
+                <UpgradeSelect
                   :model-value="state.buildings[building.id].from"
                   :options="filteredFromOptions"
                   grouped-options
                   label="From"
                   @change="(value) => handleFromChange(building.id, value)"
                 />
-                <ChiefUpgradeSelect
+                <UpgradeSelect
                   :disabled="!state.buildings[building.id].from"
                   :model-value="state.buildings[building.id].to"
                   :options="getFilteredToOptions(building.id, state.buildings[building.id].from)"

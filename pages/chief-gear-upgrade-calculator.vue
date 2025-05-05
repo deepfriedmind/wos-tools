@@ -68,14 +68,14 @@ const {
               class="mt-4 space-y-4"
             >
               <div class="grid gap-x-2 gap-y-4 sm:grid-cols-2 md:max-xl:grid-cols-1">
-                <ChiefUpgradeSelect
+                <UpgradeSelect
                   :model-value="state.gear[gear.id].from"
                   :options="filteredFromOptions"
                   grouped-options
                   label="From"
                   @change="(value) => handleFromChange(gear.id, value)"
                 />
-                <ChiefUpgradeSelect
+                <UpgradeSelect
                   :disabled="!state.gear[gear.id].from"
                   :model-value="state.gear[gear.id].to"
                   :options="getFilteredToOptions(state.gear[gear.id].from)"
