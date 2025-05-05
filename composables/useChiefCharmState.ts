@@ -72,8 +72,7 @@ export default function useChiefCharmState() {
     return { hasAnyParameter, parameters }
   })
 
-  // Load state from URL on initial load
-  onMounted(() => {
+  function loadStateFromURL() {
     let needsUpdate = false
     const { query } = route
 
@@ -124,6 +123,12 @@ export default function useChiefCharmState() {
       // Trigger immediate URL update if loaded state caused changes
       void router.replace({ query: queryParameters.value.parameters })
     }
+
+    return needsUpdate
+  }
+
+  onMounted(() => {
+    loadStateFromURL()
   })
 
   watchDebounced(queryParameters, (newParameters) => {
@@ -133,10 +138,10 @@ export default function useChiefCharmState() {
 
   // --- Computed Properties for UI ---
 
-  const selectOptions = (() => CHARM_UPGRADE_DATA.map((level: CharmUpgradeLevel) => ({
+  const selectOptions = CHARM_UPGRADE_DATA.map((level: CharmUpgradeLevel) => ({
     id: level.id,
     label: `Lv. ${level.level}`,
-  })))()
+  }))
 
   const filteredFromOptions = computed(() =>
     // Don't include the last level in "From" options

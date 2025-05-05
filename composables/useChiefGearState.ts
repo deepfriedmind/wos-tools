@@ -62,8 +62,7 @@ export default function useChiefGearState() {
     return { hasAnyParameter, parameters }
   })
 
-  // Load state from URL on initial load
-  onMounted(() => {
+  function loadStateFromURL() {
     let needsUpdate = false
     const { query } = route
 
@@ -106,6 +105,12 @@ export default function useChiefGearState() {
       // Use void to explicitly ignore the promise returned by router.replace
       void router.replace({ query: queryParameters.value.parameters })
     }
+
+    return needsUpdate
+  }
+
+  onMounted(() => {
+    loadStateFromURL()
   })
 
   watchDebounced(queryParameters, (newParameters) => {
