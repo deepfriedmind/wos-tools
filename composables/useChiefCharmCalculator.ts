@@ -51,11 +51,8 @@ export default function useChiefCharmCalculator(state: Ref<CharmCalculatorState>
   const grandTotalCost = computed(() => {
     const costsArray = Object.values(gearCosts.value)
 
-    return {
-      charmDesign: useSumBy(costsArray, ({ total }) => total.charmDesign),
-      charmGuide: useSumBy(costsArray, ({ total }) => total.charmGuide),
-      charmSecret: useSumBy(costsArray, ({ total }) => total.charmSecret),
-    }
+    return useMapValues(emptyCharmCost, (_, materialKey) =>
+      useSumBy(costsArray, ({ total }) => total[materialKey])) as CharmUpgradeCost
   })
 
   const filteredGrandTotalMaterials = computed(() => CHARM_MATERIALS.filter(({ key }) => grandTotalCost.value[key] > 0))
