@@ -20,7 +20,6 @@ export enum BuildingType {
 }
 
 export interface BuildingInfo {
-  description: string
   icon: string
   iconColorClass: string
   id: keyof CalculatorState['buildings']

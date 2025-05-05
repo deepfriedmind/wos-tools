@@ -57,9 +57,6 @@ const {
                 size="40"
               />
               <h4>{{ building.name }}</h4>
-              <ToolTip>
-                {{ building.description }}
-              </ToolTip>
             </div>
           </template>
 

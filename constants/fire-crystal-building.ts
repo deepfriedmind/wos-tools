@@ -15,56 +15,48 @@ export const FC_MATERIALS: MaterialInfo[] = [
 
 export const FC_BUILDINGS: BuildingInfo[] = [
   {
-    description: 'Main building for Fire Crystal Age upgrades',
     icon: 'game-icons:furnace',
     iconColorClass: 'bg-gradient-to-t from-red-700 to-red-600 via-orange-600',
     id: BuildingType.FURNACE,
     name: 'Furnace',
   },
   {
-    description: 'Required for alliance interactions',
     icon: 'game-icons:olive',
     iconColorClass: 'bg-gradient-to-tl from-green-600 to-green-500 via-lime-600',
     id: BuildingType.EMBASSY,
     name: 'Embassy',
   },
   {
-    description: 'Controls troop movements and rallies',
     icon: 'game-icons:tower-flag',
     iconColorClass: 'bg-gradient-to-t from-gray-600 to-red-600 to-75% via-gray-400',
     id: BuildingType.COMMAND_CENTER,
     name: 'Command Center',
   },
   {
-    description: 'Heals wounded troops',
     icon: 'game-icons:hospital-cross',
     iconColorClass: 'bg-gradient-to-tl from-red-700 to-red-700 to-50% via-red-600 via-50%',
     id: BuildingType.INFIRMARY,
     name: 'Infirmary',
   },
   {
-    description: 'Trains infantry troops',
     icon: 'game-icons:templar-shield',
     iconColorClass: 'bg-gradient-to-r from-blue-700 to-blue-700 to-50% via-blue-300 via-45%',
     id: BuildingType.INFANTRY_CAMP,
     name: 'Infantry Camp',
   },
   {
-    description: 'Trains lancer troops',
     icon: 'game-icons:barbed-spear',
     iconColorClass: 'bg-gradient-to-br from-orange-800 to-slate-600 via-gray-400 via-40%',
     id: BuildingType.LANCER_CAMP,
     name: 'Lancer Camp',
   },
   {
-    description: 'Trains marksman troops',
     icon: 'game-icons:pocket-bow',
     iconColorClass: 'bg-gradient-to-br from-orange-600 to-gray-500 to-85% via-orange-800',
     id: BuildingType.MARKSMAN_CAMP,
     name: 'Marksman Camp',
   },
   {
-    description: 'Researches military technologies',
     icon: 'game-icons:great-war-tank',
     iconColorClass: 'bg-gradient-to-t from-zinc-600 to-gray-600 via-neutral-500',
     id: BuildingType.WAR_ACADEMY,

@@ -1,8 +1,8 @@
 import type { Ref } from 'vue'
 
 import type {
-  CalculatorState,
   CalculatedCost,
+  CalculatorState,
   Material,
   UpgradeCost,
   UpgradeLevel,
