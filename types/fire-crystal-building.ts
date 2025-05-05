@@ -48,6 +48,7 @@ export interface CalculatorState {
     warAcademy: BuildingSelection
   }
   inventory: UpgradeCost
+  setAll: BuildingSelection
 }
 
 export interface LevelGroupOption {

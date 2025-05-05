@@ -19,7 +19,10 @@ const {
   handleToChange,
   hasAnySelectionOrInventory,
   queryParameters,
+  setAllToOptions,
   state,
+  updateSetAllFromSelect,
+  updateSetAllToSelect,
   upgradeData,
   upgradeLevelMap,
 } = useFireCrystalBuildingState()
@@ -125,6 +128,48 @@ const {
                 class="mt-4 text-sm italic text-primary"
               >
                 Select valid 'From' and 'To' levels to see costs.
+              </div>
+            </div>
+          </template>
+        </Card>
+        <!-- Set All Buildings Card -->
+        <Card>
+          <template #title>
+            <div class="flex items-center gap-2 text-lg font-bold">
+              <Icon
+                aria-label="Set All Buildings"
+                class="bg-gradient-to-t from-blue-700 via-blue-600 to-blue-500"
+                name="game-icons:settings"
+                size="40"
+              />
+              <h4>Set All Buildings</h4>
+            </div>
+          </template>
+          <template #content>
+            <div
+              v-auto-animate
+              class="mt-4 space-y-4"
+            >
+              <div class="grid gap-x-2 gap-y-4 sm:grid-cols-2 md:max-xl:grid-cols-1">
+                <ChiefUpgradeSelect
+                  :model-value="state.setAll?.from"
+                  :options="filteredFromOptions"
+                  grouped-options
+                  label="From"
+                  @change="(value) => updateSetAllFromSelect(value)"
+                />
+                <ChiefUpgradeSelect
+                  :disabled="!state.setAll?.from"
+                  :model-value="state.setAll?.to"
+                  :options="setAllToOptions"
+                  grouped-options
+                  label="To"
+                  @change="(value) => updateSetAllToSelect(value)"
+                />
+              </div>
+              <div class="mt-4 text-sm italic text-primary">
+                Select 'From' and 'To' levels to apply to all buildings at once.
+                The 'To' level will only be applied to buildings that have a 'From' level set.
               </div>
             </div>
           </template>

@@ -1,4 +1,5 @@
 import type {
+  BuildingSelection,
   CalculatorState,
   LevelGroupOption,
   Material,
@@ -29,6 +30,7 @@ export default function useFireCrystalBuildingState() {
       refinedFireCrystal: 0,
       wood: 0,
     },
+    setAll: { from: undefined, to: undefined },
   }
 
   const state = useLocalStorage<CalculatorState>(`${STORAGE_PREFIX}fire-crystal-building-calculator-state`, defaultState, {
@@ -168,21 +170,15 @@ export default function useFireCrystalBuildingState() {
 
     const upgradeData = FC_UPGRADE_DATA[buildingId]
     const fromIndex = upgradeData.indexOf(fromLevel)
-    const isNotLastLevel = fromIndex < upgradeData.length - 1
     const isToInvalid = !currentToLevel || upgradeData.indexOf(currentToLevel) <= fromIndex
 
-    if (isNotLastLevel) {
-      if (isToInvalid) {
-        // If 'To' is invalid or non-existent, set it to the next level (if autoSetNext) or clear it
-        const nextLevel = upgradeData[fromIndex + 1]
-        currentBuildingState.to = autoSetNext ? nextLevel.id : undefined
-      }
-      // If 'To' is valid and greater than 'From', keep it.
+    // If 'To' is invalid or non-existent, set it to the next level (if autoSetNext) or clear it
+    if (isToInvalid) {
+      const nextLevel = upgradeData[fromIndex + 1]
+      // Make sure nextLevel exists before accessing its id
+      currentBuildingState.to = (autoSetNext && nextLevel !== undefined) ? nextLevel.id : undefined
     }
-    else {
-      // If 'From' is the last level, clear 'To'
-      currentBuildingState.to = undefined
-    }
+    // If 'To' is valid and greater than 'From', keep it.
   }
 
   function handleToChange(buildingId: keyof CalculatorState['buildings'], newToId: string | undefined) {
@@ -247,7 +243,75 @@ export default function useFireCrystalBuildingState() {
       void router.replace({ query: newParameters.parameters })
   }, { debounce: 300, deep: true })
 
+  // Updates the "Set All" select's "From" value and applies it to all buildings
+  function updateSetAllFromSelect(newFromId: string | undefined, autoSetNext = true) {
+    // Update the "From" value in the "Set All" select
+    const setAll = state.value.setAll as BuildingSelection
+    setAll.from = newFromId
+
+    // Clear or set the "To" level based on the "From" level
+    if (newFromId == null || newFromId === '') {
+      setAll.to = undefined
+    }
+    else {
+      // Use the furnace as a reference for finding the next level
+      const levelMap = FC_UPGRADE_LEVEL_MAP[BuildingType.FURNACE]
+      const fromLevel = levelMap.get(newFromId)
+
+      if (fromLevel) {
+        const buildingUpgradeData = FC_UPGRADE_DATA[BuildingType.FURNACE]
+        const fromIndex = buildingUpgradeData.indexOf(fromLevel)
+
+        // Set to next level if autoSetNext is true and next level exists
+        const nextLevel = buildingUpgradeData[fromIndex + 1]
+        setAll.to = (autoSetNext && nextLevel !== undefined) ? nextLevel.id : undefined
+      }
+    }
+
+    // Apply the changes to all buildings
+    applyFromLevelToAllBuildings(newFromId, autoSetNext)
+  }
+
+  // Updates the "Set All" select's "To" value and applies it to all buildings
+  function updateSetAllToSelect(newToId: string | undefined) {
+    (state.value.setAll as BuildingSelection).to = newToId
+    applyToLevelToAllBuildings(newToId)
+  }
+
+  // Applies the same "From" level to all individual building selections
+  function applyFromLevelToAllBuildings(newFromId: string | undefined, autoSetNext = true) {
+    for (const buildingId of Object.keys(state.value.buildings) as (keyof CalculatorState['buildings'])[]) {
+      handleFromChange(buildingId, newFromId, autoSetNext)
+    }
+  }
+
+  // Applies the same "To" level to all individual building selections
+  function applyToLevelToAllBuildings(newToId: string | undefined) {
+    for (const buildingId of Object.keys(state.value.buildings) as (keyof CalculatorState['buildings'])[]) {
+      // Only set 'To' if 'From' is already set
+      const fromValue = state.value.buildings[buildingId].from
+
+      if (fromValue != null && fromValue !== '') {
+        handleToChange(buildingId, newToId)
+      }
+    }
+  }
+
+  // Get filtered 'To' options for the "Set All" functionality
+  const setAllToOptions = computed(() => {
+    const setAll = state.value.setAll as BuildingSelection
+
+    if (setAll.from == null || setAll.from === '') {
+      return []
+    }
+
+    // Use the furnace as a reference for filtering 'To' options
+    return getFilteredToOptions(BuildingType.FURNACE, setAll.from)
+  })
+
   return {
+    applyFromLevelToAllBuildings,
+    applyToLevelToAllBuildings,
     clearAll,
     filteredFromOptions,
     getFilteredToOptions,
@@ -256,7 +320,10 @@ export default function useFireCrystalBuildingState() {
     hasAnySelectionOrInventory,
     queryParameters,
     selectOptions,
+    setAllToOptions,
     state,
+    updateSetAllFromSelect,
+    updateSetAllToSelect,
     upgradeData: FC_UPGRADE_DATA,
     upgradeLevelMap: FC_UPGRADE_LEVEL_MAP,
   }

@@ -27,6 +27,7 @@ describe('useFireCrystalBuildingCalculator', () => {
       refinedFireCrystal: 0,
       wood: 100_000_000,
     },
+    setAll: { from: undefined, to: undefined },
   })
 
   // Mock upgrade data
@@ -83,6 +84,7 @@ describe('useFireCrystalBuildingCalculator', () => {
         refinedFireCrystal: 0,
         wood: 100_000_000,
       },
+      setAll: { from: undefined, to: undefined },
     }
     calculator = useFireCrystalBuildingCalculator(state, mockUpgradeData, mockUpgradeLevelMap)
   })
