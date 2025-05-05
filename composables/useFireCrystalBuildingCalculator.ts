@@ -50,36 +50,25 @@ export default function useFireCrystalBuildingCalculator(
   const filteredGrandTotalMaterials = computed(() => FC_MATERIALS.filter(({ key }) => grandTotalCost.value[key] > 0))
 
   const remainingCost = computed(() => {
-    const { inventory } = state.value
-    const total = grandTotalCost.value
+    const remaining = useMapValues(grandTotalCost.value, (needed, materialKey) => {
+      const owned = state.value.inventory[materialKey] || 0
 
-    const remaining = {
-      coal: Math.max(0, total.coal - inventory.coal),
-      fireCrystal: Math.max(0, total.fireCrystal - inventory.fireCrystal),
-      iron: Math.max(0, total.iron - inventory.iron),
-      meat: Math.max(0, total.meat - inventory.meat),
-      refinedFireCrystal: Math.max(0, total.refinedFireCrystal - inventory.refinedFireCrystal),
-      wood: Math.max(0, total.wood - inventory.wood),
-    }
+      return Math.max(0, needed - owned)
+    })
 
-    const hasInventory = Object.values(inventory).some(owned => owned > 0)
+    const hasInventory = Object.values(state.value.inventory).some(owned => owned > 0)
 
     return { hasInventory, remaining }
   })
 
-  const leftoverInventory = computed(() => {
-    const { inventory } = state.value
-    const total = grandTotalCost.value
-
-    return {
-      coal: Math.max(0, inventory.coal - total.coal),
-      fireCrystal: Math.max(0, inventory.fireCrystal - total.fireCrystal),
-      iron: Math.max(0, inventory.iron - total.iron),
-      meat: Math.max(0, inventory.meat - total.meat),
-      refinedFireCrystal: Math.max(0, inventory.refinedFireCrystal - total.refinedFireCrystal),
-      wood: Math.max(0, inventory.wood - total.wood),
-    }
-  })
+  const leftoverInventory = computed(() =>
+    Object.fromEntries(
+      FC_MATERIALS.map(({ key }) => [
+        key,
+        Math.max(0, (state.value.inventory[key] || 0) /* owned */ - grandTotalCost.value[key] /* needed */),
+      ]),
+    ),
+  )
 
   return {
     buildingCosts,
@@ -95,16 +84,18 @@ export default function useFireCrystalBuildingCalculator(
     fromId: string | undefined,
     toId: string | undefined,
   ): CalculatedCost {
+    const emptyUpgradeCost: UpgradeCost = {
+      coal: 0,
+      fireCrystal: 0,
+      iron: 0,
+      meat: 0,
+      refinedFireCrystal: 0,
+      wood: 0,
+    }
+
     const result: CalculatedCost = {
       steps: [],
-      total: {
-        coal: 0,
-        fireCrystal: 0,
-        iron: 0,
-        meat: 0,
-        refinedFireCrystal: 0,
-        wood: 0,
-      },
+      total: { ...emptyUpgradeCost },
     }
 
     if (fromId == null || fromId === '' || toId == null || toId === '')
@@ -128,27 +119,16 @@ export default function useFireCrystalBuildingCalculator(
     if (fromIndex >= toIndex)
       return result
 
-    let cumulativeCost: UpgradeCost = {
-      coal: 0,
-      fireCrystal: 0,
-      iron: 0,
-      meat: 0,
-      refinedFireCrystal: 0,
-      wood: 0,
-    }
+    // Initialize with zero values for all materials
+    let cumulativeCost: UpgradeCost = { ...emptyUpgradeCost }
 
     for (let index = fromIndex + 1; index <= toIndex; index++) {
       const currentLevel = data[index]
 
       if (currentLevel != null) {
-        cumulativeCost = {
-          coal: cumulativeCost.coal + currentLevel.cost.coal,
-          fireCrystal: cumulativeCost.fireCrystal + currentLevel.cost.fireCrystal,
-          iron: cumulativeCost.iron + currentLevel.cost.iron,
-          meat: cumulativeCost.meat + currentLevel.cost.meat,
-          refinedFireCrystal: cumulativeCost.refinedFireCrystal + currentLevel.cost.refinedFireCrystal,
-          wood: cumulativeCost.wood + currentLevel.cost.wood,
-        }
+        // Add current level costs to cumulative costs
+        cumulativeCost = useMapValues(cumulativeCost, (total, materialKey) =>
+          total + (currentLevel.cost[materialKey] || 0)) as UpgradeCost
         result.steps.push({ cumulativeCost: { ...cumulativeCost }, level: currentLevel })
       }
     }
