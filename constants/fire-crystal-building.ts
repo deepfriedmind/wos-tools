@@ -38,14 +38,14 @@ export const FC_BUILDINGS: BuildingInfo[] = [
   {
     description: 'Heals wounded troops',
     icon: 'game-icons:hospital-cross',
-    iconColorClass: 'bg-gradient-to-t from-red-700 to-red-700 via-red-600',
+    iconColorClass: 'bg-gradient-to-tl from-red-700 to-red-700 to-50% via-red-600 via-50%',
     id: BuildingType.INFIRMARY,
     name: 'Infirmary',
   },
   {
     description: 'Trains infantry troops',
     icon: 'game-icons:templar-shield',
-    iconColorClass: 'bg-gradient-to-r from-blue-700 to-blue-700 via-blue-600',
+    iconColorClass: 'bg-gradient-to-r from-blue-700 to-blue-700 to-50% via-blue-300 via-45%',
     id: BuildingType.INFANTRY_CAMP,
     name: 'Infantry Camp',
   },
