@@ -2,7 +2,7 @@
 const PAGE_TITLE = 'Chief Gear Upgrade Calculator'
 const PAGE_DESCRIPTION = 'Calculate the material costs for upgrading Chief Gear'
 const PAGE_ICON = 'game-icons:pirate-coat'
-const PAGE_ICON_COLOR_CLASS = 'bg-gradient-to-r from-yellow-700 to-yellow-700 via-yellow-900'
+const PAGE_ICON_COLOR_CLASS = tw`bg-gradient-to-r from-yellow-700 via-yellow-900 to-yellow-700`
 
 definePageMeta({
   description: `${PAGE_DESCRIPTION} in Whiteout Survival.`,

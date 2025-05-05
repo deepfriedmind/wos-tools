@@ -2,7 +2,7 @@
 const PAGE_TITLE = 'Chief Charm Upgrade Calculator'
 const PAGE_DESCRIPTION = 'Calculate the material costs for upgrading Chief Charms'
 const PAGE_ICON = 'game-icons:emerald'
-const PAGE_ICON_COLOR_CLASS = 'bg-gradient-to-tl from-indigo-500 to-purple-500 via-fuchsia-400'
+const PAGE_ICON_COLOR_CLASS = tw`bg-gradient-to-tl from-indigo-500 via-fuchsia-400 to-purple-500`
 
 definePageMeta({
   description: `${PAGE_DESCRIPTION} in Whiteout Survival.`,

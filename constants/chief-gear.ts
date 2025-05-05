@@ -1,19 +1,19 @@
 import type { GearPiece, MaterialInfo, UpgradeLevel } from '~/types/chief-gear'
 
 export const GEAR_PIECES: GearPiece[] = [
-  { charmStatsBoost: 'lancer lethality/health', icon: 'game-icons:winter-hat', iconColorClass: 'bg-gradient-to-t from-white from-20% to-white to-95% via-indigo-600 via-25%', id: 'hat', name: 'Winter Hat', statsBoost: 'lancer attack/defense' },
+  { charmStatsBoost: 'lancer lethality/health', icon: 'game-icons:winter-hat', iconColorClass: tw`bg-gradient-to-t from-white from-20% via-indigo-600 via-25% to-white to-95%`, id: 'hat', name: 'Winter Hat', statsBoost: 'lancer attack/defense' },
   { charmStatsBoost: 'infantry lethality/health', icon: 'game-icons:pirate-coat', iconColorClass: 'bg-gradient-to-r from-yellow-700 to-yellow-700 via-yellow-900', id: 'coat', name: "Valor's Embrace", statsBoost: 'infantry attack/defense' },
-  { charmStatsBoost: 'marksman lethality/health', icon: 'game-icons:ring', iconColorClass: 'bg-gradient-to-t from-amber-600 via-amber-200 to-amber-400', id: 'ring', name: 'Ring of Resilience', statsBoost: 'marksman attack/defense' },
-  { charmStatsBoost: 'lancer lethality/health', icon: 'game-icons:pocket-watch', iconColorClass: 'bg-gradient-to-t from-zinc-500 to-zinc-500 via-zinc-300', id: 'watch', name: 'Durable Watch', statsBoost: 'lancer attack/defense' },
-  { charmStatsBoost: 'infantry lethality/health', icon: 'game-icons:armored-pants', iconColorClass: 'bg-gradient-to-t from-sky-800 via-sky-600 to-sky-700', id: 'pants', name: 'Explorer Pants', statsBoost: 'infantry attack/defense' },
-  { charmStatsBoost: 'marksman lethality/health', icon: 'game-icons:wood-club', iconColorClass: 'bg-gradient-to-tr from-yellow-700 to-yellow-900 via-yellow-600', id: 'cudgel', name: 'Cudgel', statsBoost: 'marksman attack/defense' },
+  { charmStatsBoost: 'marksman lethality/health', icon: 'game-icons:ring', iconColorClass: tw`bg-gradient-to-t from-amber-600 via-amber-200 to-amber-400`, id: 'ring', name: 'Ring of Resilience', statsBoost: 'marksman attack/defense' },
+  { charmStatsBoost: 'lancer lethality/health', icon: 'game-icons:pocket-watch', iconColorClass: tw`bg-gradient-to-t from-zinc-500 via-zinc-300 to-zinc-500`, id: 'watch', name: 'Durable Watch', statsBoost: 'lancer attack/defense' },
+  { charmStatsBoost: 'infantry lethality/health', icon: 'game-icons:armored-pants', iconColorClass: tw`bg-gradient-to-t from-sky-800 via-sky-600 to-sky-700`, id: 'pants', name: 'Explorer Pants', statsBoost: 'infantry attack/defense' },
+  { charmStatsBoost: 'marksman lethality/health', icon: 'game-icons:wood-club', iconColorClass: tw`bg-gradient-to-tr from-yellow-700 via-yellow-600 to-yellow-900`, id: 'cudgel', name: 'Cudgel', statsBoost: 'marksman attack/defense' },
 ] as const
 
 export const MATERIALS: MaterialInfo[] = [
-  { icon: 'game-icons:metal-bar', iconColorClass: 'bg-gradient-to-tr from-slate-900 to-slate-900 via-gray-400', key: 'hardenedAlloy', label: 'Hardened Alloy' },
-  { icon: 'game-icons:brandy-bottle', iconColorClass: 'bg-gradient-to-tr from-emerald-400 to-emerald-400 via-emerald-200', key: 'polishingSolution', label: 'Polishing Solution' },
-  { icon: 'game-icons:tied-scroll', iconColorClass: 'bg-gradient-to-t from-amber-400 to-amber-200', key: 'designPlans', label: 'Design Plans' },
-  { icon: 'game-icons:amber-mosquito', iconColorClass: 'bg-gradient-to-t from-amber-600 to-amber-500 via-amber-300', key: 'lunarAmber', label: 'Lunar Amber' },
+  { icon: 'game-icons:metal-bar', iconColorClass: tw`bg-gradient-to-tr from-slate-900 via-gray-400 to-slate-900`, key: 'hardenedAlloy', label: 'Hardened Alloy' },
+  { icon: 'game-icons:brandy-bottle', iconColorClass: tw`bg-gradient-to-tr from-emerald-400 via-emerald-200 to-emerald-400`, key: 'polishingSolution', label: 'Polishing Solution' },
+  { icon: 'game-icons:tied-scroll', iconColorClass: tw`bg-gradient-to-t from-amber-400 to-amber-200`, key: 'designPlans', label: 'Design Plans' },
+  { icon: 'game-icons:amber-mosquito', iconColorClass: tw`bg-gradient-to-t from-amber-600 via-amber-300 to-amber-500`, key: 'lunarAmber', label: 'Lunar Amber' },
 ]
 
 // Cost represents the cost to upgrade *to* this level from the previous one
