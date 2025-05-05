@@ -111,9 +111,28 @@ describe('useFireCrystalBuildingState', () => {
     // Wait for onMounted to complete
     await nextTick()
 
-    expect(state.selectOptions.value.length).toBeGreaterThan(0)
-    expect(state.selectOptions.value[0].tier).toBeDefined()
-    expect(state.selectOptions.value[0].levels.length).toBeGreaterThan(0)
+    expect(state.selectOptions.length).toBeGreaterThan(0)
+    expect(state.selectOptions[0].tier).toBeDefined()
+    expect(state.selectOptions[0].levels.length).toBeGreaterThan(0)
+  })
+
+  it('ensures select options are in correct tier order', async () => {
+    // Wait for onMounted to complete
+    await nextTick()
+
+    // Get the tiers from the options
+    const tiers = state.selectOptions.map(option => option.tier)
+
+    // Extract the FC numbers from tiers (e.g., "FC 1" -> 1)
+    const tierNumbers = tiers.map((tier) => {
+      const match = tier.match(/FC (\d+)/)
+
+      return match ? Number.parseInt(match[1], 10) : tier
+    })
+
+    // Check that the tiers are in ascending order
+    const isSorted = tierNumbers.every((number, index) => index === 0 || number >= tierNumbers[index - 1])
+    expect(isSorted).toBe(true)
   })
 
   it('detects when there are selections or inventory', () => {

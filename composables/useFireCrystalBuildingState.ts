@@ -1,7 +1,6 @@
 import type {
   BuildingCalculatorState,
   LevelGroupOption,
-  LevelOption,
   Material,
 } from '~/types/fire-crystal-building'
 import { BuildingType } from '~/types/fire-crystal-building'
@@ -12,69 +11,16 @@ export default function useFireCrystalBuildingState() {
   const STORAGE_PREFIX = useRuntimeConfig().public.storagePrefix
 
   // Generate select options for level selection
-  const selectOptions = ref<LevelGroupOption[]>([])
+  const selectOptions = (() => {
+    // Group levels by tier and convert to select options format
+    const groupedLevels = useGroupBy(FC_UPGRADE_DATA[BuildingType.FURNACE], level => level.tier) // Use furnace data as the reference for all buildings since the tiers are the same
 
-  // Generate select options from the upgrade data
-  function generateSelectOptions() {
-    // Generate options immediately and also on mount to ensure they're available
-    _generateSelectOptions()
-
-    onMounted(() => {
-      _generateSelectOptions()
-    })
-  }
-
-  // Internal function to generate select options
-  function _generateSelectOptions() {
-    // Use furnace data as the reference for all buildings
-    const furnaceData = FC_UPGRADE_DATA[BuildingType.FURNACE]
-
-    // Validate furnace data exists and is an array
-    if (furnaceData == null || !Array.isArray(furnaceData) || furnaceData.length === 0) {
-      return
-    }
-
-    // Group levels by tier
-    const groupedLevels: Record<string, LevelOption[]> = {}
-
-    for (const level of furnaceData) {
-      const { tier } = level
-
-      // Initialize array for this tier if it doesn't exist
-      if (groupedLevels[tier] == null) {
-        groupedLevels[tier] = []
-      }
-
-      groupedLevels[tier].push({
-        id: level.id,
-        label: level.label,
-      })
-    }
-
-    // Convert grouped levels to select options
-    const options: LevelGroupOption[] = Object.entries(groupedLevels).map(([tier, levels]) => ({
-      levels,
+    // Convert grouped levels to select options (source data is already in the correct order)
+    return Object.entries(groupedLevels).map(([tier, levels]) => ({
+      levels: levels.map(level => ({ id: level.id, label: level.label })),
       tier,
     }))
-
-    // Sort options by tier
-    options.sort((a, b) => {
-      const tierA = a.tier.match(/FC (\d+)/)
-      const tierB = b.tier.match(/FC (\d+)/)
-
-      if (tierA && tierB) {
-        return Number.parseInt(tierA[1], 10) - Number.parseInt(tierB[1], 10)
-      }
-
-      return a.tier.localeCompare(b.tier)
-    })
-
-    // Update select options
-    selectOptions.value = options
-  }
-
-  // Call generateSelectOptions to set up the options
-  generateSelectOptions()
+  })()
 
   const defaultState: BuildingCalculatorState = {
     buildings: {
@@ -164,7 +110,7 @@ export default function useFireCrystalBuildingState() {
   }
 
   // Filter 'From' options to exclude the last tier (FC10) since you can't upgrade from it
-  const filteredFromOptions = computed(() => useInitial(selectOptions.value))
+  const filteredFromOptions = computed(() => useInitial(selectOptions))
 
   // Get filtered 'To' options based on the selected 'From' level
   function getFilteredToOptions(buildingType: keyof BuildingCalculatorState['buildings'], fromId: string | undefined): LevelGroupOption[] {
@@ -186,7 +132,7 @@ export default function useFireCrystalBuildingState() {
     const fromIndex = data.indexOf(fromLevel)
 
     // Filter options to only include levels higher than the 'From' level
-    return selectOptions.value
+    return selectOptions
       .map(group => ({
         ...group,
         levels: group.levels.filter((level) => {
