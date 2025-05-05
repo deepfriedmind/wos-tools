@@ -45,8 +45,43 @@ const {
     :sub-heading="PAGE_DESCRIPTION"
   >
     <div class="space-y-12">
-      <!-- Building Selection Grid -->
+      <!-- Building selection grid -->
       <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <!-- "Set all buildings" card -->
+        <Card>
+          <template #title>
+            <div class="flex items-center gap-2 text-lg font-bold">
+              <Icon
+                aria-label="Set all buildings"
+                class="bg-gradient-to-tr from-blue-500 via-sky-300 to-blue-500"
+                name="material-symbols:sync-alt-rounded"
+                size="40"
+              />
+              <h4>Set all buildings</h4>
+            </div>
+          </template>
+          <template #content>
+            <div class="mt-4 space-y-4">
+              <div class="grid gap-x-2 gap-y-4 sm:grid-cols-2 md:max-xl:grid-cols-1">
+                <ChiefUpgradeSelect
+                  :model-value="state.setAll?.from"
+                  :options="filteredFromOptions"
+                  grouped-options
+                  label="From"
+                  @change="(value) => updateSetAllFromSelect(value)"
+                />
+                <ChiefUpgradeSelect
+                  :disabled="!state.setAll?.from"
+                  :model-value="state.setAll?.to"
+                  :options="setAllToOptions"
+                  grouped-options
+                  label="To"
+                  @change="(value) => updateSetAllToSelect(value)"
+                />
+              </div>
+            </div>
+          </template>
+        </Card>
         <Card
           v-for="building in FC_BUILDINGS"
           :key="building.id"
@@ -86,13 +121,13 @@ const {
                 />
               </div>
 
-              <!-- Cost Display for this Building -->
+              <!-- Cost display for this building -->
               <div
                 v-if="buildingCosts[building.id].total.wood > 0 || buildingCosts[building.id].total.meat > 0 || buildingCosts[building.id].total.coal > 0 || buildingCosts[building.id].total.iron > 0 || buildingCosts[building.id].total.fireCrystal > 0 || buildingCosts[building.id].total.refinedFireCrystal > 0"
                 v-auto-animate
                 class="space-y-2 text-sm"
               >
-                <!-- Intermediate Steps -->
+                <!-- Intermediate steps -->
                 <Panel
                   v-if="buildingCosts[building.id].steps.length > 1"
                   toggleable
@@ -115,7 +150,7 @@ const {
                     </li>
                   </ol>
                 </Panel>
-                <!-- Total for Building -->
+                <!-- Total for building -->
                 <h5 class="font-bold">
                   Upgrade cost:
                 </h5>
@@ -132,53 +167,11 @@ const {
             </div>
           </template>
         </Card>
-        <!-- Set All Buildings Card -->
-        <Card>
-          <template #title>
-            <div class="flex items-center gap-2 text-lg font-bold">
-              <Icon
-                aria-label="Set All Buildings"
-                class="bg-gradient-to-t from-blue-700 via-blue-600 to-blue-500"
-                name="game-icons:settings"
-                size="40"
-              />
-              <h4>Set All Buildings</h4>
-            </div>
-          </template>
-          <template #content>
-            <div
-              v-auto-animate
-              class="mt-4 space-y-4"
-            >
-              <div class="grid gap-x-2 gap-y-4 sm:grid-cols-2 md:max-xl:grid-cols-1">
-                <ChiefUpgradeSelect
-                  :model-value="state.setAll?.from"
-                  :options="filteredFromOptions"
-                  grouped-options
-                  label="From"
-                  @change="(value) => updateSetAllFromSelect(value)"
-                />
-                <ChiefUpgradeSelect
-                  :disabled="!state.setAll?.from"
-                  :model-value="state.setAll?.to"
-                  :options="setAllToOptions"
-                  grouped-options
-                  label="To"
-                  @change="(value) => updateSetAllToSelect(value)"
-                />
-              </div>
-              <div class="mt-4 text-sm italic text-primary">
-                Select 'From' and 'To' levels to apply to all buildings at once.
-                The 'To' level will only be applied to buildings that have a 'From' level set.
-              </div>
-            </div>
-          </template>
-        </Card>
       </div>
 
-      <!-- Grand Total & Inventory Section -->
+      <!-- Grand total inventory section -->
       <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <!-- Inventory & Remaining Cost Card -->
+        <!-- Inventory remaining cost card -->
         <Card>
           <template #title>
             <h3 class="text-xl font-bold">
@@ -263,7 +256,7 @@ const {
           </template>
         </Card>
 
-        <!-- Grand Total Cost Card -->
+        <!-- Grand total cost card -->
         <Card>
           <template #title>
             <h3 class="text-xl font-bold">
