@@ -29,16 +29,10 @@ export default function useFireCrystalBuildingCalculator(
   upgradeData: Record<string, UpgradeLevel[]>,
   upgradeLevelMap: Record<string, Map<string, UpgradeLevel>>,
 ) {
-  const buildingCosts = computed(() => {
-    const keys = Object.keys(state.value.buildings) as (keyof CalculatorState['buildings'])[]
-    const values = keys.map((buildingId) => {
-      const buildingState = state.value.buildings[buildingId]
-
-      return calculateCost(buildingId, buildingState.from, buildingState.to)
-    })
-
-    return useZipObject(keys, values)
-  })
+  const buildingCosts = computed(() =>
+    useMapValues(state.value.buildings, (buildingState, buildingId) =>
+      calculateCost(buildingId, buildingState.from, buildingState.to)),
+  )
 
   const grandTotalCost = computed(() => {
     const costsArray = Object.values(buildingCosts.value)
