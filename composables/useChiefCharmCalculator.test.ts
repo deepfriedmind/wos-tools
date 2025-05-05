@@ -105,6 +105,26 @@ describe('useChiefCharmCalculator', () => {
     expect(grandTotalCost.value).toEqual({ charmDesign: 55, charmGuide: 100, charmSecret: 0 })
   })
 
+  it('correctly calculates costs with multiple slots and gear pieces', () => {
+    // Set up multiple slots and gear pieces with upgrades
+    state.value.gear.coat[1] = { from: 'level_1', to: 'level_2' }
+    state.value.gear.hat[0] = { from: 'level_2', to: 'level_4' }
+
+    const { gearCosts, grandTotalCost } = useChiefCharmCalculator(state)
+
+    // Check individual slot costs based on the mock data
+    expect(gearCosts.value.coat.slotCosts[0].total).toEqual({ charmDesign: 55, charmGuide: 100, charmSecret: 0 })
+    expect(gearCosts.value.coat.slotCosts[1].total).toEqual({ charmDesign: 15, charmGuide: 40, charmSecret: 0 })
+    expect(gearCosts.value.hat.slotCosts[0].total).toEqual({ charmDesign: 140, charmGuide: 140, charmSecret: 0 })
+
+    // Check gear totals (sum of slots)
+    expect(gearCosts.value.coat.total).toEqual({ charmDesign: 70, charmGuide: 140, charmSecret: 0 })
+    expect(gearCosts.value.hat.total).toEqual({ charmDesign: 140, charmGuide: 140, charmSecret: 0 })
+
+    // Check grand total (sum of all gear pieces)
+    expect(grandTotalCost.value).toEqual({ charmDesign: 210, charmGuide: 280, charmSecret: 0 })
+  })
+
   it('filteredGrandTotalMaterials omits zero totals', () => {
     state.value.inventory.charmDesign = 100
     state.value.inventory.charmGuide = 100
