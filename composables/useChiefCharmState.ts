@@ -72,6 +72,100 @@ export default function useChiefCharmState() {
     return { hasAnyParameter, parameters }
   })
 
+  const selectOptions = CHARM_UPGRADE_DATA.map((level: CharmUpgradeLevel) => ({
+    id: level.id,
+    label: `Lv. ${level.level}`,
+  }))
+
+  // Filter 'From' options to exclude the last level since you can't upgrade from it
+  const filteredFromOptions = computed(() => useInitial(selectOptions))
+
+  function getFilteredToOptions(fromId: string | undefined) {
+    if (fromId === undefined || fromId === '')
+      return selectOptions // Return all if no 'From' selected
+
+    const fromLevel: CharmUpgradeLevel | undefined = CHARM_UPGRADE_LEVEL_MAP.get(fromId)
+
+    if (fromLevel === undefined)
+      return selectOptions
+
+    return selectOptions.filter((levelOption: { id: string, label: string }) => {
+      const levelData: CharmUpgradeLevel | undefined = CHARM_UPGRADE_LEVEL_MAP.get(levelOption.id)
+
+      // Ensure both fromLevel and levelData exist before comparing index
+      return levelData != null && fromLevel != null && levelData.index > fromLevel.index
+    })
+  }
+
+  const hasAnySelectionOrInventory = computed(() => {
+    for (const gearId in state.value.gear) {
+      for (let slotIndex = 0; slotIndex < CHARM_SLOTS_PER_GEAR; slotIndex++) {
+        const slotData = state.value.gear[gearId as GearPiece['id']][slotIndex]
+
+        if (slotData == null)
+          continue
+
+        const { from, to } = slotData
+
+        if ((from != null && from !== '') || (to != null && to !== ''))
+          return true
+      }
+    }
+    for (const materialKey in state.value.inventory) {
+      if (state.value.inventory[materialKey as CharmMaterialKey] > 0)
+        return true
+    }
+
+    return false
+  })
+
+  function clearAll() {
+    state.value = structuredClone(defaultState)
+  }
+
+  function handleFromChange(gearId: GearPiece['id'], slotIndex: number, newFromId: string | undefined, autoSetNext = true) {
+    if (!Object.prototype.hasOwnProperty.call(state.value.gear[gearId], slotIndex)) {
+      state.value.gear[gearId][slotIndex] = { from: undefined, to: undefined }
+    }
+
+    const currentCharmState = state.value.gear[gearId][slotIndex]
+    currentCharmState.from = newFromId
+
+    const fromLevel = (newFromId != null && newFromId !== '') ? CHARM_UPGRADE_LEVEL_MAP.get(newFromId) : undefined
+    const currentToLevel = (currentCharmState.to != null && currentCharmState.to !== '') ? CHARM_UPGRADE_LEVEL_MAP.get(currentCharmState.to) : undefined
+
+    // If 'From' is cleared or invalid, clear 'To'
+    if (fromLevel === undefined) {
+      currentCharmState.to = undefined
+
+      return
+    }
+
+    const isNotLastLevel = fromLevel.index < CHARM_UPGRADE_DATA.length - 1
+    const isToInvalid = !currentToLevel || currentToLevel.index <= fromLevel.index
+
+    if (isNotLastLevel) {
+      if (isToInvalid) {
+        // If 'To' is invalid or non-existent, set it to the next level (if autoSetNext) or clear it
+        const nextLevel = CHARM_UPGRADE_DATA[fromLevel.index + 1]
+        currentCharmState.to = autoSetNext ? nextLevel.id : undefined
+      }
+      // If 'To' is valid and greater than 'From', keep it.
+    }
+    else {
+      // If 'From' is the last level, clear 'To'
+      currentCharmState.to = undefined
+    }
+  }
+
+  function handleToChange(gearId: GearPiece['id'], slotIndex: number, newToId: string | undefined) {
+    if (!Object.prototype.hasOwnProperty.call(state.value.gear[gearId], slotIndex)) {
+      state.value.gear[gearId][slotIndex] = { from: undefined, to: undefined }
+    }
+
+    state.value.gear[gearId][slotIndex].to = newToId
+  }
+
   function loadStateFromURL() {
     let needsUpdate = false
     const { query } = route
@@ -135,106 +229,6 @@ export default function useChiefCharmState() {
     if (!useIsEqual(newParameters.parameters, route.query))
       void router.replace({ query: newParameters.parameters })
   }, { debounce: 300, deep: true })
-
-  // --- Computed Properties for UI ---
-
-  const selectOptions = CHARM_UPGRADE_DATA.map((level: CharmUpgradeLevel) => ({
-    id: level.id,
-    label: `Lv. ${level.level}`,
-  }))
-
-  const filteredFromOptions = computed(() =>
-    // Don't include the last level in "From" options
-    useInitial(selectOptions),
-  )
-
-  function getFilteredToOptions(fromId: string | undefined) {
-    if (fromId === undefined || fromId === '')
-      return selectOptions // Return all if no 'From' selected
-
-    const fromLevel: CharmUpgradeLevel | undefined = CHARM_UPGRADE_LEVEL_MAP.get(fromId)
-
-    if (fromLevel === undefined)
-      return selectOptions
-
-    return selectOptions.filter((levelOption: { id: string, label: string }) => {
-      const levelData: CharmUpgradeLevel | undefined = CHARM_UPGRADE_LEVEL_MAP.get(levelOption.id)
-
-      // Ensure both fromLevel and levelData exist before comparing index
-      return levelData != null && fromLevel != null && levelData.index > fromLevel.index
-    })
-  }
-
-  const hasAnySelectionOrInventory = computed(() => {
-    for (const gearId in state.value.gear) {
-      for (let slotIndex = 0; slotIndex < CHARM_SLOTS_PER_GEAR; slotIndex++) {
-        const slotData = state.value.gear[gearId as GearPiece['id']][slotIndex]
-
-        if (slotData == null)
-          continue
-
-        const { from, to } = slotData
-
-        if ((from != null && from !== '') || (to != null && to !== ''))
-          return true
-      }
-    }
-    for (const materialKey in state.value.inventory) {
-      if (state.value.inventory[materialKey as CharmMaterialKey] > 0)
-        return true
-    }
-
-    return false
-  })
-
-  // --- Methods ---
-
-  function clearAll() {
-    state.value = structuredClone(defaultState)
-  }
-
-  function handleFromChange(gearId: GearPiece['id'], slotIndex: number, newFromId: string | undefined, autoSetNext = true) {
-    if (!Object.prototype.hasOwnProperty.call(state.value.gear[gearId], slotIndex)) {
-      state.value.gear[gearId][slotIndex] = { from: undefined, to: undefined }
-    }
-
-    const currentCharmState = state.value.gear[gearId][slotIndex]
-    currentCharmState.from = newFromId
-
-    const fromLevel = (newFromId != null && newFromId !== '') ? CHARM_UPGRADE_LEVEL_MAP.get(newFromId) : undefined
-    const currentToLevel = (currentCharmState.to != null && currentCharmState.to !== '') ? CHARM_UPGRADE_LEVEL_MAP.get(currentCharmState.to) : undefined
-
-    // If 'From' is cleared or invalid, clear 'To'
-    if (fromLevel === undefined) {
-      currentCharmState.to = undefined
-
-      return
-    }
-
-    const isNotLastLevel = fromLevel.index < CHARM_UPGRADE_DATA.length - 1
-    const isToInvalid = !currentToLevel || currentToLevel.index <= fromLevel.index
-
-    if (isNotLastLevel) {
-      if (isToInvalid) {
-        // If 'To' is invalid or non-existent, set it to the next level (if autoSetNext) or clear it
-        const nextLevel = CHARM_UPGRADE_DATA[fromLevel.index + 1]
-        currentCharmState.to = autoSetNext ? nextLevel.id : undefined
-      }
-      // If 'To' is valid and greater than 'From', keep it.
-    }
-    else {
-      // If 'From' is the last level, clear 'To'
-      currentCharmState.to = undefined
-    }
-  }
-
-  function handleToChange(gearId: GearPiece['id'], slotIndex: number, newToId: string | undefined) {
-    if (!Object.prototype.hasOwnProperty.call(state.value.gear[gearId], slotIndex)) {
-      state.value.gear[gearId][slotIndex] = { from: undefined, to: undefined }
-    }
-
-    state.value.gear[gearId][slotIndex].to = newToId
-  }
 
   return {
     clearAll,

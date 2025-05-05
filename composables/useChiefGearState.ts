@@ -62,6 +62,113 @@ export default function useChiefGearState() {
     return { hasAnyParameter, parameters }
   })
 
+  const selectOptions = (() => {
+    const groupedLevels = useGroupBy(UPGRADE_DATA, level => level.baseTier)
+    const baseTierOrder = ['Green', 'Blue', 'Purple', 'Gold', 'Red']
+
+    return baseTierOrder
+      .filter(baseTier => groupedLevels[baseTier] != null && groupedLevels[baseTier].length > 0)
+      .map(baseTier => ({
+        levels: groupedLevels[baseTier].map(level => ({ id: level.id, label: level.label })),
+        tier: baseTier,
+      }))
+  })()
+
+  // Filter 'From' options to exclude the last level since you can't upgrade from it
+  const filteredFromOptions = computed(() => {
+    const result = [...selectOptions]
+    const lastGroupIndex = result.length - 1
+    const lastGroup = result[lastGroupIndex]
+    result[lastGroupIndex] = {
+      ...lastGroup,
+      levels: useInitial(lastGroup.levels),
+    }
+
+    return result
+  })
+
+  function getFilteredToOptions(fromId: string | undefined) {
+    if (fromId === undefined || fromId === '')
+      return selectOptions // Return all if no 'From' selected
+
+    const fromLevel = UPGRADE_LEVEL_MAP.get(fromId)
+
+    if (fromLevel === undefined)
+      return selectOptions
+
+    const filteredGroups: LevelGroupOption[] = []
+    for (const group of selectOptions) {
+      const filteredLevels = group.levels.filter((levelOption) => {
+        const levelData = UPGRADE_LEVEL_MAP.get(levelOption.id)
+
+        return levelData != null && levelData.index > fromLevel.index
+      })
+
+      if (filteredLevels.length > 0) {
+        filteredGroups.push({ levels: filteredLevels, tier: group.tier })
+      }
+    }
+
+    return filteredGroups
+  }
+
+  const hasAnySelectionOrInventory = computed(() => {
+    for (const pieceId in state.value.gear) {
+      const { from, to } = state.value.gear[pieceId as keyof CalculatorState['gear']]
+
+      if (
+        (from != null && from !== '')
+        || (to != null && to !== '')) {
+        return true
+      }
+    }
+    for (const material in state.value.inventory) {
+      if (state.value.inventory[material as Material] > 0)
+        return true
+    }
+
+    return false
+  })
+
+  function clearAll() {
+    state.value = structuredClone(defaultState)
+  }
+
+  function handleFromChange(gearId: keyof CalculatorState['gear'], newFromId: string | undefined, autoSetNext = true) {
+    const currentGearState = state.value.gear[gearId]
+    currentGearState.from = newFromId
+
+    const fromLevel = (newFromId != null && newFromId !== '') ? UPGRADE_LEVEL_MAP.get(newFromId) : undefined
+    const currentToLevel = (currentGearState.to != null && currentGearState.to !== '') ? UPGRADE_LEVEL_MAP.get(currentGearState.to) : undefined
+
+    // If 'From' is cleared or invalid, clear 'To'
+    if (fromLevel === undefined) {
+      currentGearState.to = undefined
+
+      return
+    }
+
+    const isNotLastLevel = fromLevel.index < UPGRADE_DATA.length - 1
+    const isToInvalid = !currentToLevel || currentToLevel.index <= fromLevel.index
+
+    if (isNotLastLevel) {
+      if (isToInvalid) {
+        // If 'To' is invalid or non-existent, set it to the next level (if autoSetNext) or clear it
+        const nextLevel = UPGRADE_DATA[fromLevel.index + 1]
+        currentGearState.to = autoSetNext ? nextLevel.id : undefined
+      }
+      // If 'To' is valid and greater than 'From', keep it.
+    }
+    else {
+      // If 'From' is the last level, clear 'To'
+      currentGearState.to = undefined
+    }
+  }
+
+  function handleToChange(gearId: keyof CalculatorState['gear'], newToId: string | undefined) {
+    state.value.gear[gearId].to = newToId
+  }
+
   function loadStateFromURL() {
     let needsUpdate = false
     const { query } = route
@@ -118,124 +225,14 @@ export default function useChiefGearState() {
       void router.replace({ query: newParameters.parameters })
   }, { debounce: 300, deep: true })
 
-  // --- Computed Properties for UI ---
-
-  const selectOptions = (() => {
-    const groupedLevels = useGroupBy(UPGRADE_DATA, level => level.baseTier)
-    const baseTierOrder = ['Green', 'Blue', 'Purple', 'Gold', 'Red']
-
-    return baseTierOrder
-      .filter(baseTier => groupedLevels[baseTier] != null && groupedLevels[baseTier].length > 0)
-      .map(baseTier => ({
-        levels: groupedLevels[baseTier].map(level => ({ id: level.id, label: level.label })),
-        tier: baseTier,
-      }))
-  })()
-
-  const filteredFromOptions = computed(() => {
-    const result = [...selectOptions]
-    const lastGroupIndex = result.length - 1
-    const lastGroup = result[lastGroupIndex]
-    result[lastGroupIndex] = {
-      ...lastGroup,
-      levels: useInitial(lastGroup.levels),
-    }
-
-    return result
-  })
-
-  function getFilteredToOptions(fromId: string | undefined) {
-    if (fromId === undefined || fromId === '')
-      return selectOptions // Return all if no 'From' selected
-
-    const fromLevel = UPGRADE_LEVEL_MAP.get(fromId)
-
-    if (fromLevel === undefined)
-      return selectOptions
-
-    const filteredGroups: LevelGroupOption[] = []
-    for (const group of selectOptions) {
-      const filteredLevels = group.levels.filter((levelOption) => {
-        const levelData = UPGRADE_LEVEL_MAP.get(levelOption.id)
-
-        return levelData != null && levelData.index > fromLevel.index
-      })
-
-      if (filteredLevels.length > 0) {
-        filteredGroups.push({ levels: filteredLevels, tier: group.tier })
-      }
-    }
-
-    return filteredGroups
-  }
-
-  const hasAnySelectionOrInventory = computed(() => {
-    for (const pieceId in state.value.gear) {
-      const { from, to } = state.value.gear[pieceId as keyof CalculatorState['gear']]
-
-      if (
-        (from != null && from !== '')
-        || (to != null && to !== '')) {
-        return true
-      }
-    }
-    for (const material in state.value.inventory) {
-      if (state.value.inventory[material as Material] > 0)
-        return true
-    }
-
-    return false
-  })
-
-  // --- Methods ---
-
-  function clearAll() {
-    state.value = structuredClone(defaultState)
-  }
-
-  function handleFromChange(gearId: keyof CalculatorState['gear'], newFromId: string | undefined, autoSetNext = true) {
-    const currentGearState = state.value.gear[gearId]
-    currentGearState.from = newFromId
-
-    const fromLevel = (newFromId != null && newFromId !== '') ? UPGRADE_LEVEL_MAP.get(newFromId) : undefined
-    const currentToLevel = (currentGearState.to != null && currentGearState.to !== '') ? UPGRADE_LEVEL_MAP.get(currentGearState.to) : undefined
-
-    // If 'From' is cleared or invalid, clear 'To'
-    if (fromLevel === undefined) {
-      currentGearState.to = undefined
-
-      return
-    }
-
-    const isNotLastLevel = fromLevel.index < UPGRADE_DATA.length - 1
-    const isToInvalid = !currentToLevel || currentToLevel.index <= fromLevel.index
-
-    if (isNotLastLevel) {
-      if (isToInvalid) {
-        // If 'To' is invalid or non-existent, set it to the next level (if autoSetNext) or clear it
-        const nextLevel = UPGRADE_DATA[fromLevel.index + 1]
-        currentGearState.to = autoSetNext ? nextLevel.id : undefined
-      }
-      // If 'To' is valid and greater than 'From', keep it.
-    }
-    else {
-      // If 'From' is the last level, clear 'To'
-      currentGearState.to = undefined
-    }
-  }
-
-  function handleToChange(gearId: keyof CalculatorState['gear'], newToId: string | undefined) {
-    state.value.gear[gearId].to = newToId
-  }
-
   return {
     clearAll,
     filteredFromOptions,
     getFilteredToOptions,
     handleFromChange,
     handleToChange,
-    hasAnySelectionOrInventory, // Expose for ClearAll button visibility
-    queryParameters, // Expose for CopyButton
+    hasAnySelectionOrInventory,
+    queryParameters,
     selectOptions,
     state,
   }

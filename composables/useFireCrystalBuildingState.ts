@@ -71,43 +71,16 @@ export default function useFireCrystalBuildingState() {
     }
   })
 
-  // Generate select options for level selection
   const selectOptions = (() => {
-    // Group levels by tier and convert to select options format
     const groupedLevels = useGroupBy(FC_UPGRADE_DATA[BuildingType.FURNACE], level => level.tier) // Use furnace data as the reference for all buildings since the tiers are the same
 
-    // Convert grouped levels to select options (source data is already in the correct order)
     return Object.entries(groupedLevels).map(([tier, levels]) => ({
       levels: levels.map(level => ({ id: level.id, label: level.label })),
       tier,
     }))
   })()
 
-  // Check if there are any selections or inventory values
-  const hasAnySelectionOrInventory = computed(() => {
-    // Check if any building has a selection
-    for (const buildingState of Object.values(state.value.buildings)) {
-      if ((buildingState.from != null && buildingState.from !== '')
-        || (buildingState.to != null && buildingState.to !== '')) {
-        return true
-      }
-    }
-
-    // Check if any inventory value is non-zero
-    for (const value of Object.values(state.value.inventory)) {
-      if (value > 0)
-        return true
-    }
-
-    return false
-  })
-
-  // Clear all selections and inventory
-  function clearAll() {
-    state.value = structuredClone(defaultState)
-  }
-
-  // Filter 'From' options to exclude the last tier (FC10) since you can't upgrade from it
+  // Filter 'From' options to exclude the last level since you can't upgrade from it
   const filteredFromOptions = computed(() => useInitial(selectOptions))
 
   // Get filtered 'To' options based on the selected 'From' level
@@ -142,7 +115,29 @@ export default function useFireCrystalBuildingState() {
       .filter(group => group.levels.length > 0)
   }
 
-  // Handle 'From' level change
+  // Check if there are any selections or inventory values
+  const hasAnySelectionOrInventory = computed(() => {
+    // Check if any building has a selection
+    for (const buildingState of Object.values(state.value.buildings)) {
+      if ((buildingState.from != null && buildingState.from !== '')
+        || (buildingState.to != null && buildingState.to !== '')) {
+        return true
+      }
+    }
+
+    // Check if any inventory value is non-zero
+    for (const value of Object.values(state.value.inventory)) {
+      if (value > 0)
+        return true
+    }
+
+    return false
+  })
+
+  function clearAll() {
+    state.value = structuredClone(defaultState)
+  }
+
   function handleFromChange(
     buildingId: keyof CalculatorState['buildings'],
     newFromId: string | undefined,
@@ -159,9 +154,7 @@ export default function useFireCrystalBuildingState() {
 
     currentBuildingState.from = newFromId
 
-    // FC_UPGRADE_LEVEL_MAP is guaranteed to have entries for all building types
     const levelMap = FC_UPGRADE_LEVEL_MAP[buildingId]
-
     const fromLevel = levelMap.get(newFromId)
 
     if (!fromLevel)
@@ -173,17 +166,15 @@ export default function useFireCrystalBuildingState() {
         levelMap.get(currentToId)
       : undefined
 
-    // FC_UPGRADE_DATA is guaranteed to have entries for all building types
-    const data = FC_UPGRADE_DATA[buildingId]
-
-    const fromIndex = data.indexOf(fromLevel)
-    const isNotLastLevel = fromIndex < data.length - 1
-    const isToInvalid = !currentToLevel || data.indexOf(currentToLevel) <= fromIndex
+    const upgradeData = FC_UPGRADE_DATA[buildingId]
+    const fromIndex = upgradeData.indexOf(fromLevel)
+    const isNotLastLevel = fromIndex < upgradeData.length - 1
+    const isToInvalid = !currentToLevel || upgradeData.indexOf(currentToLevel) <= fromIndex
 
     if (isNotLastLevel) {
       if (isToInvalid) {
         // If 'To' is invalid or non-existent, set it to the next level (if autoSetNext) or clear it
-        const nextLevel = data[fromIndex + 1]
+        const nextLevel = upgradeData[fromIndex + 1]
         currentBuildingState.to = autoSetNext ? nextLevel.id : undefined
       }
       // If 'To' is valid and greater than 'From', keep it.
@@ -194,11 +185,7 @@ export default function useFireCrystalBuildingState() {
     }
   }
 
-  // Handle 'To' level change
-  function handleToChange(
-    buildingId: keyof CalculatorState['buildings'],
-    newToId: string | undefined,
-  ) {
+  function handleToChange(buildingId: keyof CalculatorState['buildings'], newToId: string | undefined) {
     state.value.buildings[buildingId].to = newToId
   }
 
@@ -206,12 +193,10 @@ export default function useFireCrystalBuildingState() {
     let needsUpdate = false
     const { query } = route
 
-    // Load building selections from URL
     for (const buildingId of Object.keys(state.value.buildings) as (keyof CalculatorState['buildings'])[]) {
       const fromParameter = query[`${buildingId}_from`] as string | undefined
       const toParameter = query[`${buildingId}_to`] as string | undefined
 
-      // FC_UPGRADE_LEVEL_MAP is guaranteed to have entries for all building types
       const levelMap = FC_UPGRADE_LEVEL_MAP[buildingId]
 
       if (fromParameter != null && fromParameter !== '' && levelMap.has(fromParameter)) {
@@ -225,7 +210,6 @@ export default function useFireCrystalBuildingState() {
       }
     }
 
-    // Load inventory from URL
     for (const materialKey of Object.keys(state.value.inventory) as Material[]) {
       const inventoryParameter = query[`inv_${materialKey}`]
 
@@ -240,6 +224,7 @@ export default function useFireCrystalBuildingState() {
     }
 
     // If state was loaded from URL, ensure 'To' levels are valid relative to 'From'
+    // Also, if the stored state had invalid 'To' relative to 'From', fix it.
     if (needsUpdate) {
       for (const buildingId of Object.keys(state.value.buildings) as (keyof CalculatorState['buildings'])[]) {
         handleFromChange(buildingId, state.value.buildings[buildingId].from, false) // Don't auto-set 'To' when loading/fixing
@@ -257,7 +242,6 @@ export default function useFireCrystalBuildingState() {
     loadStateFromURL()
   })
 
-  // Update URL when state changes
   watchDebounced(queryParameters, (newParameters) => {
     if (!useIsEqual(newParameters.parameters, route.query))
       void router.replace({ query: newParameters.parameters })
