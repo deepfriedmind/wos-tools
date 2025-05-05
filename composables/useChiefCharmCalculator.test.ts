@@ -56,6 +56,24 @@ describe('renderChiefCharmUpgradeMaterialCosts', () => {
 
     expect(result).toBe('')
   })
+
+  it('returns empty string for empty materials array', () => {
+    const result = renderChiefCharmUpgradeMaterialCosts(
+      [],
+      { charmDesign: 10, charmGuide: 5, charmSecret: 3 },
+    )
+
+    expect(result).toBe('')
+  })
+
+  it('handles missing keys in costRecord gracefully', () => {
+    const result = renderChiefCharmUpgradeMaterialCosts(
+      CHARM_MATERIALS,
+      { charmDesign: 10 } as Record<CharmMaterialKey, number>,
+    )
+
+    expect(result).toBe('Design: 10')
+  })
 })
 
 describe('useChiefCharmCalculator', () => {
@@ -105,6 +123,27 @@ describe('useChiefCharmCalculator', () => {
     expect(grandTotalCost.value).toEqual({ charmDesign: 55, charmGuide: 100, charmSecret: 0 })
   })
 
+  it('grandTotalCost correctly sums all gear costs', () => {
+    // Set up multiple slots and gear pieces with upgrades
+    state.value.gear.coat[1] = { from: 'level_1', to: 'level_2' }
+    state.value.gear.hat[0] = { from: 'level_2', to: 'level_3' }
+
+    const { gearCosts, grandTotalCost } = useChiefCharmCalculator(state)
+
+    // Verify individual gear costs
+    const coatTotal = gearCosts.value.coat.total
+    const hatTotal = gearCosts.value.hat.total
+
+    // Verify grand total is the sum of all gear totals
+    expect(grandTotalCost.value.charmDesign).toBe(coatTotal.charmDesign + hatTotal.charmDesign)
+    expect(grandTotalCost.value.charmGuide).toBe(coatTotal.charmGuide + hatTotal.charmGuide)
+    expect(grandTotalCost.value.charmSecret).toBe(coatTotal.charmSecret + hatTotal.charmSecret)
+
+    // Reset for other tests
+    state.value.gear.coat[1] = { from: undefined, to: undefined }
+    state.value.gear.hat[0] = { from: undefined, to: undefined }
+  })
+
   it('correctly calculates costs with multiple slots and gear pieces', () => {
     // Set up multiple slots and gear pieces with upgrades
     state.value.gear.coat[1] = { from: 'level_1', to: 'level_2' }
@@ -131,6 +170,19 @@ describe('useChiefCharmCalculator', () => {
     state.value.inventory.charmSecret = 100
     const { filteredGrandTotalMaterials } = useChiefCharmCalculator(state)
     expect(filteredGrandTotalMaterials.value.map(m => m.key)).toEqual(['charmDesign', 'charmGuide'])
+  })
+
+  it('filteredGrandTotalMaterials returns empty array when all totals are zero', () => {
+    // Set all gear selections to undefined to get zero costs
+    state.value.gear.coat[0] = { from: undefined, to: undefined }
+
+    const { filteredGrandTotalMaterials, grandTotalCost } = useChiefCharmCalculator(state)
+
+    // Verify that all costs are zero
+    expect(grandTotalCost.value).toEqual({ charmDesign: 0, charmGuide: 0, charmSecret: 0 })
+
+    // Verify that filteredGrandTotalMaterials is empty
+    expect(filteredGrandTotalMaterials.value).toEqual([])
   })
 
   it('remainingCost computes needed minus owned, never negative', () => {
