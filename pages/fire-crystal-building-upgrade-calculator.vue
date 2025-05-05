@@ -1,19 +1,16 @@
 <script setup lang="ts">
 const PAGE_TITLE = 'Fire Crystal Building Upgrade Calculator'
 const PAGE_DESCRIPTION = 'Calculate the material costs for upgrading Fire Crystal buildings'
-const PAGE_ICON = 'game-icons:crystal-growth'
-const PAGE_ICON_COLOR_CLASS = 'bg-gradient-to-tr from-red-800 to-red-500'
+const PAGE_IMAGE_PATH = '/img/fc.webp'
 
 definePageMeta({
   description: `${PAGE_DESCRIPTION} in Whiteout Survival.`,
-  icon: PAGE_ICON,
-  iconColorClass: PAGE_ICON_COLOR_CLASS,
+  imagePath: PAGE_IMAGE_PATH,
   title: `${PAGE_TITLE} for Whiteout Survival`,
 })
 
 const { mobileScrollIntoView } = useMobileScrollIntoView()
 
-// Initialize state
 const {
   clearAll,
   filteredFromOptions,
@@ -27,7 +24,6 @@ const {
   upgradeLevelMap,
 } = useFireCrystalBuildingState()
 
-// Initialize calculator
 const {
   buildingCosts,
   filteredGrandTotalMaterials,
@@ -42,8 +38,7 @@ const {
   <MainContentCard
     :copy-url-button="queryParameters.hasAnyParameter"
     :heading="PAGE_TITLE"
-    :icon-color-class="PAGE_ICON_COLOR_CLASS"
-    :icon="PAGE_ICON"
+    :image-path="PAGE_IMAGE_PATH"
     :sub-heading="PAGE_DESCRIPTION"
   >
     <div class="space-y-12">

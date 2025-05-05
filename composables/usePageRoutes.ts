@@ -1,6 +1,7 @@
 interface PageRoute {
   icon?: string
   iconColorClass?: string
+  imagePath?: string
   path: string
   title: string
 }
@@ -28,6 +29,7 @@ export default function usePageRoutes(): { pages: ComputedRef<PageRoute[]> } {
       .map(({ meta, path }) => ({
         icon: meta?.icon as string | undefined,
         iconColorClass: meta?.iconColorClass as string | undefined,
+        imagePath: meta?.imagePath as string | undefined,
         path,
         title: useIsString(meta?.title) ?
             meta.title.replace('for Whiteout Survival', '').trim()
