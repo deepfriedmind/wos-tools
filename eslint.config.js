@@ -95,6 +95,18 @@ export default withNuxt(
       'no-lonely-if': 'error',
       'no-useless-concat': 'error',
       'perfectionist/sort-imports': 'off',
+      'tailwindcss/classnames-order': ['error', {
+        callees: ['tw', 'twMerge', 'twJoin'],
+        tags: ['tw'],
+      }],
+      'tailwindcss/no-custom-classname': [
+        'error',
+        {
+          callees: ['tw', 'twMerge', 'twJoin'],
+          tags: ['tw', 'twMerge', 'twJoin'],
+          whitelist: ['dark', 'pi', 'pi?-[a-z-]+'],
+        },
+      ],
       'unicorn/filename-case': [
         'error',
         {
@@ -117,18 +129,6 @@ export default withNuxt(
     files: ['**/*.vue'],
     name: 'project/vue',
     rules: {
-      'tailwindcss/classnames-order': ['error', {
-        callees: ['tw', 'twMerge', 'twJoin'],
-        tags: ['tw'],
-      }],
-      'tailwindcss/no-custom-classname': [
-        'error',
-        {
-          callees: ['tw', 'twMerge', 'twJoin'],
-          tags: ['tw', 'twMerge', 'twJoin'],
-          whitelist: ['dark', 'pi', 'pi?-[a-z-]+'],
-        },
-      ],
       'vue/camelcase': 'error',
       'vue/first-attribute-linebreak': [
         'error',
@@ -174,6 +174,7 @@ export default withNuxt(
     files: ['**/*.test.ts'],
     name: 'project/tests',
     rules: {
+      'tailwindcss/no-custom-classname': 'off',
       'unicorn/no-useless-undefined': 'off',
     },
   },
