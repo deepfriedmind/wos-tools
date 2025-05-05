@@ -102,7 +102,7 @@ const charmMaterials = CHARM_MATERIALS
                     v-if="gearCosts[gearPiece.id].slotCosts[slotIndex - 1].steps.length > 1"
                     toggleable
                     collapsed
-                    :header="`Show step costs (${gearCosts[gearPiece.id].slotCosts[slotIndex - 1].steps.length}\u00A0levels)`"
+                    :header="`Step costs (${gearCosts[gearPiece.id].slotCosts[slotIndex - 1].steps.length}\u00A0levels)`"
                     class="mb-2"
                   >
                     <ol

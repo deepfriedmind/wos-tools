@@ -94,7 +94,7 @@ const {
                   v-if="buildingCosts[building.id].steps.length > 1"
                   toggleable
                   collapsed
-                  :header="`Show step costs (${buildingCosts[building.id].steps.length}&nbsp;levels)`"
+                  :header="`Step costs (${buildingCosts[building.id].steps.length}&nbsp;levels)`"
                   class="mb-4"
                 >
                   <ol
