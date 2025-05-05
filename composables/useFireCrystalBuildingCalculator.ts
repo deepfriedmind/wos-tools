@@ -1,7 +1,7 @@
 import type { Ref } from 'vue'
 
 import type {
-  BuildingCalculatorState,
+  CalculatorState,
   CalculatedCost,
   Material,
   UpgradeCost,
@@ -25,12 +25,12 @@ export function renderFireCrystalBuildingUpgradeMaterialCosts(
 }
 
 export default function useFireCrystalBuildingCalculator(
-  state: Ref<BuildingCalculatorState>,
+  state: Ref<CalculatorState>,
   upgradeData: Record<string, UpgradeLevel[]>,
   upgradeLevelMap: Record<string, Map<string, UpgradeLevel>>,
 ) {
   const buildingCosts = computed(() => {
-    const keys = Object.keys(state.value.buildings) as (keyof BuildingCalculatorState['buildings'])[]
+    const keys = Object.keys(state.value.buildings) as (keyof CalculatorState['buildings'])[]
     const values = keys.map((buildingId) => {
       const buildingState = state.value.buildings[buildingId]
 
@@ -97,7 +97,7 @@ export default function useFireCrystalBuildingCalculator(
   }
 
   function calculateCost(
-    buildingType: keyof BuildingCalculatorState['buildings'],
+    buildingType: keyof CalculatorState['buildings'],
     fromId: string | undefined,
     toId: string | undefined,
   ): CalculatedCost {

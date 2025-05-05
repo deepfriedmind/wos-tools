@@ -3,12 +3,12 @@ import { ref } from 'vue'
 
 import useFireCrystalBuildingCalculator from './useFireCrystalBuildingCalculator'
 
-import type { BuildingCalculatorState, UpgradeLevel } from '~/types/fire-crystal-building'
+import type { CalculatorState, UpgradeLevel } from '~/types/fire-crystal-building'
 import { BuildingType } from '~/types/fire-crystal-building'
 
 describe('useFireCrystalBuildingCalculator', () => {
   // Mock state
-  const state = ref<BuildingCalculatorState>({
+  const state = ref<CalculatorState>({
     buildings: {
       commandCenter: { from: undefined, to: undefined },
       embassy: { from: undefined, to: undefined },

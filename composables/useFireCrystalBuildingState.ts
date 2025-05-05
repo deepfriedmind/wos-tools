@@ -1,5 +1,5 @@
 import type {
-  BuildingCalculatorState,
+  CalculatorState,
   LevelGroupOption,
   Material,
 } from '~/types/fire-crystal-building'
@@ -10,19 +10,7 @@ export default function useFireCrystalBuildingState() {
   const router = useRouter()
   const STORAGE_PREFIX = useRuntimeConfig().public.storagePrefix
 
-  // Generate select options for level selection
-  const selectOptions = (() => {
-    // Group levels by tier and convert to select options format
-    const groupedLevels = useGroupBy(FC_UPGRADE_DATA[BuildingType.FURNACE], level => level.tier) // Use furnace data as the reference for all buildings since the tiers are the same
-
-    // Convert grouped levels to select options (source data is already in the correct order)
-    return Object.entries(groupedLevels).map(([tier, levels]) => ({
-      levels: levels.map(level => ({ id: level.id, label: level.label })),
-      tier,
-    }))
-  })()
-
-  const defaultState: BuildingCalculatorState = {
+  const defaultState: CalculatorState = {
     buildings: {
       commandCenter: { from: undefined, to: undefined },
       embassy: { from: undefined, to: undefined },
@@ -43,19 +31,17 @@ export default function useFireCrystalBuildingState() {
     },
   }
 
-  const state = useLocalStorage<BuildingCalculatorState>(`${STORAGE_PREFIX}fire-crystal-building-calculator-state`, defaultState, {
+  const state = useLocalStorage<CalculatorState>(`${STORAGE_PREFIX}fire-crystal-building-calculator-state`, defaultState, {
     initOnMounted: true,
     // Deep merge stored state with current defaults to handle potential structure changes
     mergeDefaults: (storageValue, defaults) => useToMerged(storageValue, defaults),
   })
 
-  // Compute URL parameters for sharing
   const queryParameters = computed(() => {
     const parameters: Record<string, string> = {}
     let hasAnyParameter = false
 
-    // Add building selections to URL parameters
-    for (const buildingId of Object.keys(state.value.buildings) as (keyof BuildingCalculatorState['buildings'])[]) {
+    for (const buildingId of Object.keys(state.value.buildings) as (keyof CalculatorState['buildings'])[]) {
       const buildingState = state.value.buildings[buildingId]
 
       if (buildingState.from != null && buildingState.from !== '') {
@@ -85,6 +71,18 @@ export default function useFireCrystalBuildingState() {
     }
   })
 
+  // Generate select options for level selection
+  const selectOptions = (() => {
+    // Group levels by tier and convert to select options format
+    const groupedLevels = useGroupBy(FC_UPGRADE_DATA[BuildingType.FURNACE], level => level.tier) // Use furnace data as the reference for all buildings since the tiers are the same
+
+    // Convert grouped levels to select options (source data is already in the correct order)
+    return Object.entries(groupedLevels).map(([tier, levels]) => ({
+      levels: levels.map(level => ({ id: level.id, label: level.label })),
+      tier,
+    }))
+  })()
+
   // Check if there are any selections or inventory values
   const hasAnySelectionOrInventory = computed(() => {
     // Check if any building has a selection
@@ -113,7 +111,7 @@ export default function useFireCrystalBuildingState() {
   const filteredFromOptions = computed(() => useInitial(selectOptions))
 
   // Get filtered 'To' options based on the selected 'From' level
-  function getFilteredToOptions(buildingType: keyof BuildingCalculatorState['buildings'], fromId: string | undefined): LevelGroupOption[] {
+  function getFilteredToOptions(buildingType: keyof CalculatorState['buildings'], fromId: string | undefined): LevelGroupOption[] {
     if (fromId == null || fromId === '')
       return []
 
@@ -146,7 +144,7 @@ export default function useFireCrystalBuildingState() {
 
   // Handle 'From' level change
   function handleFromChange(
-    buildingId: keyof BuildingCalculatorState['buildings'],
+    buildingId: keyof CalculatorState['buildings'],
     newFromId: string | undefined,
     autoSetNext = true,
   ) {
@@ -198,19 +196,18 @@ export default function useFireCrystalBuildingState() {
 
   // Handle 'To' level change
   function handleToChange(
-    buildingId: keyof BuildingCalculatorState['buildings'],
+    buildingId: keyof CalculatorState['buildings'],
     newToId: string | undefined,
   ) {
     state.value.buildings[buildingId].to = newToId
   }
 
-  // Function to load state from URL
   function loadStateFromURL() {
     let needsUpdate = false
     const { query } = route
 
     // Load building selections from URL
-    for (const buildingId of Object.keys(state.value.buildings) as (keyof BuildingCalculatorState['buildings'])[]) {
+    for (const buildingId of Object.keys(state.value.buildings) as (keyof CalculatorState['buildings'])[]) {
       const fromParameter = query[`${buildingId}_from`] as string | undefined
       const toParameter = query[`${buildingId}_to`] as string | undefined
 
@@ -244,7 +241,7 @@ export default function useFireCrystalBuildingState() {
 
     // If state was loaded from URL, ensure 'To' levels are valid relative to 'From'
     if (needsUpdate) {
-      for (const buildingId of Object.keys(state.value.buildings) as (keyof BuildingCalculatorState['buildings'])[]) {
+      for (const buildingId of Object.keys(state.value.buildings) as (keyof CalculatorState['buildings'])[]) {
         handleFromChange(buildingId, state.value.buildings[buildingId].from, false) // Don't auto-set 'To' when loading/fixing
       }
 
@@ -256,8 +253,6 @@ export default function useFireCrystalBuildingState() {
     return needsUpdate
   }
 
-  // Load state from URL only on mount to ensure client-side hydration
-  // and to avoid reloading state after clearAll is called
   onMounted(() => {
     loadStateFromURL()
   })

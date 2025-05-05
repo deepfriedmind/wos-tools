@@ -19,25 +19,11 @@ export enum BuildingType {
   WAR_ACADEMY = 'warAcademy',
 }
 
-export interface BuildingCalculatorState {
-  buildings: {
-    commandCenter: BuildingSelection
-    embassy: BuildingSelection
-    furnace: BuildingSelection
-    infantryCamp: BuildingSelection
-    infirmary: BuildingSelection
-    lancerCamp: BuildingSelection
-    marksmanCamp: BuildingSelection
-    warAcademy: BuildingSelection
-  }
-  inventory: UpgradeCost
-}
-
 export interface BuildingInfo {
   description: string
   icon: string
   iconColorClass: string
-  id: keyof BuildingCalculatorState['buildings']
+  id: keyof CalculatorState['buildings']
   name: string
 }
 
@@ -49,6 +35,20 @@ export interface BuildingSelection {
 export interface CalculatedCost {
   steps: { cumulativeCost: UpgradeCost, level: UpgradeLevel }[]
   total: UpgradeCost
+}
+
+export interface CalculatorState {
+  buildings: {
+    commandCenter: BuildingSelection
+    embassy: BuildingSelection
+    furnace: BuildingSelection
+    infantryCamp: BuildingSelection
+    infirmary: BuildingSelection
+    lancerCamp: BuildingSelection
+    marksmanCamp: BuildingSelection
+    warAcademy: BuildingSelection
+  }
+  inventory: UpgradeCost
 }
 
 export interface LevelGroupOption {
