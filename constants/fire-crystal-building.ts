@@ -52,7 +52,7 @@ export const FC_BUILDINGS: BuildingInfo[] = [
   },
   {
     icon: 'game-icons:pocket-bow',
-    iconColorClass: tw`bg-gradient-to-br from-orange-700 via-orange-800 via-[74%] to-gray-500 to-[74%]`,
+    iconColorClass: tw`bg-gradient-to-br from-orange-700 via-orange-800 via-[74%] to-slate-500 to-[74%]`,
     id: BuildingType.MARKSMAN_CAMP,
     name: 'Marksman Camp',
   },
