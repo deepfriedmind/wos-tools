@@ -4,6 +4,15 @@ IMPORTANT:
 
 - Do NOT use the `fix` type for anything other than bug fixes
 - Changes to config files should use the `chore` type
+- Do NOT use the `style` type, use `refactor` instead
+- Always use the `docs` type for Markdown files
+- Body is optional. Only include it if it adds value
+  - Do NOT use the body to reiterate the subject/description
+  - Do NOT use the body to list files changed or affected by the commit
+  - Do NOT use the body to list updates to dependencies
+- Do NOT add mundane/generic "reasons" for changes, such as:
+  - "for stability and performance"
+  - "for improved functionality and security"
 
 ## Format
 
@@ -30,20 +39,19 @@ IMPORTANT:
 
 ## Commit Types
 
-| Type          | Description                                                                                             |
-| ------------- | ------------------------------------------------------------------------------------------------------- |
-| `feat`        | A new feature                                                                                           |
-| `fix`         | A bug fix                                                                                               |
-| `docs`        | Documentation changes                                                                                   |
-| `style`       | Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc.) |
-| `refactor`    | A code change that neither fixes a bug nor adds a feature                                               |
-| `perf`        | A code change that improves performance                                                                 |
-| `test`        | Adding missing tests or correcting existing tests                                                       |
-| `build`       | Changes that affect the build system or external dependencies                                           |
-| `ci`          | Changes to CI configuration files and scripts                                                           |
-| `chore`       | Other changes that don't modify src or test files                                                       |
-| `chore(deps)` | Upgrading or downgrading dependencies                                                                   |
-| `revert`      | Reverts a previous commit                                                                               |
+| Type          | Description                                                   |
+| ------------- | ------------------------------------------------------------- |
+| `feat`        | A new feature                                                 |
+| `fix`         | A bug fix                                                     |
+| `docs`        | Documentation changes                                         |
+| `refactor`    | A code change that neither fixes a bug nor adds a feature     |
+| `perf`        | A code change that improves performance                       |
+| `test`        | Adding missing tests or correcting existing tests             |
+| `build`       | Changes that affect the build system or external dependencies |
+| `ci`          | Changes to CI configuration files and scripts                 |
+| `chore`       | Other changes that don't modify src or test files             |
+| `chore(deps)` | Upgrading or downgrading dependencies                         |
+| `revert`      | Reverts a previous commit                                     |
 
 ## Examples
 
