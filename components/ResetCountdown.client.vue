@@ -57,14 +57,12 @@ watch(() => secondsUntilReset.value, (seconds) => {
           name="bxs:hourglass"
         />Reset in:
       </div>
-      <time
+      <span
         class="font-semibold tabular-nums sm:text-lg/none md:text-xl/none"
-        :datetime="timeRemainingUntilReset"
-        aria-label="countdown timer"
         :style="progressColor ? { color: progressColor, transition: 'color 1s ease-out' } : undefined"
       >
         {{ timeRemainingUntilReset }}
-      </time>
+      </span>
       <ProgressBar
         :value="progress"
         :show-value="false"
