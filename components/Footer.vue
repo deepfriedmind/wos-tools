@@ -26,7 +26,7 @@ const { public: { buildTime } } = useRuntimeConfig()
             class="inline align-top"
           > by [BAM]WhaleQuest from #1459
         </span>
-        <span class="max-lg:hidden">– </span><span class="max-lg:block">Last updated: <time :datetime="buildTime">{{ $dayjs(buildTime).format('YYYY-MM-DD') }}</time></span>
+        <span class="max-lg:hidden">– </span><span class="max-lg:block">Last updated: <NuxtTime :datetime="buildTime" /></span>
       </p>
       <p class="mt-2 text-xs">
         This website has no affiliation with Century Games Pte. Ltd.
