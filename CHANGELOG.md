@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.4] - 2025-05-06
+
+### ✨ Features
+
+- *(MainContentCard)* Add copy URL button functionality
+- Add Fire Crystal building upgrade calculator (#5)
+
+### 🐛 Bug Fixes
+
+- *(server-timeline)* Update upcoming milestone button visibility condition
+
+### 🚨 Testing
+
+- *(training-bonus-activation-calculator)* Add unit tests for component
+
+### 🔧 Miscellaneous Tasks
+
+- *(sitemap)* Rename sitemap
+
 ## [1.3.3] - 2025-05-02
 
 ### ✨ Features
@@ -23,6 +42,10 @@ All notable changes to this project will be documented in this file.
 ### 🚨 Testing
 
 - *(PolarBear)* Add unit tests for SVG rendering and interactions
+
+### 🔧 Miscellaneous Tasks
+
+- *(release)* 1.3.3
 
 ## [1.3.2] - 2025-04-29
 
