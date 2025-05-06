@@ -6,12 +6,15 @@ const ThemeConfiguration = definePreset(Aura, {
     toast: {
       colorScheme: {
         dark: {
-          blur: '16px',
           error: {
             background: 'color-mix(in srgb, {red.900}, transparent 20%)',
           },
           info: {
             background: 'color-mix(in srgb, {blue.900}, transparent 20%)',
+          },
+          root: {
+
+            blur: '16px',
           },
           success: {
             background: 'color-mix(in srgb, {green.900}, transparent 20%)',

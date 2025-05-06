@@ -33,8 +33,8 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0(magicast@0.3.5)(pinia@3.0.2(typescript@5.7.3)(vue@3.5.13(typescript@5.7.3)))
       '@primeuix/themes':
-        specifier: ^1.0.1
-        version: 1.0.1
+        specifier: ^1.1.0
+        version: 1.1.0
       '@primevue/forms':
         specifier: ^4.3.3
         version: 4.3.3(vue@3.5.13(typescript@5.7.3))
@@ -1662,11 +1662,15 @@ packages:
     resolution: {integrity: sha512-5Ftw/KSauDPClQ8F2qCyCUF7cIUEY4yLNikf0rKV7Vsb8zGYNK0dahQe7CChaR6M2Kn+NA2DSBSk76ZXqj6Uog==}
     engines: {node: '>=12.11.0'}
 
+  '@primeuix/styled@0.6.0':
+    resolution: {integrity: sha512-E6vQf9+tNVNvhxpgKiKCmt7SbFvLeRFM3XPJyfiQTTvHYb4d3h4IfwC5u+6SIYg1toYLinh0bJfGMHOVXgS3Ig==}
+    engines: {node: '>=12.11.0'}
+
   '@primeuix/styles@1.0.0':
     resolution: {integrity: sha512-j/TlbqihLNMP37zFNjxac5dTRaQEf5Ldrv0P7NwKigCCc/+MI5j4MddxDw1LnxkGhWCJ1Gjbt9uwyQteWtSv7A==}
 
-  '@primeuix/themes@1.0.1':
-    resolution: {integrity: sha512-RllttI3oGTZa66UQDCIA2lPnJvO/xqtNpy+0eNql6fIxdS2AUg5n7L81jTZrHNZ+31T5OBzL/SGFCDycmHTz2g==}
+  '@primeuix/themes@1.1.0':
+    resolution: {integrity: sha512-Zj38ij/tcq/WGtP11w6sGh9q4x95nmCvc/Ql0KYDqqtt3t7GHISDLd5/LH5WbN6bWPwaRRN4PaJ0ev85sE00hQ==}
 
   '@primeuix/utils@0.4.1':
     resolution: {integrity: sha512-5+1NLfyna+gLRPeFTo+xlR0tfPVLuVdidbeahAMLkQga5Rw0LxyUBCyD2/Zv2JkV69o2T+hpEDyddl3VdnYoBw==}
@@ -8807,13 +8811,17 @@ snapshots:
     dependencies:
       '@primeuix/utils': 0.5.3
 
+  '@primeuix/styled@0.6.0':
+    dependencies:
+      '@primeuix/utils': 0.5.3
+
   '@primeuix/styles@1.0.0':
     dependencies:
       '@primeuix/styled': 0.5.0
 
-  '@primeuix/themes@1.0.1':
+  '@primeuix/themes@1.1.0':
     dependencies:
-      '@primeuix/styled': 0.5.1
+      '@primeuix/styled': 0.6.0
 
   '@primeuix/utils@0.4.1': {}
 
