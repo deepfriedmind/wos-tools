@@ -95,20 +95,20 @@ describe('useChiefGearState', () => {
     expect(stateApi.state.value.inventory.designPlans).toBe(0)
   })
 
-  it('handleFromChange sets from and updates to correctly', () => {
+  it('handleFromChange sets From and updates To correctly', () => {
     const stateApi = useChiefGearState()
     stateApi.handleFromChange('coat', 'lv1')
     expect(stateApi.state.value.gear.coat.from).toBe('lv1')
     expect(stateApi.state.value.gear.coat.to).toBe('lv2')
-    // Setting to last level clears 'to'
+    // Setting to last level clears 'To'
     stateApi.handleFromChange('coat', 'lv3')
     expect(stateApi.state.value.gear.coat.to).toBeUndefined()
-    // Clearing from clears 'to'
+    // Clearing from clears 'To'
     stateApi.handleFromChange('coat', undefined)
     expect(stateApi.state.value.gear.coat.to).toBeUndefined()
   })
 
-  it('handleToChange sets to', () => {
+  it('handleToChange sets To', () => {
     const stateApi = useChiefGearState()
     stateApi.handleToChange('coat', 'lv2')
     expect(stateApi.state.value.gear.coat.to).toBe('lv2')
@@ -118,7 +118,7 @@ describe('useChiefGearState', () => {
 
   it('getFilteredToOptions returns correct options', () => {
     const stateApi = useChiefGearState()
-    // No from selected: returns all
+    // No From selected: returns all
     let options = stateApi.getFilteredToOptions(undefined)
     expect(options.length).toBe(3)
     // From lv1: returns lv2 and lv3

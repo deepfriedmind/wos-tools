@@ -117,6 +117,9 @@ importers:
       '@iconify-json/game-icons':
         specifier: ^1.2.1
         version: 1.2.1
+      '@iconify-json/material-symbols':
+        specifier: ^1.2.20
+        version: 1.2.20
       '@iconify-json/mdi':
         specifier: ^1.2.3
         version: 1.2.3
@@ -867,6 +870,9 @@ packages:
 
   '@iconify-json/game-icons@1.2.1':
     resolution: {integrity: sha512-JrKwJT+xmee87QRGIoUdR59fxMzqykS9NUnG7P0XVeznKwr3WkAw5IVWSQVQDLcN6+X3mdMFme3Hbhh6f0qTDw==}
+
+  '@iconify-json/material-symbols@1.2.20':
+    resolution: {integrity: sha512-+KqOT+3fD+LC2FbWiV8gd4+JLMiVUtmqrjzpKN1ji7rfMQTwvYJ94RT0WQlmL+vfDNJ5MTRe3rBzzJyvIH/aSg==}
 
   '@iconify-json/mdi@1.2.3':
     resolution: {integrity: sha512-O3cLwbDOK7NNDf2ihaQOH5F9JglnulNDFV7WprU2dSoZu3h3cWH//h74uQAB87brHmvFVxIOkuBX2sZSzYhScg==}
@@ -6647,6 +6653,10 @@ snapshots:
       '@iconify/types': 2.0.0
 
   '@iconify-json/game-icons@1.2.1':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/material-symbols@1.2.20':
     dependencies:
       '@iconify/types': 2.0.0
 

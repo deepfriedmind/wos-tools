@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const { copyUrlButton, copyUrlButtonLabel = 'Copy link to current settings', heading, icon, iconColorClass = 'text-surface-500', subHeading } = defineProps<{
+const { copyUrlButton, copyUrlButtonLabel = 'Copy link to current settings', heading, icon, iconColorClass = 'text-surface-500', imagePath, subHeading } = defineProps<{
   /** Whether to show a button to copy the current URL */
   copyUrlButton?: boolean
   /** Label for the copy URL button tooltip */
@@ -10,6 +10,8 @@ const { copyUrlButton, copyUrlButtonLabel = 'Copy link to current settings', hea
   icon?: string
   /** Tailwind CSS class for setting the icon color */
   iconColorClass?: string
+  /** Image path to display instead of an icon */
+  imagePath?: string
   /** Secondary heading text displayed below the main heading */
   subHeading?: string
 }>()
@@ -37,8 +39,14 @@ const { copyUrlButton, copyUrlButtonLabel = 'Copy link to current settings', hea
     >
       <slot name="heading">
         <div class="flex items-center gap-1.5">
+          <img
+            v-if="imagePath"
+            :src="imagePath"
+            :alt="heading"
+            class="size-6 drop-shadow-md md:size-9"
+          >
           <Icon
-            v-if="icon"
+            v-else-if="icon"
             :name="icon"
             :class="`${iconColorClass} text-2xl drop-shadow-md md:text-4xl`"
           />

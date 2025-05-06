@@ -19,19 +19,19 @@ export function renderChiefGearUpgradeMaterialCosts(
 ) {
   return materials
     .filter(({ key }) => costRecord[key] > 0)
-    .map(({ key, label }) => `${label}: ${formatNumber(costRecord[key])}`)
+    .map(({ key, label }) => `${label}: ${formatNumber(costRecord[key], true)}`)
     .join(', ')
 }
 
 export default function useChiefGearCalculator(state: Ref<CalculatorState>) {
-  const gearCosts = computed(() => {
-    const keys = GEAR_PIECES.map(gearPiece => gearPiece.id)
-    const values = GEAR_PIECES.map(gearPiece =>
-      calculateCost(state.value.gear[gearPiece.id].from, state.value.gear[gearPiece.id].to),
-    )
-
-    return useZipObject(keys, values)
-  })
+  const gearCosts = computed(() =>
+    Object.fromEntries(
+      GEAR_PIECES.map(({ id }) => [
+        id,
+        calculateCost(state.value.gear[id].from, state.value.gear[id].to),
+      ]),
+    ),
+  )
 
   const grandTotalCost = computed(() => {
     const costsArray = Object.values(gearCosts.value)
@@ -58,17 +58,14 @@ export default function useChiefGearCalculator(state: Ref<CalculatorState>) {
     return { hasInventory, remaining }
   })
 
-  const leftoverInventory = computed(() => {
-    const keys = MATERIALS.map(mat => mat.key)
-    const values = MATERIALS.map((mat) => {
-      const needed = grandTotalCost.value[mat.key]
-      const owned = state.value.inventory[mat.key] || 0
-
-      return Math.max(0, owned - needed)
-    })
-
-    return useZipObject(keys, values)
-  })
+  const leftoverInventory = computed(() =>
+    Object.fromEntries(
+      MATERIALS.map(({ key }) => [
+        key,
+        Math.max(0, (state.value.inventory[key] || 0) /* owned */ - grandTotalCost.value[key] /* needed */),
+      ]),
+    ),
+  )
 
   return {
     filteredGrandTotalMaterials,

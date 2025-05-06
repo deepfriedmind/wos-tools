@@ -2,7 +2,7 @@
 const PAGE_TITLE = 'Chief Charm Upgrade Calculator'
 const PAGE_DESCRIPTION = 'Calculate the material costs for upgrading Chief Charms'
 const PAGE_ICON = 'game-icons:emerald'
-const PAGE_ICON_COLOR_CLASS = 'bg-gradient-to-tl from-indigo-500 to-purple-500 via-fuchsia-400'
+const PAGE_ICON_COLOR_CLASS = tw`bg-gradient-to-tl from-indigo-500 via-fuchsia-400 to-purple-500`
 
 definePageMeta({
   description: `${PAGE_DESCRIPTION} in Whiteout Survival.`,
@@ -75,7 +75,7 @@ const charmMaterials = CHARM_MATERIALS
               >
                 <div class="grid grid-cols-[auto,1fr,1fr] items-center gap-x-2 gap-y-1">
                   <span class="text-xs font-medium tabular-nums text-primary">#{{ slotIndex }}</span>
-                  <ChiefUpgradeSelect
+                  <UpgradeSelect
                     v-if="state?.gear?.[gearPiece.id]?.[slotIndex - 1]"
                     :model-value="state.gear[gearPiece.id][slotIndex - 1].from"
                     :options="filteredFromOptions"
@@ -83,7 +83,7 @@ const charmMaterials = CHARM_MATERIALS
                     label="From"
                     @change="(value: string | undefined) => handleFromChange(gearPiece.id, slotIndex - 1, value)"
                   />
-                  <ChiefUpgradeSelect
+                  <UpgradeSelect
                     v-if="state?.gear?.[gearPiece.id]?.[slotIndex - 1]"
                     :model-value="state.gear[gearPiece.id][slotIndex - 1].to"
                     :options="getFilteredToOptions(state.gear[gearPiece.id][slotIndex - 1]?.from)"
@@ -102,7 +102,7 @@ const charmMaterials = CHARM_MATERIALS
                     v-if="gearCosts[gearPiece.id].slotCosts[slotIndex - 1].steps.length > 1"
                     toggleable
                     collapsed
-                    :header="`Show step costs (${gearCosts[gearPiece.id].slotCosts[slotIndex - 1].steps.length}\u00A0levels)`"
+                    :header="`Step costs (${gearCosts[gearPiece.id].slotCosts[slotIndex - 1].steps.length}\u00A0levels)`"
                     class="mb-2"
                   >
                     <ol

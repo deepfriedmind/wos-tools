@@ -27,7 +27,7 @@ watch(() => route.fullPath, () => {
       id="mainMenu"
       v-model:visible="drawerVisible"
       position="right"
-      class="w-full sm:w-[rem(414)]"
+      class="w-full sm:w-[rem(450)]"
     >
       <template #header>
         <Logo
@@ -97,8 +97,14 @@ watch(() => route.fullPath, () => {
                   :to="page.path"
                   class="text-lg text-primary-emphasis underline-offset-4 transition-colors hover:text-primary-emphasis-alt link-active:pointer-events-none link-active:font-medium link-active:text-primary-emphasis/70 link-active:underline link-active:decoration-wavy"
                 >
+                  <img
+                    v-if="page.imagePath"
+                    :alt="page.title"
+                    :src="page.imagePath"
+                    class="inline-block size-[1em] object-contain align-sub drop-shadow-md"
+                  >
                   <Icon
-                    v-if="page.icon"
+                    v-else-if="page.icon"
                     class="mt-[0.125em] align-text-top drop-shadow-md"
                     :class="page.iconColorClass ? String(page.iconColorClass) : 'text-surface-500'"
                     :name="String(page.icon)"

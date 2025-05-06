@@ -62,59 +62,6 @@ export default function useChiefGearState() {
     return { hasAnyParameter, parameters }
   })
 
-  // Load state from URL on initial load
-  onMounted(() => {
-    let needsUpdate = false
-    const { query } = route
-
-    for (const gearPiece of GEAR_PIECES) {
-      const fromParameter = query[`${gearPiece.id}_from`] as string | undefined
-      const toParameter = query[`${gearPiece.id}_to`] as string | undefined
-
-      if (fromParameter != null && fromParameter !== '' && UPGRADE_LEVEL_MAP.has(fromParameter)) {
-        state.value.gear[gearPiece.id].from = fromParameter
-        needsUpdate = true
-      }
-
-      if (toParameter != null && toParameter !== '' && UPGRADE_LEVEL_MAP.has(toParameter)) {
-        state.value.gear[gearPiece.id].to = toParameter
-        needsUpdate = true
-      }
-    }
-
-    for (const material of MATERIALS) {
-      const invParameter = query[`inv_${material.key}`] as string | undefined
-
-      if (invParameter != null && invParameter !== '') {
-        const amount = Number.parseInt(invParameter)
-
-        if (!Number.isNaN(amount) && amount >= 0) {
-          state.value.inventory[material.key] = amount
-          needsUpdate = true
-        }
-      }
-    }
-
-    // If state was loaded from URL, ensure 'to' levels are valid relative to 'from'
-    // Also, if the stored state had invalid 'to' relative to 'from', fix it.
-    if (needsUpdate) {
-      for (const gearPiece of GEAR_PIECES) {
-        handleFromChange(gearPiece.id, state.value.gear[gearPiece.id].from, false) // Don't auto-set 'to' when loading/fixing
-      }
-
-      // Trigger immediate URL update if loaded state caused changes
-      // Use void to explicitly ignore the promise returned by router.replace
-      void router.replace({ query: queryParameters.value.parameters })
-    }
-  })
-
-  watchDebounced(queryParameters, (newParameters) => {
-    if (!useIsEqual(newParameters.parameters, route.query))
-      void router.replace({ query: newParameters.parameters })
-  }, { debounce: 300, deep: true })
-
-  // --- Computed Properties for UI ---
-
   const selectOptions = (() => {
     const groupedLevels = useGroupBy(UPGRADE_DATA, level => level.baseTier)
     const baseTierOrder = ['Green', 'Blue', 'Purple', 'Gold', 'Red']
@@ -127,6 +74,7 @@ export default function useChiefGearState() {
       }))
   })()
 
+  // Filter 'From' options to exclude the last level since you can't upgrade from it
   const filteredFromOptions = computed(() => {
     const result = [...selectOptions]
     const lastGroupIndex = result.length - 1
@@ -141,7 +89,7 @@ export default function useChiefGearState() {
 
   function getFilteredToOptions(fromId: string | undefined) {
     if (fromId === undefined || fromId === '')
-      return selectOptions // Return all if no 'from' selected
+      return selectOptions // Return all if no 'From' selected
 
     const fromLevel = UPGRADE_LEVEL_MAP.get(fromId)
 
@@ -182,8 +130,6 @@ export default function useChiefGearState() {
     return false
   })
 
-  // --- Methods ---
-
   function clearAll() {
     state.value = structuredClone(defaultState)
   }
@@ -195,7 +141,7 @@ export default function useChiefGearState() {
     const fromLevel = (newFromId != null && newFromId !== '') ? UPGRADE_LEVEL_MAP.get(newFromId) : undefined
     const currentToLevel = (currentGearState.to != null && currentGearState.to !== '') ? UPGRADE_LEVEL_MAP.get(currentGearState.to) : undefined
 
-    // If 'from' is cleared or invalid, clear 'to'
+    // If 'From' is cleared or invalid, clear 'To'
     if (fromLevel === undefined) {
       currentGearState.to = undefined
 
@@ -207,14 +153,14 @@ export default function useChiefGearState() {
 
     if (isNotLastLevel) {
       if (isToInvalid) {
-        // If 'to' is invalid or non-existent, set it to the next level (if autoSetNext) or clear it
+        // If 'To' is invalid or non-existent, set it to the next level (if autoSetNext) or clear it
         const nextLevel = UPGRADE_DATA[fromLevel.index + 1]
         currentGearState.to = autoSetNext ? nextLevel.id : undefined
       }
-      // If 'to' is valid and greater than 'from', keep it.
+      // If 'To' is valid and greater than 'From', keep it.
     }
     else {
-      // If 'from' is the last level, clear 'to'
+      // If 'From' is the last level, clear 'To'
       currentGearState.to = undefined
     }
   }
@@ -223,14 +169,70 @@ export default function useChiefGearState() {
     state.value.gear[gearId].to = newToId
   }
 
+  function loadStateFromURL() {
+    let needsUpdate = false
+    const { query } = route
+
+    for (const gearPiece of GEAR_PIECES) {
+      const fromParameter = query[`${gearPiece.id}_from`] as string | undefined
+      const toParameter = query[`${gearPiece.id}_to`] as string | undefined
+
+      if (fromParameter != null && fromParameter !== '' && UPGRADE_LEVEL_MAP.has(fromParameter)) {
+        state.value.gear[gearPiece.id].from = fromParameter
+        needsUpdate = true
+      }
+
+      if (toParameter != null && toParameter !== '' && UPGRADE_LEVEL_MAP.has(toParameter)) {
+        state.value.gear[gearPiece.id].to = toParameter
+        needsUpdate = true
+      }
+    }
+
+    for (const material of MATERIALS) {
+      const invParameter = query[`inv_${material.key}`] as string | undefined
+
+      if (invParameter != null && invParameter !== '') {
+        const amount = Number.parseInt(invParameter)
+
+        if (!Number.isNaN(amount) && amount >= 0) {
+          state.value.inventory[material.key] = amount
+          needsUpdate = true
+        }
+      }
+    }
+
+    // If state was loaded from URL, ensure 'To' levels are valid relative to 'From'
+    // Also, if the stored state had invalid 'To' relative to 'From', fix it.
+    if (needsUpdate) {
+      for (const gearPiece of GEAR_PIECES) {
+        handleFromChange(gearPiece.id, state.value.gear[gearPiece.id].from, false) // Don't auto-set 'To' when loading/fixing
+      }
+
+      // Trigger immediate URL update if loaded state caused changes
+      // Use void to explicitly ignore the promise returned by router.replace
+      void router.replace({ query: queryParameters.value.parameters })
+    }
+
+    return needsUpdate
+  }
+
+  onMounted(() => {
+    loadStateFromURL()
+  })
+
+  watchDebounced(queryParameters, (newParameters) => {
+    if (!useIsEqual(newParameters.parameters, route.query))
+      void router.replace({ query: newParameters.parameters })
+  }, { debounce: 300, deep: true })
+
   return {
     clearAll,
     filteredFromOptions,
     getFilteredToOptions,
     handleFromChange,
     handleToChange,
-    hasAnySelectionOrInventory, // Expose for ClearAll button visibility
-    queryParameters, // Expose for CopyButton
+    hasAnySelectionOrInventory,
+    queryParameters,
     selectOptions,
     state,
   }

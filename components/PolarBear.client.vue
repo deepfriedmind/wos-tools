@@ -793,7 +793,6 @@ onUnmounted(() => {
         stroke="#333"
         :stroke-width="BLINK.strokeWidth"
         stroke-linecap="round"
-        data-test="blink-left"
       />
       <template v-else>
         <ellipse
@@ -832,7 +831,6 @@ onUnmounted(() => {
         stroke="#333"
         :stroke-width="BLINK.strokeWidth"
         stroke-linecap="round"
-        data-test="blink-right"
       />
       <template v-else>
         <ellipse

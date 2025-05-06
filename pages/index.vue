@@ -26,11 +26,17 @@ const { pages } = usePageRoutes()
             :to="page.path"
             class="inline-block text-lg font-bold text-primary-emphasis transition text-shadow hover:scale-105 hover:text-primary-emphasis-alt max-sm:origin-left sm:text-2xl md:text-4xl"
           >
+            <img
+              v-if="page.imagePath"
+              :alt="page.title"
+              :src="page.imagePath"
+              class="inline-block size-[1em] object-contain align-top drop-shadow-md"
+            >
             <Icon
-              v-if="page.icon"
+              v-else-if="page.icon"
+              :class="page.iconColorClass ? page.iconColorClass : 'text-surface-500'"
+              :name="page.icon"
               class="mt-[0.125em] align-text-top drop-shadow-md"
-              :class="page.iconColorClass ? String(page.iconColorClass) : 'text-surface-500'"
-              :name="String(page.icon)"
             />
             {{ page.title }}
           </RouterLink>
