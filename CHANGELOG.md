@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.5] - 2025-05-06
+
+### ♻️ Refactor
+
+- *(fire-crystal-building)* Update color class for Marksman Camp icon
+- *(ResetCountdown)* Replace <time> with <span> for countdown display
+- *(training-bonus-activation-calculator)* Adjust width of start time label
+- *(footer)* Replace buildTime formatting with NuxtTime component
+
+### 📚 Documentation
+
+- Update commit message instructions for clarity and consistency
+
+### 🔧 Miscellaneous Tasks
+
+- *(images)* Update image assets for Fire Crystals
+
 ## [1.3.4] - 2025-05-06
 
 ### ✨ Features
@@ -20,6 +37,7 @@ All notable changes to this project will be documented in this file.
 ### 🔧 Miscellaneous Tasks
 
 - *(sitemap)* Rename sitemap
+- *(release)* 1.3.4
 
 ## [1.3.3] - 2025-05-02
 
