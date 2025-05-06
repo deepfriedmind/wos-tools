@@ -169,7 +169,7 @@ const formattedStartTime = computed(() => {
           class="flex flex-wrap items-center gap-4"
         >
           <div class="flex items-center gap-2">
-            <div class="text-lg font-bold sm:w-48">
+            <div class="text-lg font-bold sm:w-56">
               Start training at:
             </div>
           </div>
