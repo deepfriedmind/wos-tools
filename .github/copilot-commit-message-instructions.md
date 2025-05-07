@@ -13,6 +13,7 @@ IMPORTANT:
 - Do NOT add mundane/generic "reasons" for changes, such as:
   - "for stability and performance"
   - "for improved functionality and security"
+  - "for consistency"
 
 ## Format
 
