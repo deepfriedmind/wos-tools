@@ -6,16 +6,11 @@ IMPORTANT:
 - Changes to config files should use the `chore` type
 - Do NOT use the `style` type, use `refactor` instead
 - Always use the `docs` type for Markdown files
+- Do NOT add "reasons" for changes unless absolutely necessary, e.g. "for ..."
 - Body is optional. Only include it if it adds value
   - Do NOT use the body to reiterate the subject/description
   - Do NOT use the body to list files changed or affected by the commit
   - Do NOT use the body to list updates to dependencies
-- Do NOT add mundane/generic "reasons" for changes, such as:
-  - "for stability and performance"
-  - "for improved functionality and security"
-  - "for consistency"
-  - "for clarity"
-  - "for better layout"
 
 ## Format
 
