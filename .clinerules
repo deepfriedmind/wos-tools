@@ -167,7 +167,7 @@ export const useUserStore = defineStore('user', () => {
 - Validate code syntax and nesting before suggesting changes
 - Run ESLint and type checking before providing code suggestions
 - Use descriptive variable names without abbreviations or acronyms
-- Always prefer destructuring whenever possible
+- Always prefer destructuring syntax whenever possible
 - Always prefer `undefined` over `null` for uninitialized values
 - Do NOT use the `any` type. Always use specific types
 - Do NOT add explicit types when TypeScript can infer them
