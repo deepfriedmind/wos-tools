@@ -64,30 +64,60 @@ describe('useHeroGearMasteryState', () => {
   it('should add a new gear piece', () => {
     const { addGearPiece, state } = useHeroGearMasteryState()
 
+    // Clear any existing state and ensure we start with exactly one piece
+    state.value.pieces = [{ from: undefined, id: 'test-uuid', to: undefined }]
+    expect(state.value.pieces).toHaveLength(1)
+
     addGearPiece()
 
     expect(state.value.pieces).toHaveLength(2)
   })
 
-  it('should remove a gear piece', () => {
-    const { addGearPiece, removeGearPiece, state } = useHeroGearMasteryState()
+  it('should remove a gear piece when there are multiple pieces', () => {
+    const { removeGearPiece, state } = useHeroGearMasteryState()
 
-    addGearPiece() // Now we have 2 pieces
-    const pieceId = state.value.pieces[0].id
+    // Set up a known state with two pieces
+    state.value.pieces = [
+      { from: undefined, id: 'piece-1', to: undefined },
+      { from: undefined, id: 'piece-2', to: undefined },
+    ]
+    expect(state.value.pieces).toHaveLength(2)
 
-    removeGearPiece(pieceId)
+    // Remove the first piece
+    removeGearPiece('piece-1')
 
+    // Should have one piece left, which is the second piece
     expect(state.value.pieces).toHaveLength(1)
+    expect(state.value.pieces[0].id).toBe('piece-2')
   })
 
   it('should not allow removing all pieces (keeps at least one)', () => {
     const { removeGearPiece, state } = useHeroGearMasteryState()
 
+    // Clear any existing state and ensure we start with exactly one piece
+    state.value.pieces = [{ from: undefined, id: 'test-uuid', to: undefined }]
+
+    // Try to remove the only piece that exists
     const pieceId = state.value.pieces[0].id
     removeGearPiece(pieceId)
 
+    // Should still have one piece with the same ID since we can't remove the last piece
     expect(state.value.pieces).toHaveLength(1)
     expect(state.value.pieces[0].id).toBe('test-uuid')
+
+    // Add a second piece
+    state.value.pieces.push({ from: undefined, id: 'second-piece', to: undefined })
+    expect(state.value.pieces).toHaveLength(2)
+
+    // Now we should be able to remove the first piece
+    removeGearPiece(pieceId)
+    expect(state.value.pieces).toHaveLength(1)
+    expect(state.value.pieces[0].id).toBe('second-piece')
+
+    // But we still can't remove the last remaining piece
+    removeGearPiece('second-piece')
+    expect(state.value.pieces).toHaveLength(1)
+    expect(state.value.pieces[0].id).toBe('second-piece')
   })
 
   it('should handle from level change', () => {

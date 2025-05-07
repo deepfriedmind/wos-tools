@@ -50,8 +50,13 @@ export function useHeroGearMasteryState() {
   }
 
   function removeGearPiece(pieceId: string) {
-    state.value.pieces = state.value.pieces.filter(p => p.id !== pieceId)
-    updateQueryParameters()
+    // Only remove the piece if there would still be at least one piece left
+    if (state.value.pieces.length > 1) {
+      state.value.pieces = state.value.pieces.filter(p => p.id !== pieceId)
+      updateQueryParameters()
+    }
+    // If we're trying to remove the last piece, do nothing
+    // This matches the UI behavior where the delete button isn't shown for the last piece
   }
 
   // --- Level Selection ---
