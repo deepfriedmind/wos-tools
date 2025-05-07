@@ -122,8 +122,10 @@ export function useHeroGearMasteryState() {
   )
 
   // --- Inventory & Clear ---
-  const hasAnySelectionOrInventory = computed(() => state.value.pieces.some(p => typeof p.from === 'string' || typeof p.to === 'string')
-    || Object.values(state.value.inventory).some(value => value > 0))
+  const hasAnySelectionOrInventory = computed(() =>
+    state.value.pieces.some(p => typeof p.from === 'string' || typeof p.to === 'string')
+    || Object.values(state.value.inventory).some(value => value > 0)
+    || state.value.pieces.length > 1)
 
   function clearAll() {
     state.value = structuredClone(initialState)

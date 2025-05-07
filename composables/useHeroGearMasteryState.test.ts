@@ -169,10 +169,11 @@ describe('useHeroGearMasteryState', () => {
     expect(state.value.inventory.essenceStone).toBe(0)
   })
 
-  it('should detect when there are selections or inventory', () => {
-    const { handleFromChange, hasAnySelectionOrInventory, state } = useHeroGearMasteryState()
+  it('should detect when there are selections, inventory, or multiple gear pieces', () => {
+    const { addGearPiece, handleFromChange, hasAnySelectionOrInventory, state } = useHeroGearMasteryState()
 
-    // Initially should be false
+    // Initially should be false with just one empty piece
+    state.value.pieces = [{ from: undefined, id: 'test-uuid', to: undefined }]
     expect(hasAnySelectionOrInventory.value).toBe(false)
 
     // Add a from level
@@ -185,6 +186,14 @@ describe('useHeroGearMasteryState', () => {
     expect(hasAnySelectionOrInventory.value).toBe(false)
 
     state.value.inventory.essenceStone = 50
+    expect(hasAnySelectionOrInventory.value).toBe(true)
+
+    // Clear inventory and add a second piece
+    state.value.inventory.essenceStone = 0
+    expect(hasAnySelectionOrInventory.value).toBe(false)
+
+    addGearPiece()
+    expect(state.value.pieces.length).toBe(2)
     expect(hasAnySelectionOrInventory.value).toBe(true)
   })
 
