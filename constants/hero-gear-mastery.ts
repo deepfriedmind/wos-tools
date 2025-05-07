@@ -1,30 +1,26 @@
 import type { HeroGearMasteryCost, HeroGearMasteryLevel, HeroGearMasteryMaterial } from '~/types/hero-gear-mastery'
 
-// Material Definitions
 export const HERO_GEAR_MASTERY_MATERIALS: ReadonlyArray<HeroGearMasteryMaterial> = [
   {
-    icon: 'game-icons:crystal-growth',
-    iconColorClass: 'bg-purple-500',
+    icon: 'game-icons:rune-stone',
+    iconColorClass: tw`bg-gradient-to-r from-stone-700 via-stone-400 to-stone-700`,
     key: 'essenceStone',
     label: 'Essence Stones',
   },
   {
     icon: 'game-icons:shoulder-armor',
-    iconColorClass: 'bg-orange-600',
+    iconColorClass: tw`bg-gradient-to-tr from-amber-400 from-[46%] via-amber-100 via-[46%] to-amber-400 to-60%`,
     key: 'mythicGearPiece',
     label: 'Mythic Hero Gear',
   },
 ] as const
 
-// Level Definitions
 export const HERO_GEAR_MASTERY_LEVELS: ReadonlyArray<HeroGearMasteryLevel> = Array.from({ length: 20 }, (_, index) => ({
   id: `level-${index + 1}`,
   label: `Level ${index + 1}`,
   level: index + 1,
 })) as ReadonlyArray<HeroGearMasteryLevel>
 
-// Upgrade Cost Table
-// Data derived from the provided HTML table
 export const HERO_GEAR_MASTERY_COSTS: ReadonlyArray<HeroGearMasteryCost> = [
   { cost: { essenceStone: 10, mythicGearPiece: 0 }, levelId: 'level-1' },
   { cost: { essenceStone: 20, mythicGearPiece: 0 }, levelId: 'level-2' },

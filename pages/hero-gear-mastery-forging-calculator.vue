@@ -70,17 +70,26 @@ function getPieceCostById(pieceId: string) {
           :key="piece.id"
         >
           <template #title>
-            <div class="flex items-center justify-between">
+            <div
+              v-auto-animate
+              class="flex items-center gap-2"
+            >
+              <Icon
+                class="bg-gradient-to-tr from-amber-400 from-[46%] via-amber-100 via-[46%] to-amber-400 to-60%"
+                aria-label="Hero gear piece"
+                name="game-icons:shoulder-armor"
+                size="40"
+              />
               <h4 class="text-lg font-bold">
-                Hero Gear Piece #{{ index + 1 }}
+                Hero Gear #{{ index + 1 }}
               </h4>
               <Button
                 v-if="state.pieces.length > 1"
                 icon="pi pi-times"
                 text
                 rounded
-                severity="danger"
                 aria-label="Remove piece"
+                class="ml-auto"
                 @click="removeGearPiece(piece.id)"
               />
             </div>
