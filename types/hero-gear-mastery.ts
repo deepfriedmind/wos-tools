@@ -9,6 +9,13 @@ export interface CalculatedPieceCost {
   total: HeroGearMasteryCostPerLevel
 }
 
+export interface CalculatorState {
+  inventory: {
+    [key in HeroGearMasteryMaterialKey]: number
+  }
+  pieces: HeroGearPieceInstance[]
+}
+
 export interface GrandTotalCost {
   essenceStone: number
   mythicGearPiece: number
@@ -43,13 +50,6 @@ export type HeroGearMasteryMaterialKey = 'essenceStone' | 'mythicGearPiece'
 
 export interface HeroGearMasteryQueryParameters {
   [key: string]: string | undefined
-}
-
-export interface HeroGearMasteryState {
-  inventory: {
-    [key in HeroGearMasteryMaterialKey]: number
-  }
-  pieces: HeroGearPieceInstance[]
 }
 
 export interface HeroGearPieceInstance {

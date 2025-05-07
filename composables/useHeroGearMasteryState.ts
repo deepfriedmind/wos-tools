@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 
-import type { HeroGearMasteryLevelId, HeroGearMasteryMaterialKey, HeroGearMasteryQueryParameters, HeroGearMasteryState, HeroGearPieceInstance } from '~/types/hero-gear-mastery'
+import type { CalculatorState, HeroGearMasteryLevelId, HeroGearMasteryMaterialKey, HeroGearMasteryQueryParameters, HeroGearPieceInstance } from '~/types/hero-gear-mastery'
 
 const DEFAULT_INVENTORY = Object.fromEntries(
   HERO_GEAR_MASTERY_MATERIALS.map(material => [material.key, 0]),
@@ -11,12 +11,12 @@ export function useHeroGearMasteryState() {
   const router = useRouter()
   const STORAGE_PREFIX = useRuntimeConfig().public.storagePrefix
 
-  const initialState: HeroGearMasteryState = {
+  const initialState: CalculatorState = {
     inventory: { ...DEFAULT_INVENTORY },
     pieces: [{ from: undefined, id: uuidv4(), to: undefined }],
   }
 
-  const state = useLocalStorage<HeroGearMasteryState>(`${STORAGE_PREFIX}hero-gear-mastery-calculator-state`, initialState, {
+  const state = useLocalStorage<CalculatorState>(`${STORAGE_PREFIX}hero-gear-mastery-calculator-state`, defaultState, {
     initOnMounted: true,
     // Deep merge stored state with current defaults to handle potential structure changes
     mergeDefaults: (storageValue, defaults) => useToMerged(storageValue, defaults),

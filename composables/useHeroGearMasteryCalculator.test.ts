@@ -3,13 +3,13 @@ import type { Ref } from 'vue'
 
 import useHeroGearMasteryCalculator from './useHeroGearMasteryCalculator'
 
-import type { HeroGearMasteryState } from '~/types/hero-gear-mastery'
+import type { CalculatorState } from '~/types/hero-gear-mastery'
 
 // Mock formatNumber
 vi.stubGlobal('formatNumber', (value: number) => value.toString())
 
 describe('useHeroGearMasteryCalculator', () => {
-  let mockState: Ref<HeroGearMasteryState>
+  let mockState: Ref<CalculatorState>
 
   beforeEach(() => {
     mockState = ref({

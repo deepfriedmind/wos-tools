@@ -1,6 +1,6 @@
 import type { Ref } from 'vue'
 
-import type { CalculatedCostStep, CalculatedPieceCost, GrandTotalCost, HeroGearMasteryCostPerLevel, HeroGearMasteryLevelId, HeroGearMasteryState, RemainingCostResult } from '~/types/hero-gear-mastery'
+import type { CalculatedCostStep, CalculatedPieceCost, CalculatorState, GrandTotalCost, HeroGearMasteryCostPerLevel, HeroGearMasteryLevelId, RemainingCostResult } from '~/types/hero-gear-mastery'
 
 /**
  * Returns a string for Hero Gear Mastery upgrade material costs with comma separation, omitting zero values.
@@ -18,7 +18,7 @@ export function renderHeroGearMasteryUpgradeMaterialCosts(
     .join(', ')
 }
 
-export default function useHeroGearMasteryCalculator(state: Ref<HeroGearMasteryState>) {
+export default function useHeroGearMasteryCalculator(state: Ref<CalculatorState>) {
   const pieceCosts = computed<CalculatedPieceCost[]>(() => state.value.pieces.map((piece) => {
     const { steps, total } = calculateUpgradeCostForSinglePiece(piece.from, piece.to)
 
