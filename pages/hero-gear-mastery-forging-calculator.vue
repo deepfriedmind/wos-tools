@@ -63,12 +63,14 @@ function getPieceCostById(pieceId: string) {
               v-auto-animate
               class="flex items-center gap-2"
             >
-              <Icon
-                aria-label="Hero gear piece"
-                :class="piece.gradient || 'bg-gradient-to-tr from-amber-400 from-[46%] via-amber-100 via-[46%] to-amber-400 to-60%'"
-                name="game-icons:shoulder-armor"
-                size="40"
-              />
+              <ClientOnly>
+                <Icon
+                  aria-label="Hero gear piece"
+                  :class="piece.gradient"
+                  name="game-icons:shoulder-armor"
+                  size="40"
+                />
+              </ClientOnly>
               <h4 class="text-lg font-bold">
                 Hero Gear #{{ index + 1 }}
               </h4>
