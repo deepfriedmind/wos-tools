@@ -50,11 +50,14 @@ describe('useHeroGearMasteryState', () => {
     const { state } = useHeroGearMasteryState()
 
     expect(state.value.pieces).toHaveLength(1)
-    expect(state.value.pieces[0]).toEqual({
-      from: undefined,
-      id: 'test-uuid',
-      to: undefined,
-    })
+
+    // Check each property individually, ignoring the gradient
+    const [piece] = state.value.pieces
+    expect(piece.from).toBeUndefined()
+    expect(piece.id).toBe('test-uuid')
+    expect(piece.to).toBeUndefined()
+    expect(typeof piece.gradient).toBe('string') // Just verify it's a string
+
     expect(state.value.inventory).toEqual({
       essenceStone: 0,
       mythicGearPiece: 0,

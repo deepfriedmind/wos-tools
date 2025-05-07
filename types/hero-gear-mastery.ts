@@ -54,6 +54,7 @@ export interface HeroGearMasteryQueryParameters {
 
 export interface HeroGearPieceInstance {
   from?: HeroGearMasteryLevelId
+  gradient?: string
   id: string
   to?: HeroGearMasteryLevelId
 }

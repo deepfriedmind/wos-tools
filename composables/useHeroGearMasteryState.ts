@@ -2,8 +2,17 @@ import { v4 as uuidv4 } from 'uuid'
 
 import type { CalculatorState, HeroGearMasteryLevelId, HeroGearMasteryMaterialKey, HeroGearMasteryQueryParameters, HeroGearPieceInstance } from '~/types/hero-gear-mastery'
 
+const GEAR_GRADIENTS = [
+  'bg-gradient-to-tr from-amber-400 from-[46%] via-amber-100 via-[46%] to-amber-400 to-60%',
+  'bg-gradient-to-tr from-amber-500 from-[40%] via-amber-100 via-[50%] to-amber-400 to-65%',
+  'bg-gradient-to-tr from-amber-400 from-[50%] via-amber-200 via-[40%] to-amber-500 to-55%',
+  'bg-gradient-to-bl from-amber-400 from-[46%] via-amber-100 via-[46%] to-amber-400 to-60%',
+  'bg-gradient-to-tl from-amber-500 from-[40%] via-amber-100 via-[50%] to-amber-400 to-65%',
+  'bg-gradient-to-br from-amber-400 from-[50%] via-amber-200 via-[40%] to-amber-500 to-55%',
+]
+
 const DEFAULT_INVENTORY = Object.fromEntries(
-  HERO_GEAR_MASTERY_MATERIALS.map(material => [material.key, 0]),
+  HERO_GEAR_MASTERY_MATERIALS.map(({ key }) => [key, 0]),
 ) as { [key in HeroGearMasteryMaterialKey]: number }
 
 export default function useHeroGearMasteryState() {
@@ -13,7 +22,7 @@ export default function useHeroGearMasteryState() {
 
   const defaultState: CalculatorState = {
     inventory: { ...DEFAULT_INVENTORY },
-    pieces: [{ from: undefined, id: uuidv4(), to: undefined }],
+    pieces: [{ from: undefined, gradient: useSample(GEAR_GRADIENTS), id: uuidv4(), to: undefined }],
   }
 
   const state = useLocalStorage<CalculatorState>(`${STORAGE_PREFIX}hero-gear-mastery-calculator-state`, defaultState, {
@@ -24,11 +33,11 @@ export default function useHeroGearMasteryState() {
 
   const queryParameters = computed(() => {
     const parameters: HeroGearMasteryQueryParameters = {}
-    for (const [index, piece] of state.value.pieces.entries()) {
-      if (typeof piece.from === 'string')
-        parameters[`p${index}_from`] = piece.from
-      if (typeof piece.to === 'string')
-        parameters[`p${index}_to`] = piece.to
+    for (const [index, { from, to }] of state.value.pieces.entries()) {
+      if (typeof from === 'string')
+        parameters[`p${index}_from`] = from
+      if (typeof to === 'string')
+        parameters[`p${index}_to`] = to
     }
     for (const material of HERO_GEAR_MASTERY_MATERIALS) {
       if (state.value.inventory[material.key] > 0) {
@@ -169,12 +178,22 @@ export default function useHeroGearMasteryState() {
   }
 
   function addGearPiece() {
-    state.value.pieces.push({ from: undefined, id: uuidv4(), to: undefined })
+    const lastPiece = state.value.pieces.at(-1)
+    const gradient = useSample(GEAR_GRADIENTS.filter(gradient => gradient !== lastPiece?.gradient))
+
+    state.value.pieces.push({
+      from: undefined,
+      gradient,
+      id: uuidv4(),
+      to: undefined,
+    })
   }
 
   function removeGearPiece(pieceId: string) {
-    if (state.value.pieces.length > 1) {
-      state.value.pieces = state.value.pieces.filter(p => p.id !== pieceId)
+    const { pieces } = state.value
+
+    if (pieces.length > 1) {
+      state.value.pieces = pieces.filter(({ id }) => id !== pieceId)
     }
   }
 

@@ -75,8 +75,8 @@ function getPieceCostById(pieceId: string) {
               class="flex items-center gap-2"
             >
               <Icon
-                class="bg-gradient-to-tr from-amber-400 from-[46%] via-amber-100 via-[46%] to-amber-400 to-60%"
                 aria-label="Hero gear piece"
+                :class="piece.gradient || 'bg-gradient-to-tr from-amber-400 from-[46%] via-amber-100 via-[46%] to-amber-400 to-60%'"
                 name="game-icons:shoulder-armor"
                 size="40"
               />
