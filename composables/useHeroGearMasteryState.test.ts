@@ -76,6 +76,23 @@ describe('useHeroGearMasteryState', () => {
     expect(state.value.pieces).toHaveLength(2)
   })
 
+  it('should copy from/to values from the previous piece when adding a new one', () => {
+    const { addGearPiece, state } = useHeroGearMasteryState()
+
+    // Set up a piece with from/to values
+    state.value.pieces = [{
+      from: 'level-3',
+      id: 'test-uuid',
+      to: 'level-7',
+    }]
+
+    addGearPiece()
+
+    expect(state.value.pieces).toHaveLength(2)
+    expect(state.value.pieces[1].from).toBe('level-3')
+    expect(state.value.pieces[1].to).toBe('level-7')
+  })
+
   it('should remove a gear piece when there are multiple pieces', () => {
     const { removeGearPiece, state } = useHeroGearMasteryState()
 

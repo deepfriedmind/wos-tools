@@ -182,10 +182,10 @@ export default function useHeroGearMasteryState() {
     const gradient = useSample(GEAR_GRADIENTS.filter(gradient => gradient !== lastPiece?.gradient))
 
     state.value.pieces.push({
-      from: undefined,
+      from: lastPiece?.from,
       gradient,
       id: uuidv4(),
-      to: undefined,
+      to: lastPiece?.to,
     })
   }
 
