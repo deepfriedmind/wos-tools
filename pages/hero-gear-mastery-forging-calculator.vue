@@ -1,8 +1,8 @@
 <script setup lang="ts">
 const PAGE_TITLE = 'Hero Gear Mastery Forging Calculator'
 const PAGE_DESCRIPTION = 'Calculate the material costs for upgrading Hero Gear Mastery levels'
-const PAGE_ICON = 'game-icons:crystal-growth'
-const PAGE_ICON_COLOR_CLASS = 'bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500'
+const PAGE_ICON = 'game-icons:shoulder-armor'
+const PAGE_ICON_COLOR_CLASS = tw`bg-gradient-to-tr from-amber-400 from-[46%] via-amber-100 via-[46%] to-amber-400 to-60%`
 
 definePageMeta({
   description: `${PAGE_DESCRIPTION} in Whiteout Survival.`,
