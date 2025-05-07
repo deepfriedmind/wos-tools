@@ -49,17 +49,6 @@ function getPieceCostById(pieceId: string) {
     copy-url-button-label="Copy link to current settings"
   >
     <div class="space-y-12">
-      <div class="flex justify-end">
-        <Button
-          icon="pi pi-plus"
-          label="Add hero gear piece"
-          outlined
-          rounded
-          size="small"
-          @click="addGearPiece"
-        />
-      </div>
-
       <!-- Gear Pieces Grid -->
       <div
         v-auto-animate
@@ -289,8 +278,16 @@ function getPieceCostById(pieceId: string) {
         </Card>
       </div>
 
-      <!-- Clear Button -->
+      <!-- Add + Clear buttons -->
       <div class="flex items-center justify-center gap-4">
+        <Button
+          icon="pi pi-plus"
+          label="Add Hero Gear piece"
+          outlined
+          rounded
+          size="small"
+          @click="addGearPiece"
+        />
         <Button
           :disabled="!hasAnySelectionOrInventory"
           icon="pi pi-trash"
