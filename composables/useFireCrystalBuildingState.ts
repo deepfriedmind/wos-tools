@@ -233,15 +233,6 @@ export default function useFireCrystalBuildingState() {
     return needsUpdate
   }
 
-  onMounted(() => {
-    loadStateFromURL()
-  })
-
-  watchDebounced(queryParameters, (newParameters) => {
-    if (!useIsEqual(newParameters.parameters, route.query))
-      void router.replace({ query: newParameters.parameters })
-  }, { debounce: 300, deep: true })
-
   // Updates the "Set All" select's "From" value and applies it to all buildings
   function updateSetAllFromSelect(newFromId: string | undefined, autoSetNext = true) {
     // Update the "From" value in the "Set All" select
@@ -307,6 +298,15 @@ export default function useFireCrystalBuildingState() {
     // Use the furnace as a reference for filtering 'To' options
     return getFilteredToOptions(BuildingType.FURNACE, setAll.from)
   })
+
+  onMounted(() => {
+    loadStateFromURL()
+  })
+
+  watchDebounced(queryParameters, (newParameters) => {
+    if (!useIsEqual(newParameters.parameters, route.query))
+      void router.replace({ query: newParameters.parameters })
+  }, { debounce: 300, deep: true })
 
   return {
     applyFromLevelToAllBuildings,

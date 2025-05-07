@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { useHeroGearMasteryState } from './useHeroGearMasteryState'
+import useHeroGearMasteryState from './useHeroGearMasteryState'
 
 // --- Mocks for Nuxt composables and helpers ---
 const pushMock = vi.fn()

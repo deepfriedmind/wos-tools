@@ -6,12 +6,12 @@ const DEFAULT_INVENTORY = Object.fromEntries(
   HERO_GEAR_MASTERY_MATERIALS.map(material => [material.key, 0]),
 ) as { [key in HeroGearMasteryMaterialKey]: number }
 
-export function useHeroGearMasteryState() {
+export default function useHeroGearMasteryState() {
   const route = useRoute()
   const router = useRouter()
   const STORAGE_PREFIX = useRuntimeConfig().public.storagePrefix
 
-  const initialState: CalculatorState = {
+  const defaultState: CalculatorState = {
     inventory: { ...DEFAULT_INVENTORY },
     pieces: [{ from: undefined, id: uuidv4(), to: undefined }],
   }
@@ -22,7 +22,6 @@ export function useHeroGearMasteryState() {
     mergeDefaults: (storageValue, defaults) => useToMerged(storageValue, defaults),
   })
 
-  // --- Query Parameter Handling ---
   const queryParameters = computed(() => {
     const parameters: HeroGearMasteryQueryParameters = {}
     for (const [index, piece] of state.value.pieces.entries()) {
@@ -43,23 +42,35 @@ export function useHeroGearMasteryState() {
     }
   })
 
-  // --- Piece Management ---
-  function addGearPiece() {
-    state.value.pieces.push({ from: undefined, id: uuidv4(), to: undefined })
-    updateQueryParameters()
+  const selectOptions = HERO_GEAR_MASTERY_LEVELS.map(({ id, label }) => ({
+    id,
+    label,
+  }))
+
+  // Filter 'From' options to exclude the last level since you can't upgrade from it
+  const filteredFromOptions = computed(() => useInitial(selectOptions))
+
+  function getFilteredToOptions(fromLevelId?: HeroGearMasteryLevelId) {
+    if (typeof fromLevelId !== 'string')
+      return []
+
+    const fromIndex = HERO_GEAR_MASTERY_LEVELS.findIndex(level => level.id === fromLevelId)
+
+    if (fromIndex === -1)
+      return []
+
+    return selectOptions.slice(fromIndex + 1) // Start from the level after the 'From' level
   }
 
-  function removeGearPiece(pieceId: string) {
-    // Only remove the piece if there would still be at least one piece left
-    if (state.value.pieces.length > 1) {
-      state.value.pieces = state.value.pieces.filter(p => p.id !== pieceId)
-      updateQueryParameters()
-    }
-    // If we're trying to remove the last piece, do nothing
-    // This matches the UI behavior where the delete button isn't shown for the last piece
+  const hasAnySelectionOrInventory = computed(() =>
+    state.value.pieces.some(({ from, to }) => typeof from === 'string' || typeof to === 'string')
+    || Object.values(state.value.inventory).some(value => value > 0)
+    || state.value.pieces.length > 1)
+
+  function clearAll() {
+    state.value = structuredClone(defaultState)
   }
 
-  // --- Level Selection ---
   function handleFromChange(pieceId: string, value?: HeroGearMasteryLevelId, autoSetNext = true) {
     const piece = state.value.pieces.find(p => p.id === pieceId)
 
@@ -71,7 +82,6 @@ export function useHeroGearMasteryState() {
     // If 'From' is cleared or invalid, clear 'To'
     if (typeof value !== 'string') {
       piece.to = undefined
-      updateQueryParameters()
 
       return
     }
@@ -97,8 +107,6 @@ export function useHeroGearMasteryState() {
       piece.to = undefined
     }
     // If 'To' is valid and greater than 'From', keep it
-
-    updateQueryParameters()
   }
 
   function handleToChange(pieceId: string, value?: HeroGearMasteryLevelId) {
@@ -108,31 +116,6 @@ export function useHeroGearMasteryState() {
       return
 
     piece.to = value
-    updateQueryParameters()
-  }
-
-  // Create select options from the levels
-  const selectOptions = HERO_GEAR_MASTERY_LEVELS.map(level => ({
-    id: level.id,
-    label: level.label,
-    value: level.id,
-  }))
-
-  // Filter 'From' options to exclude the last level since you can't upgrade from it
-  const filteredFromOptions = computed(() => useInitial(selectOptions))
-
-  // --- Inventory & Clear ---
-  const hasAnySelectionOrInventory = computed(() =>
-    state.value.pieces.some(p => typeof p.from === 'string' || typeof p.to === 'string')
-    || Object.values(state.value.inventory).some(value => value > 0)
-    || state.value.pieces.length > 1)
-
-  function clearAll() {
-    state.value = structuredClone(initialState)
-  }
-
-  function updateQueryParameters() {
-    void router.replace({ query: queryParameters.value.params })
   }
 
   function loadStateFromURL() {
@@ -185,34 +168,24 @@ export function useHeroGearMasteryState() {
     return needsUpdate
   }
 
-  // Watch inventory changes for query param updates
-  watchDebounced(() => state.value.inventory, () => {
-    updateQueryParameters()
-  }, { debounce: 300, deep: true })
+  function addGearPiece() {
+    state.value.pieces.push({ from: undefined, id: uuidv4(), to: undefined })
+  }
 
-  // Watch for queryParameters changes
-  watchDebounced(queryParameters, (newParameters) => {
-    if (!useIsEqual(newParameters.params, route.query))
-      void router.replace({ query: newParameters.params })
-  }, { debounce: 300, deep: true })
-
-  // Watch for route query changes is not needed as we'll load from URL on mount
+  function removeGearPiece(pieceId: string) {
+    if (state.value.pieces.length > 1) {
+      state.value.pieces = state.value.pieces.filter(p => p.id !== pieceId)
+    }
+  }
 
   onMounted(() => {
     loadStateFromURL()
   })
 
-  function getFilteredToOptions(fromLevelId?: HeroGearMasteryLevelId) {
-    if (typeof fromLevelId !== 'string')
-      return []
-
-    const fromIndex = HERO_GEAR_MASTERY_LEVELS.findIndex(level => level.id === fromLevelId)
-
-    if (fromIndex === -1)
-      return []
-
-    return selectOptions.slice(fromIndex + 1) // Start from the level after the 'From' level
-  }
+  watchDebounced(queryParameters, (newParameters) => {
+    if (!useIsEqual(newParameters.params, route.query))
+      void router.replace({ query: newParameters.params })
+  }, { debounce: 300, deep: true })
 
   return {
     addGearPiece,
@@ -224,6 +197,7 @@ export function useHeroGearMasteryState() {
     hasAnySelectionOrInventory,
     queryParameters,
     removeGearPiece,
+    selectOptions,
     state,
   }
 }
