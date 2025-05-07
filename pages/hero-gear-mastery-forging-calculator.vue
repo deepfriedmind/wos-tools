@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const PAGE_TITLE = 'Hero Gear Mastery Forging Calculator'
-const PAGE_DESCRIPTION = 'Calculate the material costs for upgrading Hero Gear Mastery levels'
+const PAGE_DESCRIPTION = 'Calculate the material costs for Hero Gear Mastery Forging upgrades'
 const PAGE_ICON = 'game-icons:shoulder-armor'
 const PAGE_ICON_COLOR_CLASS = tw`bg-gradient-to-tr from-amber-400 from-[46%] via-amber-100 via-[46%] to-amber-400 to-60%`
 
@@ -271,7 +271,7 @@ function getPieceCostById(pieceId: string) {
                 v-else
                 class="italic text-primary"
               >
-                Select gear levels to calculate total costs
+                Select gear mastery forging levels to calculate total costs
               </div>
             </div>
           </template>
