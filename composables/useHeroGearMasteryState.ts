@@ -111,15 +111,15 @@ export function useHeroGearMasteryState() {
     updateQueryParameters()
   }
 
+  // Create select options from the levels
+  const selectOptions = HERO_GEAR_MASTERY_LEVELS.map(level => ({
+    id: level.id,
+    label: level.label,
+    value: level.id,
+  }))
+
   // Filter 'From' options to exclude the last level since you can't upgrade from it
-  const filteredFromOptions = computed(() =>
-    // Exclude the last level
-    HERO_GEAR_MASTERY_LEVELS.slice(0, -1).map(level => ({
-      id: level.id,
-      label: level.label,
-      value: level.id,
-    })),
-  )
+  const filteredFromOptions = computed(() => useInitial(selectOptions))
 
   // --- Inventory & Clear ---
   const hasAnySelectionOrInventory = computed(() =>
@@ -202,6 +202,18 @@ export function useHeroGearMasteryState() {
     loadStateFromURL()
   })
 
+  function getFilteredToOptions(fromLevelId?: HeroGearMasteryLevelId) {
+    if (typeof fromLevelId !== 'string')
+      return []
+
+    const fromIndex = HERO_GEAR_MASTERY_LEVELS.findIndex(level => level.id === fromLevelId)
+
+    if (fromIndex === -1)
+      return []
+
+    return selectOptions.slice(fromIndex + 1) // Start from the level after the 'From' level
+  }
+
   return {
     addGearPiece,
     clearAll,
@@ -214,22 +226,4 @@ export function useHeroGearMasteryState() {
     removeGearPiece,
     state,
   }
-}
-
-function getFilteredToOptions(fromLevelId?: HeroGearMasteryLevelId) {
-  if (typeof fromLevelId !== 'string')
-    return []
-
-  const fromIndex = HERO_GEAR_MASTERY_LEVELS.findIndex(level => level.id === fromLevelId)
-
-  if (fromIndex === -1)
-    return []
-
-  return HERO_GEAR_MASTERY_LEVELS
-    .slice(fromIndex + 1) // Start from the level after the 'From' level
-    .map(level => ({
-      id: level.id,
-      label: level.label,
-      value: level.id,
-    }))
 }
