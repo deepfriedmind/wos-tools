@@ -2,14 +2,36 @@ import { v4 as uuidv4 } from 'uuid'
 
 import type { CalculatorState, HeroGearMasteryLevelId, HeroGearMasteryMaterialKey, HeroGearMasteryQueryParameters, HeroGearPieceInstance } from '~/types/hero-gear-mastery'
 
-const GEAR_GRADIENTS = [
-  'bg-gradient-to-tr from-amber-400 from-[46%] via-amber-100 via-[46%] to-amber-400 to-60%',
-  'bg-gradient-to-tr from-amber-500 from-[40%] via-amber-100 via-[50%] to-amber-400 to-65%',
-  'bg-gradient-to-tr from-amber-400 from-[50%] via-amber-200 via-[40%] to-amber-500 to-55%',
-  'bg-gradient-to-bl from-amber-400 from-[46%] via-amber-100 via-[46%] to-amber-400 to-60%',
-  'bg-gradient-to-tl from-amber-500 from-[40%] via-amber-100 via-[50%] to-amber-400 to-65%',
-  'bg-gradient-to-br from-amber-400 from-[50%] via-amber-200 via-[40%] to-amber-500 to-55%',
+const GRADIENT_DIRECTIONS = [
+  'bg-gradient-to-b',
+  'bg-gradient-to-bl',
+  'bg-gradient-to-br',
+  'bg-gradient-to-l',
+  'bg-gradient-to-r',
+  'bg-gradient-to-t',
+  'bg-gradient-to-tl',
+  'bg-gradient-to-tr',
 ]
+
+const AMBER_COLORS = ['amber-100', 'amber-200', 'amber-300', 'amber-400', 'amber-500']
+const TO_FROM_PERCENT_OPTIONS = [30, 35, 40, 45, 50, 55, 60]
+const VIA_PERCENT_OPTIONS = [30, 35, 40, 45, 50, 55, 60]
+
+/**
+ * Generates a random gradient string for gear pieces
+ * @returns A Tailwind CSS gradient class string
+ */
+function generateRandomAmberGradient() {
+  const direction = useSample(GRADIENT_DIRECTIONS)
+  const fromColor = useSample(AMBER_COLORS)
+  const viaColor = useSample(AMBER_COLORS.filter(color => color !== fromColor))
+  const toColor = useSample(AMBER_COLORS.filter(color => color !== viaColor))
+  const fromPercent = useSample(TO_FROM_PERCENT_OPTIONS)
+  const viaPercent = useSample(VIA_PERCENT_OPTIONS)
+  const toPercent = useSample(TO_FROM_PERCENT_OPTIONS)
+
+  return `${direction} from-${fromColor} from-${fromPercent}% via-${viaColor} via-${viaPercent}% to-${toColor} to-${toPercent}%`
+}
 
 const DEFAULT_INVENTORY = Object.fromEntries(
   HERO_GEAR_MASTERY_MATERIALS.map(({ key }) => [key, 0]),
@@ -22,7 +44,7 @@ export default function useHeroGearMasteryState() {
 
   const defaultState: CalculatorState = {
     inventory: { ...DEFAULT_INVENTORY },
-    pieces: [{ from: undefined, gradient: useSample(GEAR_GRADIENTS), id: uuidv4(), to: undefined }],
+    pieces: [{ from: undefined, gradient: generateRandomAmberGradient(), id: uuidv4(), to: undefined }],
   }
 
   const state = useLocalStorage<CalculatorState>(`${STORAGE_PREFIX}hero-gear-mastery-calculator-state`, defaultState, {
@@ -135,7 +157,10 @@ export default function useHeroGearMasteryState() {
 
     // Check for query parameters in the format p0_from, p0_to, p1_from, etc.
     while (typeof query[`p${pieceIndex}_from`] === 'string' || typeof query[`p${pieceIndex}_to`] === 'string') {
-      const piece: HeroGearPieceInstance = { id: uuidv4() }
+      const piece: HeroGearPieceInstance = {
+        gradient: generateRandomAmberGradient(),
+        id: uuidv4(),
+      }
 
       if (typeof query[`p${pieceIndex}_from`] === 'string')
         piece.from = query[`p${pieceIndex}_from`] as HeroGearMasteryLevelId
@@ -179,7 +204,7 @@ export default function useHeroGearMasteryState() {
 
   function addGearPiece() {
     const lastPiece = state.value.pieces.at(-1)
-    const gradient = useSample(GEAR_GRADIENTS.filter(gradient => gradient !== lastPiece?.gradient))
+    const gradient = generateRandomAmberGradient()
 
     state.value.pieces.push({
       from: lastPiece?.from,
