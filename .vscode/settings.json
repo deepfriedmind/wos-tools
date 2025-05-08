@@ -1,5 +1,4 @@
 {
-  "augment.chat.userGuidelines": "read `.clinerules`",
   "common-intellisense.ui": [
     "primevue4"
   ],
