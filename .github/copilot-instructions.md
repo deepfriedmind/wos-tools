@@ -22,7 +22,7 @@ Implement utilities in `utils/` directory with proper types and JSDoc comments.
 
 Use `<script setup lang="ts">` for single-file components.
 
-Always prefer destructuring whenever possible.
+Always prefer destructuring syntax whenever possible.
 
 Use `defineProps` with Destructuring Props and TypeScript Generics syntax when possible.
 

@@ -1,4 +1,4 @@
-Your task either already involves using `es-toolkit` (similar to `lodash`) functions, or is to suggest instances where you can use them instead of custom implementations.
+Analyze this file and suggest instances where you can use `es-toolkit` (similar to `lodash`) functions instead of custom implementations.
 
 Requirements:
 
@@ -14,9 +14,6 @@ Requirements:
 - Do NOT use any functions that are NOT listed in the documentation below.
 - Do NOT use `isEqual` for primitive values.
 - The goal is to make the codebase more maintainable and readable, not to add unnecessary complexity.
-
-If you were asked to identify instances where you can replace a custom implementation with an `es-toolkit` function, please follow these instructions:
-
 - For each instance you suggest, provide a brief explanation of how the `es-toolkit` function could be preferable to a custom implementation.
 - Do NOT point out instances where `es-toolkit` functions are already used or where changes are not needed.
 - Do NOT suggest any functions that are NOT listed in the documentation below.

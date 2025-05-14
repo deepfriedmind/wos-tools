@@ -208,7 +208,7 @@ export default withNuxt(
           patterns: [
             {
               allowTypeImports: true,
-              group: ['@vueuse', '~/composables', '~/constants', '~/stores', '~/utils', 'dayjs', 'pinia', 'primevue', 'vue', 'vue-router'],
+              group: ['@vueuse', '~/composables', '~/constants', '~/stores', '~/utils', 'dayjs', 'pinia', 'primevue', 'vue', 'vue-router', 'es-toolkit'],
               message: 'Remove this import. It is auto-imported by Nuxt.',
             },
           ],

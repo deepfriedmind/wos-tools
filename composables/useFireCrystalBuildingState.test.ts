@@ -282,7 +282,7 @@ describe('useFireCrystalBuildingState', () => {
     expect(state.state.value.buildings.furnace.from).toBe('fc1_0')
     expect(state.state.value.buildings.commandCenter.from).toBe('fc1_0')
 
-    // Note: The current implementation of handleFromChange still sets the 'to' value
+    // Note: The current implementation of handleFromChange still sets the 'To' value
     // even when autoSetNext is false, so we need to check for that behavior
     expect(state.state.value.buildings.furnace.to).toBeDefined()
     expect(state.state.value.buildings.commandCenter.to).toBeDefined()
@@ -306,8 +306,8 @@ describe('useFireCrystalBuildingState', () => {
     expect(state.state.value.buildings.furnace.to).toBe('fc2_0')
     expect(state.state.value.buildings.commandCenter.to).toBe('fc2_0')
 
-    // The embassy should not have a 'to' value since we didn't set a 'from' value
-    // But in the current implementation, all buildings get a 'from' value from handleSetAllFromChange
+    // The embassy should not have a 'To' value since we didn't set a 'From' value
+    // But in the current implementation, all buildings get a 'From' value from handleSetAllFromChange
     // So we need to explicitly check that the embassy has the expected values
     expect(state.state.value.buildings.embassy.from).toBeUndefined()
   })

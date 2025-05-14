@@ -85,7 +85,60 @@ export default <Partial<Config>>{
     }),
   ],
 
-  safelist: ['text-red-500', 'text-yellow-500', 'text-gray-300'],
+  safelist: [
+    // Text colors
+    'text-red-500',
+    'text-yellow-500',
+    'text-gray-300',
+
+    // Gradient directions
+    'bg-gradient-to-b',
+    'bg-gradient-to-bl',
+    'bg-gradient-to-br',
+    'bg-gradient-to-l',
+    'bg-gradient-to-r',
+    'bg-gradient-to-t',
+    'bg-gradient-to-tl',
+    'bg-gradient-to-tr',
+
+    // Amber colors for from/via/to
+    'from-amber-100',
+    'from-amber-200',
+    'from-amber-300',
+    'from-amber-400',
+    'from-amber-500',
+    'via-amber-100',
+    'via-amber-200',
+    'via-amber-300',
+    'via-amber-400',
+    'via-amber-500',
+    'to-amber-100',
+    'to-amber-200',
+    'to-amber-300',
+    'to-amber-400',
+    'to-amber-500',
+
+    // Percentage values for gradient stops
+    'from-30%',
+    'from-35%',
+    'from-40%',
+    'from-45%',
+    'from-50%',
+    'from-55%',
+    'from-60%',
+    'via-30%',
+    'via-35%',
+    'via-40%',
+    'via-45%',
+    'via-50%',
+    'via-55%',
+    'via-60%',
+    'to-50%',
+    'to-55%',
+    'to-60%',
+    'to-65%',
+    'to-70%',
+  ],
   theme: {
     container: {
       center: true,

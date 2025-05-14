@@ -5,7 +5,7 @@ Requirements:
 - Check the documentation below for the functions/features you need to use.
 - Use dayjs via `const dayjs = useDayjs()`.
 - Inside `<template>` you can use `$dayjs()` directly.
-- Do not add imports from dayjs, it's auto-imported by the framework.
+- Do NOT add imports from dayjs, it's auto-imported by the framework.
 
 # Day.js docs
 
