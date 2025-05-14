@@ -1,13 +1,11 @@
 <script setup lang="ts">
 const PAGE_TITLE = 'Hero Gear Mastery Forging Calculator'
 const PAGE_DESCRIPTION = 'Calculate the material costs for Hero Gear Mastery Forging upgrades'
-const PAGE_ICON = 'game-icons:shoulder-armor'
-const PAGE_ICON_COLOR_CLASS = tw`bg-gradient-to-tr from-amber-400 from-[46%] via-amber-100 via-[46%] to-amber-400 to-60%`
+const PAGE_IMAGE_PATH = '/img/hero-gear.webp'
 
 definePageMeta({
   description: `${PAGE_DESCRIPTION} in Whiteout Survival.`,
-  icon: PAGE_ICON,
-  iconColorClass: PAGE_ICON_COLOR_CLASS,
+  imagePath: PAGE_IMAGE_PATH,
   title: `${PAGE_TITLE} for Whiteout Survival`,
 })
 
@@ -43,10 +41,8 @@ function getPieceCostById(pieceId: string) {
   <MainContentCard
     :copy-url-button="queryParameters.hasAnyParameter"
     :heading="PAGE_TITLE"
-    :icon-color-class="PAGE_ICON_COLOR_CLASS"
-    :icon="PAGE_ICON"
+    :image-path="PAGE_IMAGE_PATH"
     :sub-heading="PAGE_DESCRIPTION"
-    copy-url-button-label="Copy link to current settings"
   >
     <div class="space-y-12">
       <!-- Gear Pieces Grid -->
