@@ -99,8 +99,11 @@ echo
 # Execute pre-release hooks.
 execute_hook "pre-release"
 
-# Update CHANGELOG.
-git cliff --tag "$VERSION_TAG" -o CHANGELOG.md
+# Update CHANGELOG and escape HTML tags in commit messages
+git cliff --tag "$VERSION_TAG" -o CHANGELOG.md.tmp
+# Escape HTML tags with backticks
+sed -E "s/([^\`])(<[^>]+>)([^\`])/\\1\`\\2\`\\3/g; s/^(<[^>]+>)([^\`])/\`\\1\`\\2/g; s/([^\`])(<[^>]+>)$/\\1\`\\2\`/g; s/^(<[^>]+>)$/\`\\1\`/g; s/\`\`([^>\`]+>)\`\`/\`\\1\`/g" CHANGELOG.md.tmp > CHANGELOG.md
+rm CHANGELOG.md.tmp
 
 # Add all changes and commit.
 git add -A
