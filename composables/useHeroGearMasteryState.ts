@@ -239,6 +239,7 @@ export default function useHeroGearMasteryState() {
     handleFromChange,
     handleToChange,
     hasAnySelectionOrInventory,
+    loadStateFromURL, // Expose this for testing
     queryParameters,
     removeGearPiece,
     selectOptions,

@@ -317,6 +317,7 @@ export default function useFireCrystalBuildingState() {
     handleFromChange,
     handleToChange,
     hasAnySelectionOrInventory,
+    loadStateFromURL, // Expose this for testing
     queryParameters,
     selectOptions,
     setAllToOptions,

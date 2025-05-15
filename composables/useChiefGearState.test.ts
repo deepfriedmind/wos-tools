@@ -31,7 +31,7 @@ vi.stubGlobal(
     return value
   },
 )
-vi.stubGlobal('onMounted', (function_: () => void) => function_())
+vi.stubGlobal('onMounted', vi.fn())
 vi.stubGlobal('watchDebounced', watchDebouncedMock)
 vi.stubGlobal(
   'useGroupBy',
@@ -81,6 +81,7 @@ describe('useChiefGearState', () => {
 
   it('initializes with default state', () => {
     const stateApi = useChiefGearState()
+    stateApi.loadStateFromURL()
     expect(stateApi.state.value.gear.coat.from).toBeUndefined()
     expect(stateApi.state.value.gear.cudgel.to).toBeUndefined()
     expect(stateApi.state.value.inventory.designPlans).toBe(0)
@@ -88,6 +89,7 @@ describe('useChiefGearState', () => {
 
   it('clearAll resets state', () => {
     const stateApi = useChiefGearState()
+    stateApi.loadStateFromURL()
     stateApi.state.value.gear.coat.from = 'lv1'
     stateApi.state.value.inventory.designPlans = 5
     stateApi.clearAll()
@@ -97,6 +99,7 @@ describe('useChiefGearState', () => {
 
   it('handleFromChange sets From and updates To correctly', () => {
     const stateApi = useChiefGearState()
+    stateApi.loadStateFromURL()
     stateApi.handleFromChange('coat', 'lv1')
     expect(stateApi.state.value.gear.coat.from).toBe('lv1')
     expect(stateApi.state.value.gear.coat.to).toBe('lv2')
@@ -110,6 +113,7 @@ describe('useChiefGearState', () => {
 
   it('handleToChange sets To', () => {
     const stateApi = useChiefGearState()
+    stateApi.loadStateFromURL()
     stateApi.handleToChange('coat', 'lv2')
     expect(stateApi.state.value.gear.coat.to).toBe('lv2')
     stateApi.handleToChange('coat', undefined)
@@ -118,6 +122,7 @@ describe('useChiefGearState', () => {
 
   it('getFilteredToOptions returns correct options', () => {
     const stateApi = useChiefGearState()
+    stateApi.loadStateFromURL()
     // No From selected: returns all
     let options = stateApi.getFilteredToOptions(undefined)
     expect(options.length).toBe(3)
@@ -133,6 +138,7 @@ describe('useChiefGearState', () => {
 
   it('hasAnySelectionOrInventory is true when gear or inventory set', () => {
     const stateApi = useChiefGearState()
+    stateApi.loadStateFromURL()
     expect(stateApi.hasAnySelectionOrInventory.value).toBe(false)
     stateApi.state.value.gear.coat.from = 'lv1'
     expect(stateApi.hasAnySelectionOrInventory.value).toBe(true)
@@ -143,6 +149,7 @@ describe('useChiefGearState', () => {
 
   it('queryParameters reflects state', () => {
     const stateApi = useChiefGearState()
+    stateApi.loadStateFromURL()
     stateApi.state.value.gear.coat.from = 'lv1'
     stateApi.state.value.gear.cudgel.to = 'lv2'
     stateApi.state.value.inventory.designPlans = 3

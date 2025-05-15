@@ -26,7 +26,7 @@ vi.stubGlobal(
     _options?: unknown,
   ) => ref(init),
 )
-vi.stubGlobal('onMounted', (function_: () => void) => function_())
+vi.stubGlobal('onMounted', vi.fn())
 vi.stubGlobal('watchDebounced', watchDebouncedMock)
 
 // Mock the types/fire-crystal-building module
@@ -107,6 +107,8 @@ describe('useFireCrystalBuildingState', () => {
     vi.clearAllMocks()
     replaceMock.mockClear()
     state = useFireCrystalBuildingState()
+    // Manually call loadStateFromURL instead of relying on onMounted
+    state.loadStateFromURL()
   })
 
   it('initializes with default state', () => {
@@ -116,19 +118,13 @@ describe('useFireCrystalBuildingState', () => {
     expect(state.state.value.inventory.wood).toBe(0)
   })
 
-  it('generates select options correctly', async () => {
-    // Wait for onMounted to complete
-    await nextTick()
-
+  it('generates select options correctly', () => {
     expect(state.selectOptions.length).toBeGreaterThan(0)
     expect(state.selectOptions[0].tier).toBeDefined()
     expect(state.selectOptions[0].levels.length).toBeGreaterThan(0)
   })
 
-  it('ensures select options are in correct tier order', async () => {
-    // Wait for onMounted to complete
-    await nextTick()
-
+  it('ensures select options are in correct tier order', () => {
     // Get the tiers from the options
     const tiers = state.selectOptions.map(option => option.tier)
 

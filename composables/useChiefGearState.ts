@@ -232,6 +232,7 @@ export default function useChiefGearState() {
     handleFromChange,
     handleToChange,
     hasAnySelectionOrInventory,
+    loadStateFromURL, // Expose this for testing
     queryParameters,
     selectOptions,
     state,

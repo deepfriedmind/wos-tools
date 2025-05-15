@@ -17,7 +17,6 @@ const mockRouter = {
 }
 
 vi.mock('#imports', () => ({
-  onMounted: (function_: () => void) => function_(),
   useInitial: (array: unknown[]): unknown[] => array.slice(0, -1),
   useIsEqual: (a: unknown, b: unknown): boolean => JSON.stringify(a) === JSON.stringify(b),
   useLocalStorage: vi.fn((key: string, defaultValue: unknown) => ref(structuredClone(defaultValue))),
@@ -26,6 +25,16 @@ vi.mock('#imports', () => ({
   useToMerged: (a: Record<string, unknown>, b: Record<string, unknown>) => ({ ...b, ...a }),
   watchDebounced: (source: { value: unknown }, callback: (value: unknown) => void) => callback(source.value),
 }))
+
+// Mock onMounted to be a no-op function
+vi.mock('vue', async () => {
+  const actual = await vi.importActual('vue')
+
+  return {
+    ...(actual as Record<string, unknown>),
+    onMounted: vi.fn(),
+  }
+})
 
 // --- Global constants and helpers ---
 
@@ -65,7 +74,8 @@ describe('useChiefCharmState', () => {
   })
 
   it('initializes state with defaults', () => {
-    const { state } = useChiefCharmState()
+    const { loadStateFromURL, state } = useChiefCharmState()
+    loadStateFromURL()
     expect(state.value.gear.coat).toBeDefined()
     expect(state.value.gear.cudgel).toBeDefined()
     expect(state.value.inventory.charmDesign).toBe(0)
@@ -74,7 +84,8 @@ describe('useChiefCharmState', () => {
   })
 
   it('clearAll resets state', () => {
-    const { clearAll, state } = useChiefCharmState()
+    const { clearAll, loadStateFromURL, state } = useChiefCharmState()
+    loadStateFromURL()
     state.value.gear.coat[0].from = 'lv1'
     state.value.inventory.charmDesign = 5
     clearAll()
@@ -83,14 +94,16 @@ describe('useChiefCharmState', () => {
   })
 
   it('filteredFromOptions omits last level', () => {
-    const { filteredFromOptions } = useChiefCharmState()
+    const { filteredFromOptions, loadStateFromURL } = useChiefCharmState()
+    loadStateFromURL()
     expect(filteredFromOptions.value.map(o => o.id)).toEqual(
       CHARM_UPGRADE_DATA.slice(0, -1).map(l => l.id),
     )
   })
 
   it('getFilteredToOptions returns correct options', () => {
-    const { getFilteredToOptions } = useChiefCharmState()
+    const { getFilteredToOptions, loadStateFromURL } = useChiefCharmState()
+    loadStateFromURL()
     // No fromId: returns all
     expect(getFilteredToOptions(undefined).map(o => o.id)).toEqual(
       CHARM_UPGRADE_DATA.map(l => l.id),
@@ -106,7 +119,8 @@ describe('useChiefCharmState', () => {
   })
 
   it('handleFromChange sets from and adjusts to', () => {
-    const { handleFromChange, state } = useChiefCharmState()
+    const { handleFromChange, loadStateFromURL, state } = useChiefCharmState()
+    loadStateFromURL()
     handleFromChange('coat', 0, 'level_1')
     expect(state.value.gear.coat[0].from).toBe('level_1')
     expect(state.value.gear.coat[0].to).toBe('level_2')
@@ -121,13 +135,15 @@ describe('useChiefCharmState', () => {
   })
 
   it('handleToChange sets to', () => {
-    const { handleToChange, state } = useChiefCharmState()
+    const { handleToChange, loadStateFromURL, state } = useChiefCharmState()
+    loadStateFromURL()
     handleToChange('cudgel', 1, 'lv2')
     expect(state.value.gear.cudgel[1].to).toBe('lv2')
   })
 
   it('hasAnySelectionOrInventory is true when any slot or inventory is set', () => {
-    const { clearAll, hasAnySelectionOrInventory, state } = useChiefCharmState()
+    const { clearAll, hasAnySelectionOrInventory, loadStateFromURL, state } = useChiefCharmState()
+    loadStateFromURL()
     clearAll()
     expect(hasAnySelectionOrInventory.value).toBe(false)
     state.value.gear.coat[0].from = 'level_1'
@@ -138,7 +154,8 @@ describe('useChiefCharmState', () => {
   })
 
   it('queryParameters reflects state', () => {
-    const { queryParameters, state } = useChiefCharmState()
+    const { loadStateFromURL, queryParameters, state } = useChiefCharmState()
+    loadStateFromURL()
     state.value.gear.coat[0].from = 'lv1'
     state.value.gear.coat[0].to = 'lv2'
     state.value.inventory.charmDesign = 3
@@ -152,7 +169,8 @@ describe('useChiefCharmState', () => {
   })
 
   it('selectOptions returns all upgrade levels', () => {
-    const { selectOptions } = useChiefCharmState()
+    const { loadStateFromURL, selectOptions } = useChiefCharmState()
+    loadStateFromURL()
     expect(selectOptions.map(o => o.id)).toEqual(
       CHARM_UPGRADE_DATA.map(l => l.id),
     )
