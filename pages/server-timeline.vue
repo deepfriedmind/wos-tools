@@ -228,7 +228,6 @@ onUnmounted(() => {
                 date-format="yy-mm-dd"
                 :min-date="$dayjs(WOS_LAUNCH_DATE).toDate()"
                 :max-date="new Date()"
-                show-button-bar
                 :invalid="!selectedDateIsValid"
               />
               <label
