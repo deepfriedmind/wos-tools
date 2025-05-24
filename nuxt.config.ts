@@ -62,13 +62,7 @@ export default defineNuxtConfig({
   },
   watch: ['primevue.config.ts'],
   compatibilityDate: '2025-02-22',
-  nitro: {
-    runtimeConfig: {
-      public: {
-        buildTime: '',
-      },
-    },
-  },
+
   postcss: {
     plugins: {
       'postcss-functions': {
@@ -76,11 +70,7 @@ export default defineNuxtConfig({
       },
     },
   },
-  hooks: {
-    'nitro:build:before': (nitro) => {
-      nitro.options.runtimeConfig.public.buildTime = new Date().toISOString()
-    },
-  },
+
   dayjs: {
     plugins: ['duration', 'isSameOrAfter', 'relativeTime', 'utc'],
   },
