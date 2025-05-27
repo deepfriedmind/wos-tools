@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.6] - 2025-05-27
+
+### ♻️ Refactor
+
+- *(server-timeline)* Remove unused show-button-bar attribute
+- *(index)* Remove heading and placeholder text
+- *(Footer, nuxt.config)* Remove build time from footer and config
+
+### 🔧 Miscellaneous Tasks
+
+- Remove unused `.roomodes` configuration file
+
 ## [1.3.5] - 2025-05-15
 
 ### ✨ Features
@@ -27,6 +39,7 @@ All notable changes to this project will be documented in this file.
 ### 🔧 Miscellaneous Tasks
 
 - *(images)* Update image assets for Fire Crystals
+- *(release)* 1.3.5
 - *(release)* 1.3.5
 
 ## [1.3.4] - 2025-05-06
