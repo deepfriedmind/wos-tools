@@ -75,7 +75,7 @@ fi
 if [ "$#" -eq 1 ]; then
     VERSION_TAG=$1
 else
-    suggested_version=$(git cliff --bumped-version)
+    suggested_version=$(git cliff --unreleased --bump --context | jq -r .[0].version)
     echo -n "No version tag provided. git-cliff suggests $suggested_version. Proceed? [Y/n] "
     read -r user_input
 
