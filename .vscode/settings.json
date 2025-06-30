@@ -1,7 +1,4 @@
 {
-  "common-intellisense.ui": [
-    "primevue4"
-  ],
   "cSpell.ignorePaths": [
     "package-lock.json",
     "node_modules",
@@ -10,8 +7,10 @@
     ".git/{index,*refs,*HEAD}",
     ".vscode",
     ".vscode-insiders",
-    "CHANGELOG.md",
-    ".github/{docs,prompts}"
+    "CHANGELOG.md"
+  ],
+  "common-intellisense.ui": [
+    "primevue4"
   ],
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
@@ -71,20 +70,9 @@
     "pnpm-lock.yaml": true
   },
   "git.inputValidationSubjectLength": 72,
-  "github.copilot.chat.codeGeneration.useInstructionFiles": true,
   "github.copilot.chat.commitMessageGeneration.instructions": [
     {
       "file": ".github/copilot-commit-message-instructions.md"
-    }
-  ],
-  "github.copilot.chat.reviewSelection.instructions": [
-    {
-      "file": ".github/copilot-code-review-instructions.md"
-    }
-  ],
-  "github.copilot.chat.testGeneration.instructions": [
-    {
-      "file": ".github/copilot-test-generation-instructions.md"
     }
   ],
   "nuxtr.defaultPackageManager": "pnpm",
