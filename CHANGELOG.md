@@ -2,17 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.3.6] - 2025-05-27
+## [1.3.7] - 2025-06-30
 
 ### ♻️ Refactor
 
 - *(server-timeline)* Remove unused show-button-bar attribute
 - *(index)* Remove heading and placeholder text
 - *(Footer, nuxt.config)* Remove build time from footer and config
+- *(Footer)* Simplify footer layout and remove unneeded elements
+
+### 📚 Documentation
+
+- Remove unused docs
 
 ### 🔧 Miscellaneous Tasks
 
 - Remove unused `.roomodes` configuration file
+- *(release)* 1.3.6
+- *(release)* Update git-cliff command to improve version parsing
 
 ## [1.3.5] - 2025-05-15
 
