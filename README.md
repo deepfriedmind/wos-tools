@@ -1,8 +1,8 @@
+# WoS<img src="./public/favicon-96x96.png" width="32" height="32" alt="WoS Tools favicon" valign="top" />Tools
+
 [![Netlify Status](https://api.netlify.com/api/v1/badges/6f85effa-aabb-4edf-9123-07bb31a5b916/deploy-status)](https://app.netlify.com/sites/wostools/deploys)
 ![GitHub License](https://img.shields.io/github/license/deepfriedmind/wos-tools)
 [![code style](https://antfu.me/badge-code-style.svg)](https://github.com/antfu/eslint-config)
-
-# WoS<img src="./public/favicon-96x96.png" width="32" height="32" alt="WoS Tools favicon" valign="top" />Tools
 
 A website with a collection of tools for the game Whiteout Survival.  
 Built with Nuxt 3 (Vue 3/TypeScript), PrimeVue, and Tailwind CSS.
